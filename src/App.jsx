@@ -48,6 +48,7 @@ function App() {
 function IntroPage() {
   const navigate = useNavigate()
   const firstSong = performanceSongs[0]
+  const landingLogoSrc = `${import.meta.env.BASE_URL}assets/logos/landing-logo.png`
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (firstSong) {
@@ -68,6 +69,12 @@ function IntroPage() {
       >
         <p className="eyebrow">Landing</p>
         <div className="placeholder-panel">
+          <LogoSlot
+            src={landingLogoSrc}
+            alt="공연 로고"
+            className="landing-logo-slot"
+            fallback="Logo"
+          />
           <p className="placeholder-note">랜딩 페이지</p>
           <h1 className="intro-title">추후 디자인 적용 예정</h1>
         </div>
@@ -113,6 +120,7 @@ function SongPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { songId } = useParams()
+  const headerLogoSrc = `${import.meta.env.BASE_URL}assets/logos/header-logo.png`
   const [activePanel, setActivePanel] = useState({
     songKey: null,
     type: null,
@@ -248,6 +256,12 @@ function SongPage() {
         {...swipeHandlers}
       >
         <header className="song-hero">
+          <LogoSlot
+            src={headerLogoSrc}
+            alt="공연 심볼"
+            className="header-logo-slot"
+            fallback="Mark"
+          />
           <p className="eyebrow">
             Track {String(songIndex + 1).padStart(2, '0')} / {String(performanceSongs.length).padStart(2, '0')}
           </p>
@@ -413,6 +427,29 @@ function MobileFrame({ themeColor, textColor, accentColor, backgroundImage, chil
       <div className="ambient ambient--right" />
       <div className="mobile-frame">{children}</div>
     </main>
+  )
+}
+
+function LogoSlot({ src, alt, className, fallback }) {
+  const [hasError, setHasError] = useState(false)
+
+  if (hasError) {
+    return (
+      <div className={className} aria-hidden="true">
+        {fallback}
+      </div>
+    )
+  }
+
+  return (
+    <div className={className}>
+      <img
+        src={src}
+        alt={alt}
+        className="logo-image"
+        onError={() => setHasError(true)}
+      />
+    </div>
   )
 }
 
