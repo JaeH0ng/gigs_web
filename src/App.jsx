@@ -13,10 +13,10 @@ import { interactionZoneLabels, performanceSongs } from './data/songs'
 import { supabase, supabaseEnabled } from './lib/supabase'
 
 const reactionTypes = [
-  { id: 'like', label: 'Like', symbol: '♥' },
-  { id: 'clap', label: 'Clap', symbol: '✦' },
-  { id: 'wave', label: 'Wave', symbol: '≈' },
-  { id: 'spark', label: 'Spark', symbol: '✷' },
+  { id: 'like', label: '좋아요', symbol: '❤️' },
+  { id: 'clap', label: '박수', symbol: '👏' },
+  { id: 'wave', label: '파도', symbol: '🌊' },
+  { id: 'spark', label: '반짝', symbol: '✨' },
 ]
 
 const landingTheme = {
@@ -127,6 +127,8 @@ function SongPage() {
   })
   const [floatingReactions, setFloatingReactions] = useState([])
   const [reactionCounts, setReactionCounts] = useState({})
+  const [channelStatus, setChannelStatus] = useState('idle')
+  const [reactionError, setReactionError] = useState('')
   const clientIdRef = useRef(getClientId())
 
   const song = useMemo(() => {
@@ -203,7 +205,19 @@ function SongPage() {
           }
         },
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          setChannelStatus('connected')
+        } else if (status === 'CHANNEL_ERROR') {
+          setChannelStatus('error')
+          setReactionError('Realtime 채널 연결에 실패했습니다.')
+        } else if (status === 'TIMED_OUT') {
+          setChannelStatus('error')
+          setReactionError('Realtime 연결 시간이 초과되었습니다.')
+        } else if (status === 'CLOSED') {
+          setChannelStatus('connecting')
+        }
+      })
 
     return () => {
       isMounted = false
@@ -242,6 +256,13 @@ function SongPage() {
     (sum, reaction) => sum + (reactionCounts[reaction.id] ?? 0),
     0,
   )
+  const realtimeStatus = !supabaseEnabled
+    ? 'disabled'
+    : channelStatus === 'connected'
+      ? 'connected'
+      : channelStatus === 'error'
+        ? 'error'
+        : 'connecting'
 
   return (
     <MobileFrame
@@ -307,12 +328,34 @@ function SongPage() {
               <li key={instruction}>{instruction}</li>
             ))}
           </ul>
+          <div className="reaction-meta">
+            <span className={`realtime-badge realtime-badge--${realtimeStatus}`}>
+              {realtimeStatus === 'connected'
+                ? '실시간 연결됨'
+                : realtimeStatus === 'disabled'
+                  ? 'Supabase 연결 전'
+                  : realtimeStatus === 'error'
+                    ? '실시간 연결 오류'
+                    : '실시간 연결 중'}
+            </span>
+            <span className="reaction-count">
+              {supabaseEnabled ? `총 반응 ${totalReactionCount}` : '로컬 미리보기'}
+            </span>
+          </div>
+          {reactionError ? (
+            <p className="reaction-error">{reactionError}</p>
+          ) : null}
+        </section>
+
+        <div className="floating-reaction-dock">
           <div className="reaction-toolbar">
             {reactionTypes.map((reaction) => (
               <button
                 key={reaction.id}
                 type="button"
                 className={`reaction-button reaction-button--${reaction.id}`}
+                aria-label={reaction.label}
+                title={reaction.label}
                 onClick={() =>
                   handleReaction(
                     song.id,
@@ -322,16 +365,16 @@ function SongPage() {
                   )
                 }
               >
-                <span aria-hidden="true">{reaction.symbol}</span>
-                <span>{reaction.label}</span>
-                <small>{reactionCounts[reaction.id] ?? 0}</small>
+                <span className="reaction-button__emoji" aria-hidden="true">
+                  {reaction.symbol}
+                </span>
+                <small className="reaction-button__count">
+                  {reactionCounts[reaction.id] ?? 0}
+                </small>
               </button>
             ))}
           </div>
-          <span className="reaction-count">
-            {supabaseEnabled ? `총 반응 ${totalReactionCount}` : 'Supabase 연결 전'}
-          </span>
-        </section>
+        </div>
 
         <p className="swipe-hint">오른쪽으로 이전, 왼쪽으로 다음</p>
 
