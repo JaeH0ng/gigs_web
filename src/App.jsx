@@ -10,6 +10,14 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import { interactionZoneLabels, performanceSongs } from './data/songs'
+import { supabase, supabaseEnabled } from './lib/supabase'
+
+const reactionTypes = [
+  { id: 'like', label: 'Like', symbol: '♥' },
+  { id: 'clap', label: 'Clap', symbol: '✦' },
+  { id: 'wave', label: 'Wave', symbol: '≈' },
+  { id: 'spark', label: 'Spark', symbol: '✷' },
+]
 
 const landingTheme = {
   background: '#111417',
@@ -109,6 +117,9 @@ function SongPage() {
     songKey: null,
     type: null,
   })
+  const [floatingReactions, setFloatingReactions] = useState([])
+  const [reactionCounts, setReactionCounts] = useState({})
+  const clientIdRef = useRef(getClientId())
 
   const song = useMemo(() => {
     return performanceSongs.find(
@@ -127,6 +138,70 @@ function SongPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [song?.id])
+
+  useEffect(() => {
+    if (!song || !supabaseEnabled) {
+      return undefined
+    }
+
+    let isMounted = true
+
+    async function loadReactionCount() {
+      const counts = {}
+
+      await Promise.all(
+        reactionTypes.map(async (reaction) => {
+          const { count } = await supabase
+            .from('song_reactions')
+            .select('*', { count: 'exact', head: true })
+            .eq('song_id', song.id)
+            .eq('reaction_type', reaction.id)
+
+          counts[reaction.id] = count ?? 0
+        }),
+      )
+
+      if (isMounted) {
+        setReactionCounts(counts)
+      }
+    }
+
+    loadReactionCount()
+
+    const channel = supabase
+      .channel(`song-reactions-${song.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'song_reactions',
+          filter: `song_id=eq.${song.id}`,
+        },
+        (payload) => {
+          const reactionType = payload.new?.reaction_type
+
+          if (!reactionTypes.some((reaction) => reaction.id === reactionType)) {
+            return
+          }
+
+          setReactionCounts((current) => ({
+            ...current,
+            [reactionType]: (current[reactionType] ?? 0) + 1,
+          }))
+
+          if (payload.new?.client_id !== clientIdRef.current) {
+            spawnReaction(setFloatingReactions, reactionType, 'remote')
+          }
+        },
+      )
+      .subscribe()
+
+    return () => {
+      isMounted = false
+      supabase.removeChannel(channel)
+    }
+  }, [song])
 
   const previousSong = songIndex > 0 ? performanceSongs[songIndex - 1] : null
   const nextSong = songIndex < performanceSongs.length - 1 ? performanceSongs[songIndex + 1] : null
@@ -155,6 +230,10 @@ function SongPage() {
   }
 
   const visiblePanel = activePanel.songKey === song.id ? activePanel.type : null
+  const totalReactionCount = reactionTypes.reduce(
+    (sum, reaction) => sum + (reactionCounts[reaction.id] ?? 0),
+    0,
+  )
 
   return (
     <MobileFrame
@@ -214,6 +293,30 @@ function SongPage() {
               <li key={instruction}>{instruction}</li>
             ))}
           </ul>
+          <div className="reaction-toolbar">
+            {reactionTypes.map((reaction) => (
+              <button
+                key={reaction.id}
+                type="button"
+                className={`reaction-button reaction-button--${reaction.id}`}
+                onClick={() =>
+                  handleReaction(
+                    song.id,
+                    reaction.id,
+                    clientIdRef.current,
+                    setFloatingReactions,
+                  )
+                }
+              >
+                <span aria-hidden="true">{reaction.symbol}</span>
+                <span>{reaction.label}</span>
+                <small>{reactionCounts[reaction.id] ?? 0}</small>
+              </button>
+            ))}
+          </div>
+          <span className="reaction-count">
+            {supabaseEnabled ? `총 반응 ${totalReactionCount}` : 'Supabase 연결 전'}
+          </span>
         </section>
 
         <p className="swipe-hint">오른쪽으로 이전, 왼쪽으로 다음</p>
@@ -274,6 +377,22 @@ function SongPage() {
             </section>
           </div>
         ) : null}
+
+        <div className="heart-stage" aria-hidden="true">
+          {floatingReactions.map((reaction) => (
+            <span
+              key={reaction.id}
+              className={`floating-heart floating-heart--${reaction.variant} floating-heart--${reaction.reactionType}`}
+              style={{
+                '--heart-left': `${reaction.left}%`,
+                '--heart-size': `${reaction.size}px`,
+                '--heart-delay': `${reaction.delay}ms`,
+              }}
+            >
+              {reaction.symbol}
+            </span>
+          ))}
+        </div>
       </article>
     </MobileFrame>
   )
@@ -324,3 +443,60 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
 }
 
 export default App
+
+function getClientId() {
+  const storageKey = 'gigs-web-client-id'
+  const existingId = window.localStorage.getItem(storageKey)
+
+  if (existingId) {
+    return existingId
+  }
+
+  const nextId = window.crypto.randomUUID()
+  window.localStorage.setItem(storageKey, nextId)
+  return nextId
+}
+
+async function handleReaction(songId, reactionType, clientId, setFloatingReactions) {
+  spawnReaction(setFloatingReactions, reactionType, 'self')
+
+  if (!supabaseEnabled) {
+    return
+  }
+
+  const { error } = await supabase.from('song_reactions').insert({
+    song_id: songId,
+    reaction_type: reactionType,
+    client_id: clientId,
+  })
+
+  if (error) {
+    console.error('Failed to send reaction', error)
+  }
+}
+
+function spawnReaction(setFloatingReactions, reactionType, variant) {
+  const reactionMeta = reactionTypes.find((reaction) => reaction.id === reactionType)
+
+  if (!reactionMeta) {
+    return
+  }
+
+  const reaction = {
+    id: `${variant}-${window.crypto.randomUUID()}`,
+    left: 18 + Math.random() * 64,
+    size: 18 + Math.round(Math.random() * 18),
+    delay: Math.round(Math.random() * 120),
+    variant,
+    reactionType,
+    symbol: reactionMeta.symbol,
+  }
+
+  setFloatingReactions((current) => [...current, reaction])
+
+  window.setTimeout(() => {
+    setFloatingReactions((current) =>
+      current.filter((item) => item.id !== reaction.id),
+    )
+  }, 2200)
+}
