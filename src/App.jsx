@@ -432,6 +432,7 @@ function MobileFrame({ themeColor, textColor, accentColor, backgroundImage, chil
 
 function LogoSlot({ src, alt, className, fallback }) {
   const [hasError, setHasError] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   if (hasError) {
     return (
@@ -442,11 +443,12 @@ function LogoSlot({ src, alt, className, fallback }) {
   }
 
   return (
-    <div className={className}>
+    <div className={`${className} ${isLoaded ? 'logo-slot--loaded' : ''}`}>
       <img
         src={src}
         alt={alt}
         className="logo-image"
+        onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
       />
     </div>
@@ -454,17 +456,34 @@ function LogoSlot({ src, alt, className, fallback }) {
 }
 
 function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
-  const touchStartRef = useRef({ x: 0, y: 0 })
+  const pointerStartRef = useRef({ x: 0, y: 0, active: false, pointerId: null })
 
   return {
-    onTouchStart: (event) => {
-      const touch = event.changedTouches[0]
-      touchStartRef.current = { x: touch.clientX, y: touch.clientY }
+    onPointerDown: (event) => {
+      pointerStartRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        active: true,
+        pointerId: event.pointerId,
+      }
     },
-    onTouchEnd: (event) => {
-      const touch = event.changedTouches[0]
-      const deltaX = touch.clientX - touchStartRef.current.x
-      const deltaY = touch.clientY - touchStartRef.current.y
+    onPointerUp: (event) => {
+      if (
+        !pointerStartRef.current.active ||
+        pointerStartRef.current.pointerId !== event.pointerId
+      ) {
+        return
+      }
+
+      const deltaX = event.clientX - pointerStartRef.current.x
+      const deltaY = event.clientY - pointerStartRef.current.y
+
+      pointerStartRef.current = {
+        x: 0,
+        y: 0,
+        active: false,
+        pointerId: null,
+      }
 
       if (Math.abs(deltaX) < 56 || Math.abs(deltaX) < Math.abs(deltaY)) {
         return
@@ -474,6 +493,14 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
         onSwipeLeft?.()
       } else {
         onSwipeRight?.()
+      }
+    },
+    onPointerCancel: () => {
+      pointerStartRef.current = {
+        x: 0,
+        y: 0,
+        active: false,
+        pointerId: null,
       }
     },
   }
