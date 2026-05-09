@@ -187,8 +187,14 @@ function SongPage() {
   const [reactionCounts, setReactionCounts] = useState({})
   const [channelStatus, setChannelStatus] = useState('idle')
   const [reactionError, setReactionError] = useState('')
+  const [soundActionError, setSoundActionError] = useState('')
+  const [cooldownRemainingMs, setCooldownRemainingMs] = useState(0)
   const clientIdRef = useRef(window.crypto.randomUUID())
   const reactionCountsRef = useRef({})
+  const soundAudioPoolRef = useRef([])
+  const soundCooldownTimeoutRef = useRef(null)
+  const soundTickerRef = useRef(null)
+  const previousSoundIndexRef = useRef(-1)
 
   const song = useMemo(() => {
     return performanceSongs.find(
@@ -211,6 +217,67 @@ function SongPage() {
   useEffect(() => {
     reactionCountsRef.current = reactionCounts
   }, [reactionCounts])
+
+  useEffect(() => {
+    return () => {
+      if (soundCooldownTimeoutRef.current) {
+        window.clearTimeout(soundCooldownTimeoutRef.current)
+      }
+
+      if (soundTickerRef.current) {
+        window.clearInterval(soundTickerRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const resetFrame = window.requestAnimationFrame(() => {
+      setSoundActionError('')
+      setCooldownRemainingMs(0)
+    })
+
+    if (soundCooldownTimeoutRef.current) {
+      window.clearTimeout(soundCooldownTimeoutRef.current)
+      soundCooldownTimeoutRef.current = null
+    }
+
+    if (soundTickerRef.current) {
+      window.clearInterval(soundTickerRef.current)
+      soundTickerRef.current = null
+    }
+
+    soundAudioPoolRef.current = []
+    previousSoundIndexRef.current = -1
+
+    const soundSources = getSoundSources(song?.soundAction)
+
+    if (soundSources.length === 0) {
+      return undefined
+    }
+
+    const audioPool = soundSources.map((source) => {
+      const nextAudio = new Audio(source)
+      nextAudio.preload = 'auto'
+      return nextAudio
+    })
+    soundAudioPoolRef.current = audioPool
+
+    const handleError = () => {
+      setSoundActionError('천둥 사운드 파일을 불러오지 못했습니다.')
+    }
+
+    audioPool.forEach((audio) => {
+      audio.addEventListener('error', handleError)
+    })
+
+    return () => {
+      window.cancelAnimationFrame(resetFrame)
+      audioPool.forEach((audio) => {
+        audio.pause()
+        audio.removeEventListener('error', handleError)
+      })
+    }
+  }, [song?.id, song?.soundAction, song?.soundAction?.soundFile, song?.soundAction?.soundFiles])
 
   useEffect(() => {
     if (!song || !supabaseEnabled) {
@@ -330,6 +397,14 @@ function SongPage() {
     (sum, reaction) => sum + (reactionCounts[reaction.id] ?? 0),
     0,
   )
+  const soundAction = song.soundAction
+  const cooldownDurationMs = (soundAction?.cooldownSeconds ?? 0) * 1000
+  const cooldownProgress = cooldownDurationMs
+    ? Math.max(0, Math.min(1, 1 - cooldownRemainingMs / cooldownDurationMs))
+    : 1
+  const cooldownLabel = cooldownRemainingMs > 0
+    ? `${(cooldownRemainingMs / 1000).toFixed(1)}`
+    : null
   const realtimeStatus = !supabaseEnabled
     ? 'disabled'
     : channelStatus === 'connected'
@@ -423,6 +498,38 @@ function SongPage() {
 
         <div className="floating-reaction-dock">
           <div className="reaction-toolbar">
+            {soundAction ? (
+              <button
+                type="button"
+                className={`reaction-button reaction-button--sound ${cooldownRemainingMs > 0 ? 'reaction-button--cooling' : ''}`}
+                aria-label={soundAction.label}
+                title={soundAction.label}
+                style={{
+                  '--cooldown-progress': `${cooldownProgress * 360}deg`,
+                }}
+                onClick={() =>
+                  handleSoundAction({
+                    song,
+                    audioPoolRef: soundAudioPoolRef,
+                    previousSoundIndexRef,
+                    cooldownRemainingMs,
+                    cooldownDurationMs,
+                    setCooldownRemainingMs,
+                    setSoundActionError,
+                    cooldownTimeoutRef: soundCooldownTimeoutRef,
+                    cooldownTickerRef: soundTickerRef,
+                  })
+                }
+              >
+                <span className="reaction-button__cooldown-ring" aria-hidden="true" />
+                <span className="reaction-button__emoji" aria-hidden="true">
+                  {soundAction.icon}
+                </span>
+                <small className="reaction-button__count reaction-button__count--cooldown">
+                  {cooldownLabel ?? 'ON'}
+                </small>
+              </button>
+            ) : null}
             {reactionTypes.map((reaction) => (
               <button
                 key={reaction.id}
@@ -469,6 +576,12 @@ function SongPage() {
             곡 이야기
           </button>
         </div>
+
+        {soundAction ? (
+          <p className="sound-action-note">
+            {soundActionError || soundAction.helperText}
+          </p>
+        ) : null}
 
         {visiblePanel ? (
           <div
@@ -689,6 +802,112 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
 }
 
 export default App
+
+async function handleSoundAction({
+  song,
+  audioPoolRef,
+  previousSoundIndexRef,
+  cooldownRemainingMs,
+  cooldownDurationMs,
+  setCooldownRemainingMs,
+  setSoundActionError,
+  cooldownTimeoutRef,
+  cooldownTickerRef,
+}) {
+  if (!song?.soundAction || cooldownRemainingMs > 0) {
+    return
+  }
+
+  const audioPool = audioPoolRef.current
+
+  if (!audioPool.length) {
+    setSoundActionError('천둥 사운드 파일이 아직 준비되지 않았습니다.')
+    return
+  }
+
+  const nextSoundIndex = pickRandomSoundIndex(
+    audioPool.length,
+    previousSoundIndexRef.current,
+  )
+  const nextAudio = audioPool[nextSoundIndex]
+
+  try {
+    setSoundActionError('')
+    nextAudio.pause()
+    nextAudio.currentTime = 0
+    await nextAudio.play()
+    previousSoundIndexRef.current = nextSoundIndex
+  } catch {
+    setSoundActionError('사운드를 재생하지 못했습니다. 무음 모드를 확인해 주세요.')
+    return
+  }
+
+  if (!cooldownDurationMs) {
+    return
+  }
+
+  const cooldownEndsAt = Date.now() + cooldownDurationMs
+  setCooldownRemainingMs(cooldownDurationMs)
+
+  if (cooldownTimeoutRef.current) {
+    window.clearTimeout(cooldownTimeoutRef.current)
+  }
+
+  if (cooldownTickerRef.current) {
+    window.clearInterval(cooldownTickerRef.current)
+  }
+
+  cooldownTickerRef.current = window.setInterval(() => {
+    const nextRemaining = Math.max(0, cooldownEndsAt - Date.now())
+    setCooldownRemainingMs(nextRemaining)
+
+    if (nextRemaining === 0 && cooldownTickerRef.current) {
+      window.clearInterval(cooldownTickerRef.current)
+      cooldownTickerRef.current = null
+    }
+  }, 100)
+
+  cooldownTimeoutRef.current = window.setTimeout(() => {
+    setCooldownRemainingMs(0)
+
+    if (cooldownTickerRef.current) {
+      window.clearInterval(cooldownTickerRef.current)
+      cooldownTickerRef.current = null
+    }
+
+    cooldownTimeoutRef.current = null
+  }, cooldownDurationMs)
+}
+
+function getSoundSources(soundAction) {
+  if (!soundAction) {
+    return []
+  }
+
+  if (Array.isArray(soundAction.soundFiles) && soundAction.soundFiles.length > 0) {
+    return soundAction.soundFiles
+  }
+
+  if (soundAction.soundFile) {
+    return [soundAction.soundFile]
+  }
+
+  return []
+}
+
+function pickRandomSoundIndex(totalCount, previousIndex) {
+  if (totalCount <= 1) {
+    return 0
+  }
+
+  let nextIndex = Math.floor(Math.random() * totalCount)
+
+  while (nextIndex === previousIndex) {
+    nextIndex = Math.floor(Math.random() * totalCount)
+  }
+
+  return nextIndex
+}
 
 async function handleReaction(
   songId,

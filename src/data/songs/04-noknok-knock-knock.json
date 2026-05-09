@@ -2,7 +2,7 @@
     "id": "noknok-knock-knock",
     "order": 4,
     "isActive": true,
-    "title": "녹녹",
+    "title": "Knock Knock",
     "subtitle": "예상치 못한 이별과 쏟아지는 비 속에서 나온 노래",
     "themeColor": "#18202a",
     "textColor": "#f6efe5",
@@ -20,6 +20,19 @@
       "object2": false,
       "object3": true,
       "object4": false
+    },
+    "soundAction": {
+      "icon": "⚡",
+      "label": "천둥 재생",
+      "helperText": "10초에 한 번, 천둥을 울릴 수 있습니다.",
+      "cooldownSeconds": 10,
+      "soundFiles": [
+        "/assets/sounds/knock_knock/Thunder4_high_1.wav",
+        "/assets/sounds/knock_knock/Thunder_calm_1.wav",
+        "/assets/sounds/knock_knock/Thunder_loudest_1.wav",
+        "/assets/sounds/knock_knock/Thunder_medium_1.wav",
+        "/assets/sounds/knock_knock/Thunder_sharp_1.wav"
+      ]
     },
     "mapImage": "/assets/maps/song-04-map.svg",
     "lyrics": "[Verse1]\nknock knock\n그 문은 닫혀있단 걸\n나는 알아\n간절히 똑똑 두드려도\n아무리 애를 써본대도\n이미 텅 비어있는 방인걸\n\n뚝뚝\n하늘엔 먹구름이 보여\n그걸 알아차렸을 땐\n이미 너무 늦어버렸고\n비는 흠뻑 내리고 있는걸\n\n뚝뚝\n그 모습 앞에 난 또 그저 좋은 사람\n밤새 고민한 말들에\n다소 안심한 듯 보여\n난 어른인 척 하는 애인걸\n그저 어른인 척 하는 애인걸\n비는 내리고 있는 걸\n\n[Chorus]\n체릿빛깔 열매를 맺은 한 그루 나무가 되고 싶어요\n그댈 위한 그늘은 비워둘게요\n내리는 비도 그대 나와 함께라면\n분명 즐거운 하루일거에요\nGet back to where I used to be\n잠시 행복한 꿈을 꿨어요\n난 다시 힘차게 나아가\n우산도 없이 퍼붓는 이 빗 속으로\n난 더 젖을 것도 없지\n젖을 것도 없지\n\n[Outro]\nknock knock\n그 문은 닫혀있단 걸\n나도 알아\nknock knock\nknock knock",

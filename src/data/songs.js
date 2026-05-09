@@ -55,15 +55,31 @@ function normalizeSong(song) {
     },
     backgroundImage: '',
     mapImage: '/assets/maps/song-01-map.svg',
+    soundAction: null,
     lyrics: '여기에 가사를 입력하세요.',
     behindStory: '여기에 비하인드 스토리를 입력하세요.',
     ...song,
   }
 
+  const normalizedSoundAction = normalizedSong.soundAction
+    ? {
+        cooldownSeconds: 10,
+        icon: '⚡',
+        label: '특수 사운드',
+        helperText: '',
+        ...normalizedSong.soundAction,
+        soundFile: withBaseUrl(normalizedSong.soundAction.soundFile),
+        soundFiles: Array.isArray(normalizedSong.soundAction.soundFiles)
+          ? normalizedSong.soundAction.soundFiles.map(withBaseUrl)
+          : [],
+      }
+    : null
+
   return {
     ...normalizedSong,
     mapImage: withBaseUrl(normalizedSong.mapImage),
     backgroundImage: withBaseUrl(normalizedSong.backgroundImage),
+    soundAction: normalizedSoundAction,
   }
 }
 
