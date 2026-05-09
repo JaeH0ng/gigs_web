@@ -51,6 +51,7 @@
   backdrop-filter: blur(18px);
   overflow: hidden;
   position: relative;
+  perspective: 1600px;
 }
 
 .mobile-frame::before {
@@ -86,6 +87,7 @@
   display: grid;
   align-content: start;
   gap: 12px;
+  transform-origin: center center;
 }
 
 .eyebrow {
@@ -112,6 +114,7 @@
 .song-title {
   font-size: clamp(2rem, 8vw, 3rem);
   line-height: 0.92;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.24);
 }
 
 .placeholder-panel,
@@ -285,33 +288,118 @@
   color: color-mix(in srgb, var(--text-color) 72%, white);
 }
 
+.panel-dock {
+  position: sticky;
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding-top: 4px;
+  z-index: 3;
+}
+
+.dock-button,
+.panel-close {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(7, 8, 10, 0.42);
+  color: var(--text-color);
+  backdrop-filter: blur(12px);
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dock-button {
+  min-height: 40px;
+  padding: 0 14px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.panel-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  align-items: end;
+  background: linear-gradient(180deg, rgba(7, 8, 10, 0.05), rgba(7, 8, 10, 0.45));
+}
+
+.panel-sheet {
+  border-radius: 24px 24px 0 0;
+  background: rgba(14, 16, 18, 0.88);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  padding: 16px 16px 18px;
+  display: grid;
+  gap: 12px;
+  animation: panel-rise 0.28s ease both;
+}
+
+.panel-sheet__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-sheet__header h2 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.panel-close {
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+.prose-block--sheet {
+  max-height: min(48svh, 420px);
+  padding: 0;
+}
+
 .song-screen--forward {
-  animation: slide-in-forward 0.42s ease both;
+  animation: page-turn-forward 0.48s ease both;
 }
 
 .song-screen--backward {
-  animation: slide-in-backward 0.42s ease both;
+  animation: page-turn-backward 0.48s ease both;
 }
 
-@keyframes slide-in-forward {
+@keyframes page-turn-forward {
   0% {
     opacity: 0;
-    transform: translate3d(32px, 0, 0);
+    transform: translate3d(28px, 0, 0) rotateY(-16deg) scale(0.985);
+    filter: drop-shadow(-14px 0 18px rgba(0, 0, 0, 0.2));
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
   }
 }
 
-@keyframes slide-in-backward {
+@keyframes page-turn-backward {
   0% {
     opacity: 0;
-    transform: translate3d(-32px, 0, 0);
+    transform: translate3d(-28px, 0, 0) rotateY(16deg) scale(0.985);
+    filter: drop-shadow(14px 0 18px rgba(0, 0, 0, 0.2));
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+}
+
+@keyframes panel-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

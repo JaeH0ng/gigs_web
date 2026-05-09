@@ -12,7 +12,8 @@
     'Avenir Next', 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR',
     'Malgun Gothic', sans-serif;
   --font-display:
-    'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    'Nanum Pen Script', 'Bradley Hand', 'Apple Chancery',
+    'Segoe Print', 'Comic Sans MS', cursive;
 }
 
 * {

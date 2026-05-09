@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   HashRouter,
   Navigate,
@@ -105,6 +105,10 @@ function SongPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { songId } = useParams()
+  const [activePanel, setActivePanel] = useState({
+    songKey: null,
+    type: null,
+  })
 
   const song = useMemo(() => {
     return performanceSongs.find(
@@ -149,6 +153,8 @@ function SongPage() {
   if (!song) {
     return <Navigate to="/intro" replace />
   }
+
+  const visiblePanel = activePanel.songKey === song.id ? activePanel.type : null
 
   return (
     <MobileFrame
@@ -210,25 +216,64 @@ function SongPage() {
           </ul>
         </section>
 
-        <details className="fold-card">
-          <summary>가사 펼쳐보기</summary>
-          <div className="prose-block">
-            {song.lyrics.split('\n').map((line, index) => (
-              <p key={`${song.id}-lyric-${index}`}>{line || <br />}</p>
-            ))}
-          </div>
-        </details>
-
-        <details className="fold-card">
-          <summary>곡 이야기 펼쳐보기</summary>
-          <div className="prose-block">
-            {song.behindStory.split('\n').map((line, index) => (
-              <p key={`${song.id}-story-${index}`}>{line || <br />}</p>
-            ))}
-          </div>
-        </details>
-
         <p className="swipe-hint">오른쪽으로 이전, 왼쪽으로 다음</p>
+
+        <div className="panel-dock">
+          <button
+            type="button"
+            className="dock-button"
+            onClick={() => setActivePanel({ songKey: song.id, type: 'lyrics' })}
+          >
+            가사 보기
+          </button>
+          <button
+            type="button"
+            className="dock-button"
+            onClick={() => setActivePanel({ songKey: song.id, type: 'story' })}
+          >
+            곡 이야기
+          </button>
+        </div>
+
+        {visiblePanel ? (
+          <div
+            className="panel-overlay"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setActivePanel({ songKey: null, type: null })}
+          >
+            <section
+              className="panel-sheet"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="panel-sheet__header">
+                <div>
+                  <p className="eyebrow">
+                    {visiblePanel === 'lyrics' ? 'Lyrics' : 'Behind Story'}
+                  </p>
+                  <h2>
+                    {visiblePanel === 'lyrics' ? '가사' : '곡 이야기'}
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  className="panel-close"
+                  onClick={() => setActivePanel({ songKey: null, type: null })}
+                  aria-label="닫기"
+                >
+                  닫기
+                </button>
+              </div>
+              <div className="prose-block prose-block--sheet">
+                {(visiblePanel === 'lyrics' ? song.lyrics : song.behindStory)
+                  .split('\n')
+                  .map((line, index) => (
+                    <p key={`${song.id}-${visiblePanel}-${index}`}>{line || <br />}</p>
+                  ))}
+              </div>
+            </section>
+          </div>
+        ) : null}
       </article>
     </MobileFrame>
   )
