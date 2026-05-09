@@ -21,12 +21,17 @@ const songModules = import.meta.glob('./songs/*.json', {
   import: 'default',
 })
 
+const assetVersion = __APP_VERSION__
+
 function withBaseUrl(path) {
   if (!path || !path.startsWith('/')) {
     return path
   }
 
-  return `${import.meta.env.BASE_URL}${path.slice(1)}`
+  const basePath = `${import.meta.env.BASE_URL}${path.slice(1)}`
+  const separator = basePath.includes('?') ? '&' : '?'
+
+  return `${basePath}${separator}v=${assetVersion}`
 }
 
 function normalizeSong(song) {

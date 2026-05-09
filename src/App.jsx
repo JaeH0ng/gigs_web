@@ -32,6 +32,64 @@ const endingTheme = {
 }
 
 function App() {
+  useEffect(() => {
+    const faviconHref = `${import.meta.env.BASE_URL}favicon.svg?v=${__APP_VERSION__}`
+    let favicon = document.querySelector("link[rel='icon']")
+
+    if (!favicon) {
+      favicon = document.createElement('link')
+      favicon.setAttribute('rel', 'icon')
+      favicon.setAttribute('type', 'image/svg+xml')
+      document.head.appendChild(favicon)
+    }
+
+    favicon.setAttribute('href', faviconHref)
+  }, [])
+
+  useEffect(() => {
+    const versionCheckKey = 'gigs-web-last-reloaded-version'
+
+    async function ensureLatestBuild() {
+      try {
+        const versionUrl = `${import.meta.env.BASE_URL}version.json?ts=${Date.now()}`
+        const response = await fetch(versionUrl, {
+          cache: 'no-store',
+          headers: {
+            'cache-control': 'no-store',
+          },
+        })
+
+        if (!response.ok) {
+          return
+        }
+
+        const payload = await response.json()
+        const latestVersion = payload?.version
+
+        if (!latestVersion || latestVersion === __APP_VERSION__) {
+          sessionStorage.removeItem(versionCheckKey)
+          return
+        }
+
+        const alreadyReloadedVersion = sessionStorage.getItem(versionCheckKey)
+
+        if (alreadyReloadedVersion === latestVersion) {
+          return
+        }
+
+        sessionStorage.setItem(versionCheckKey, latestVersion)
+
+        const nextUrl = new URL(window.location.href)
+        nextUrl.searchParams.set('appv', latestVersion)
+        window.location.replace(nextUrl.toString())
+      } catch {
+        // Ignore version check failures and keep the current page usable.
+      }
+    }
+
+    ensureLatestBuild()
+  }, [])
+
   return (
     <HashRouter>
       <Routes>
@@ -48,7 +106,7 @@ function App() {
 function IntroPage() {
   const navigate = useNavigate()
   const firstSong = performanceSongs[0]
-  const landingLogoSrc = `${import.meta.env.BASE_URL}assets/logos/landing-logo.png`
+  const landingLogoSrc = `${import.meta.env.BASE_URL}assets/logos/landing-logo.png?v=${__APP_VERSION__}`
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (firstSong) {
@@ -120,7 +178,7 @@ function SongPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { songId } = useParams()
-  const headerLogoSrc = `${import.meta.env.BASE_URL}assets/logos/header-logo.png`
+  const headerLogoSrc = `${import.meta.env.BASE_URL}assets/logos/header-logo.png?v=${__APP_VERSION__}`
   const [activePanel, setActivePanel] = useState({
     songKey: null,
     type: null,
