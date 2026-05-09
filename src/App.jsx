@@ -576,52 +576,114 @@ function LogoSlot({ src, alt, className, fallback }) {
 }
 
 function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
-  const pointerStartRef = useRef({ x: 0, y: 0, active: false, pointerId: null })
+  const gestureStateRef = useRef({
+    x: 0,
+    y: 0,
+    active: false,
+    pointerId: null,
+  })
+
+  function resetGesture() {
+    gestureStateRef.current = {
+      x: 0,
+      y: 0,
+      active: false,
+      pointerId: null,
+    }
+  }
+
+  function startGesture(x, y, pointerId = null) {
+    gestureStateRef.current = {
+      x,
+      y,
+      active: true,
+      pointerId,
+    }
+  }
+
+  function endGesture(x, y) {
+    if (!gestureStateRef.current.active) {
+      return
+    }
+
+    const deltaX = x - gestureStateRef.current.x
+    const deltaY = y - gestureStateRef.current.y
+
+    resetGesture()
+
+    if (Math.abs(deltaX) < 56 || Math.abs(deltaX) < Math.abs(deltaY)) {
+      return
+    }
+
+    if (deltaX < 0) {
+      onSwipeLeft?.()
+    } else {
+      onSwipeRight?.()
+    }
+  }
 
   return {
     onPointerDown: (event) => {
-      pointerStartRef.current = {
-        x: event.clientX,
-        y: event.clientY,
-        active: true,
-        pointerId: event.pointerId,
+      startGesture(event.clientX, event.clientY, event.pointerId)
+
+      if (typeof event.currentTarget.setPointerCapture === 'function') {
+        event.currentTarget.setPointerCapture(event.pointerId)
       }
     },
     onPointerUp: (event) => {
       if (
-        !pointerStartRef.current.active ||
-        pointerStartRef.current.pointerId !== event.pointerId
+        !gestureStateRef.current.active ||
+        gestureStateRef.current.pointerId !== event.pointerId
       ) {
         return
       }
 
-      const deltaX = event.clientX - pointerStartRef.current.x
-      const deltaY = event.clientY - pointerStartRef.current.y
-
-      pointerStartRef.current = {
-        x: 0,
-        y: 0,
-        active: false,
-        pointerId: null,
+      if (typeof event.currentTarget.releasePointerCapture === 'function') {
+        try {
+          event.currentTarget.releasePointerCapture(event.pointerId)
+        } catch {
+          // Ignore release failures when capture has already been cleared.
+        }
       }
 
-      if (Math.abs(deltaX) < 56 || Math.abs(deltaX) < Math.abs(deltaY)) {
+      endGesture(event.clientX, event.clientY)
+    },
+    onPointerCancel: () => {
+      resetGesture()
+    },
+    onTouchStart: (event) => {
+      if (window.PointerEvent) {
         return
       }
 
-      if (deltaX < 0) {
-        onSwipeLeft?.()
-      } else {
-        onSwipeRight?.()
+      const touch = event.touches[0]
+
+      if (!touch) {
+        return
       }
+
+      startGesture(touch.clientX, touch.clientY)
     },
-    onPointerCancel: () => {
-      pointerStartRef.current = {
-        x: 0,
-        y: 0,
-        active: false,
-        pointerId: null,
+    onTouchEnd: (event) => {
+      if (window.PointerEvent || !gestureStateRef.current.active) {
+        return
       }
+
+      const touch = event.changedTouches[0]
+
+      if (!touch) {
+        resetGesture()
+        return
+      }
+
+      endGesture(touch.clientX, touch.clientY)
+    },
+    onTouchCancel: () => {
+      if (window.PointerEvent) {
+        return
+      }
+
+      resetGesture()
     },
   }
 }

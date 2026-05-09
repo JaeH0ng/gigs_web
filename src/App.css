@@ -69,6 +69,9 @@
   position: relative;
   z-index: 1;
   padding: 16px;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .intro-screen {
