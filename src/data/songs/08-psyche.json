@@ -1,0 +1,27 @@
+{
+    "id": "psyche",
+    "order": 8,
+    "isActive": true,
+    "title": "Psyche",
+    "subtitle": "자신을 태워가면서까지 무언가를 열렬히 사랑했던 마음에 대한 노래",
+    "themeColor": "#241822",
+    "textColor": "#f6efe5",
+    "accentColor": "#f1c84b",
+    "backgroundImage": "",
+    "interactionSummary": "나비, 고치, 깊은 밤의 이미지를 확장하는 시각 인터렉션",
+    "interactionInstructions": [
+      "노란색으로 표시된 파사드 구역을 중심으로 시선을 열어 주세요.",
+      "이 곡에서는 빛과 이미지가 감정의 흐름에 맞춰 변화합니다."
+    ],
+    "interactionZones": {
+      "tentFacade": true,
+      "audienceFloor": true,
+      "object1": false,
+      "object2": true,
+      "object3": false,
+      "object4": true
+    },
+    "mapImage": "/assets/maps/song-08-map.svg",
+    "lyrics": "[1절]\n비좁은 그 길 위에서\n억지로 나를 밀어내진 마요\n외로운 이 길 위에 놓여\n서성이고 헤매는 나는 어디로\n\n우리\n좋았던 그 기억들은\n그때 그 거리를 가득 채운 낙엽같은\n웃음되어 무심히 바스락대고 있어\n팔랑이며 온 나비처럼\n\nLet's dive into cocoon\nForget all this world by noon\n\nLet's hide under the tree and\nSee the world fade away\n\n더는 기대고 싶지 않아\n아아\n이미 알고 있었잖아 나는\nDon't wanna die but\nDon't wanna live like this\n어제와 다를 바 없는 하루인데 어느새\n고요한 세상을 뒤덮은 깊은 밤\n깊어진 밤의 어둠 위에 수놓인 Oh\n짙은 달\n\n[2절]\n사랑\n그 앞에 우린 바보가 되지\n그 잔인함은\n가시 돋친 붉은 장미같이\n\n목소리 없던 삶이어도\n그 안에 짓눌려 있던 욕심도\n창밖을 바라보기만 한 소년은\n사실은 솟구치고 싶었어 자유롭게\n\n더는 지고 싶지 않아 나에게\n저기 저 돌 틈 속 던져진 잎새도\n말없이 뿌리를 뻗어 고개를 들어\n어서 집중해 저 별은 널 위해 떠 있어\n\n하늘 아래 땅 위에\n오직 점 하나 싣고 팔랑이는 그\n꿈을 꾼 죄, 기꺼이 벌을 받으리\n\n내 안에 틀어박힌\n이성조차 무릎 꿇은\n관능 앞에서 deep dive into me\n\n하늘 아래 땅 위에\n오직 점 하나 싣고 팔랑이는 그\n꿈을 꾼 죄, 기꺼이 벌을 받으리\n\n내 안에 틀어박힌\n이성조차 무릎 꿇은\n관능 앞에서 deep dive into me\n\n되돌려 받기 위한 친절은\t(집어치워)\n짓눌려 있던 그 얼굴도\t\t(walk away from it)\n사랑의 불씨는 어느덧 내게로\n비릿한 정신 승리는 이젠 곤란해 yeah\nUmm\n\n[3절]\n어김없이 찾아온 인간의 굴레에\n또다시 우린 물에 빠지겠지만\n온몸이 흠뻑 젖어 초라하고 \n축 처진 생쥐 꼴에도 우리\n웃음을 잃지 않기로 해\n\n어김없이 찾아온 인간의 굴레에\n또다시 우린 물에 빠지겠지만\n온몸이 흠뻑 젖어 초라하고 \n축 처진 생쥐 꼴에도 우리\n웃음을 잃지 않기로 해\n\n나를 이끌던 그때 그 소녀\n천진난만한 나의 그 미소\n그댄 지금 무얼 하고 있나요\n무척 보고 싶네요\n\n떠나간 그 길 위에서 부디\n넘어져 울고 있진 않기를",
+    "behindStory": "무언가를 열렬히 사랑해 보신 적 있으신가요? 꼭 연인에 대한 사랑에 대해서만 이야기하고 싶은 건 아닙니다. 자신을 전부 태워가면서까지 무언가를 열렬히 사랑했던 그 마음을 담고 싶었습니다."
+  }

@@ -1,0 +1,27 @@
+{
+    "id": "noknok-knock-knock",
+    "order": 4,
+    "isActive": true,
+    "title": "녹녹",
+    "subtitle": "예상치 못한 이별과 쏟아지는 비 속에서 나온 노래",
+    "themeColor": "#18202a",
+    "textColor": "#f6efe5",
+    "accentColor": "#f1c84b",
+    "backgroundImage": "",
+    "interactionSummary": "비와 문 두드림의 감각을 활용한 사운드 인터렉션",
+    "interactionInstructions": [
+      "노란색으로 표시된 구역은 비와 노크 사운드가 활성화되는 위치입니다.",
+      "해당 오브젝트를 만지면 빗소리 위로 짧은 사운드 레이어가 더해집니다."
+    ],
+    "interactionZones": {
+      "tentFacade": true,
+      "audienceFloor": false,
+      "object1": false,
+      "object2": false,
+      "object3": true,
+      "object4": false
+    },
+    "mapImage": "/assets/maps/song-04-map.svg",
+    "lyrics": "[Verse1]\nknock knock\n그 문은 닫혀있단 걸\n나는 알아\n간절히 똑똑 두드려도\n아무리 애를 써본대도\n이미 텅 비어있는 방인걸\n\n뚝뚝\n하늘엔 먹구름이 보여\n그걸 알아차렸을 땐\n이미 너무 늦어버렸고\n비는 흠뻑 내리고 있는걸\n\n뚝뚝\n그 모습 앞에 난 또 그저 좋은 사람\n밤새 고민한 말들에\n다소 안심한 듯 보여\n난 어른인 척 하는 애인걸\n그저 어른인 척 하는 애인걸\n비는 내리고 있는 걸\n\n[Chorus]\n체릿빛깔 열매를 맺은 한 그루 나무가 되고 싶어요\n그댈 위한 그늘은 비워둘게요\n내리는 비도 그대 나와 함께라면\n분명 즐거운 하루일거에요\nGet back to where I used to be\n잠시 행복한 꿈을 꿨어요\n난 다시 힘차게 나아가\n우산도 없이 퍼붓는 이 빗 속으로\n난 더 젖을 것도 없지\n젖을 것도 없지\n\n[Outro]\nknock knock\n그 문은 닫혀있단 걸\n나도 알아\nknock knock\nknock knock",
+    "behindStory": "예상할 수 없었던 이별이 찾아온 날, 어두운 하늘에선 비가 참 많이 왔습니다. 나는 우산도 없이 온몸이 젖어버렸고, 더는 젖을 것도 없었습니다. 그때의 마음이 쏟아져 나온 곡입니다."
+  }

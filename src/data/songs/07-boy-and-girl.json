@@ -1,0 +1,27 @@
+{
+  "id": "boy-and-girl",
+  "order": 7,
+  "isActive": true,
+  "title": "소년과 소녀",
+  "subtitle": "일곱 번째 곡 설명을 입력하세요.",
+  "themeColor": "#1e2431",
+  "textColor": "#f6efe5",
+  "accentColor": "#f0cd52",
+  "backgroundImage": "",
+  "interactionSummary": "파사드 영상과 물체 3이 연결되는 곡",
+  "interactionInstructions": [
+    "먼저 파사드 쪽 영상을 보고, 이어서 물체 3 근처를 확인해 주세요.",
+    "시선 이동과 접촉 타이밍이 맞물리면 보컬 이펙트가 커집니다."
+  ],
+  "interactionZones": {
+    "tentFacade": true,
+    "audienceFloor": false,
+    "object1": false,
+    "object2": false,
+    "object3": true,
+    "object4": false
+  },
+  "mapImage": "/assets/maps/song-07-map.svg",
+  "lyrics": "여기에 7번 곡 가사를 입력하세요.\n\n줄바꿈은 그대로 화면에 반영됩니다.",
+  "behindStory": "여기에 7번 곡 비하인드 스토리를 입력하세요.\n\n공연에서 이 곡이 맡는 역할과 관객이 어떤 감각으로 받아들이면 좋은지 적어두면 좋습니다."
+}

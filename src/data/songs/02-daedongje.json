@@ -1,0 +1,27 @@
+{
+  "id": "daedongje",
+  "order": 2,
+  "isActive": true,
+  "title": "대동제",
+  "subtitle": "두 번째 곡 설명을 입력하세요.",
+  "themeColor": "#16252d",
+  "textColor": "#f6efe5",
+  "accentColor": "#ffd447",
+  "backgroundImage": "",
+  "interactionSummary": "관객 바닥 인터렉션이 중심이 되는 장면",
+  "interactionInstructions": [
+    "바닥에 표시된 노란 구역을 확인해 주세요.",
+    "주변 관객의 움직임이 이어질수록 공간감이 넓어집니다."
+  ],
+  "interactionZones": {
+    "tentFacade": false,
+    "audienceFloor": true,
+    "object1": false,
+    "object2": false,
+    "object3": false,
+    "object4": false
+  },
+  "mapImage": "/assets/maps/song-02-map.svg",
+  "lyrics": "여기에 2번 곡 가사를 입력하세요.\n\n줄바꿈은 그대로 화면에 반영됩니다.",
+  "behindStory": "여기에 2번 곡 비하인드 스토리를 입력하세요.\n\n공연에서 이 곡이 맡는 역할과 관객이 어떤 감각으로 받아들이면 좋은지 적어두면 좋습니다."
+}

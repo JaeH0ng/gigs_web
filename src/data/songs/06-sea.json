@@ -1,0 +1,27 @@
+{
+  "id": "sea",
+  "order": 6,
+  "isActive": true,
+  "title": "바다",
+  "subtitle": "여섯 번째 곡 설명을 입력하세요.",
+  "themeColor": "#28201d",
+  "textColor": "#f6efe5",
+  "accentColor": "#ffd447",
+  "backgroundImage": "",
+  "interactionSummary": "관객 바닥과 물체 1, 물체 2가 함께 반응하는 곡",
+  "interactionInstructions": [
+    "바닥 구역과 두 오브젝트 중 가까운 위치를 골라 참여해 주세요.",
+    "여러 지점의 접촉이 겹칠수록 리듬이 두꺼워집니다."
+  ],
+  "interactionZones": {
+    "tentFacade": false,
+    "audienceFloor": true,
+    "object1": true,
+    "object2": true,
+    "object3": false,
+    "object4": false
+  },
+  "mapImage": "/assets/maps/song-06-map.svg",
+  "lyrics": "여기에 6번 곡 가사를 입력하세요.\n\n줄바꿈은 그대로 화면에 반영됩니다.",
+  "behindStory": "여기에 6번 곡 비하인드 스토리를 입력하세요.\n\n공연에서 이 곡이 맡는 역할과 관객이 어떤 감각으로 받아들이면 좋은지 적어두면 좋습니다."
+}
