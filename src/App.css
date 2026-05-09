@@ -537,6 +537,7 @@
   text-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
   animation: heart-float 2.2s ease-out forwards;
   animation-delay: var(--heart-delay);
+  will-change: transform, opacity;
 }
 
 .floating-heart--remote {
@@ -614,7 +615,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate3d(-8px, -180px, 0) scale(1.12) rotate(-8deg);
+    transform: translate3d(var(--heart-drift, -8px), -220px, 0) scale(1.16) rotate(-10deg);
   }
 }
 
