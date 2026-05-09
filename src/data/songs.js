@@ -21,8 +21,16 @@ const songModules = import.meta.glob('./songs/*.json', {
   import: 'default',
 })
 
+function withBaseUrl(path) {
+  if (!path || !path.startsWith('/')) {
+    return path
+  }
+
+  return `${import.meta.env.BASE_URL}${path.slice(1)}`
+}
+
 function normalizeSong(song) {
-  return {
+  const normalizedSong = {
     id: '',
     order: 1,
     isActive: true,
@@ -45,6 +53,12 @@ function normalizeSong(song) {
     lyrics: '여기에 가사를 입력하세요.',
     behindStory: '여기에 비하인드 스토리를 입력하세요.',
     ...song,
+  }
+
+  return {
+    ...normalizedSong,
+    mapImage: withBaseUrl(normalizedSong.mapImage),
+    backgroundImage: withBaseUrl(normalizedSong.backgroundImage),
   }
 }
 
