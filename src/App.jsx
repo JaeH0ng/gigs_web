@@ -696,6 +696,18 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
     pointerId: null,
   })
 
+  function isInteractiveTarget(target) {
+    if (!(target instanceof Element)) {
+      return false
+    }
+
+    return Boolean(
+      target.closest(
+        'button, a, input, textarea, select, label, summary, [role="dialog"], [data-no-swipe="true"]',
+      ),
+    )
+  }
+
   function resetGesture() {
     gestureStateRef.current = {
       x: 0,
@@ -737,6 +749,10 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
 
   return {
     onPointerDown: (event) => {
+      if (isInteractiveTarget(event.target)) {
+        return
+      }
+
       startGesture(event.clientX, event.clientY, event.pointerId)
 
       if (typeof event.currentTarget.setPointerCapture === 'function') {
@@ -766,6 +782,10 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
     },
     onTouchStart: (event) => {
       if (window.PointerEvent) {
+        return
+      }
+
+      if (isInteractiveTarget(event.target)) {
         return
       }
 
