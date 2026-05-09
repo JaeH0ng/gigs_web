@@ -129,7 +129,7 @@ function SongPage() {
   const [reactionCounts, setReactionCounts] = useState({})
   const [channelStatus, setChannelStatus] = useState('idle')
   const [reactionError, setReactionError] = useState('')
-  const clientIdRef = useRef(getSessionClientId())
+  const clientIdRef = useRef(window.crypto.randomUUID())
   const reactionCountsRef = useRef({})
 
   const song = useMemo(() => {
@@ -462,6 +462,7 @@ function SongPage() {
                 '--heart-size': `${reaction.size}px`,
                 '--heart-delay': `${reaction.delay}ms`,
                 '--heart-drift': `${reaction.drift}px`,
+                '--heart-duration': `${reaction.duration}ms`,
               }}
             >
               {reaction.symbol}
@@ -569,19 +570,6 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
 
 export default App
 
-function getSessionClientId() {
-  const storageKey = 'gigs-web-session-client-id'
-  const existingId = window.sessionStorage.getItem(storageKey)
-
-  if (existingId) {
-    return existingId
-  }
-
-  const nextId = window.crypto.randomUUID()
-  window.sessionStorage.setItem(storageKey, nextId)
-  return nextId
-}
-
 async function handleReaction(
   songId,
   reactionType,
@@ -607,41 +595,40 @@ async function handleReaction(
 }
 
 function spawnReactionBurst(setFloatingReactions, reactionType, variant, burstStrength = 1) {
-  const burstCount = 2 + burstStrength
-
-  Array.from({ length: burstCount }).forEach((_, index) => {
-    window.setTimeout(() => {
-      spawnReaction(setFloatingReactions, reactionType, variant, burstStrength)
-    }, index * 70)
-  })
-}
-
-function spawnReaction(setFloatingReactions, reactionType, variant, burstStrength = 1) {
   const reactionMeta = reactionTypes.find((reaction) => reaction.id === reactionType)
 
   if (!reactionMeta) {
     return
   }
 
-  const reaction = {
-    id: `${variant}-${window.crypto.randomUUID()}`,
-    left: 12 + Math.random() * 72,
-    size: 18 + Math.round(Math.random() * (18 + burstStrength * 2)),
-    delay: Math.round(Math.random() * 80),
-    variant,
-    reactionType,
-    symbol: reactionMeta.symbol,
-    drift: -20 + Math.random() * 40,
-    duration: 1900 + Math.round(Math.random() * 700),
-  }
+  const burstCount = 4 + burstStrength * 2
+  const baseLeft = 16 + Math.random() * 60
+  const reactions = Array.from({ length: burstCount }, (_, index) => {
+    const delay = Math.round(Math.random() * 180) + index * 18
+    const duration = 1800 + Math.round(Math.random() * 900)
 
-  setFloatingReactions((current) => [...current, reaction])
+    return {
+      id: `${variant}-${window.crypto.randomUUID()}`,
+      left: Math.max(6, Math.min(88, baseLeft + (-10 + Math.random() * 20))),
+      size: 18 + Math.round(Math.random() * (20 + burstStrength * 3)),
+      delay,
+      duration,
+      variant,
+      reactionType,
+      symbol: reactionMeta.symbol,
+      drift: -28 + Math.random() * 56,
+    }
+  })
 
-  window.setTimeout(() => {
-    setFloatingReactions((current) =>
-      current.filter((item) => item.id !== reaction.id),
-    )
-  }, reaction.duration + reaction.delay + 120)
+  setFloatingReactions((current) => [...current, ...reactions])
+
+  reactions.forEach((reaction) => {
+    window.setTimeout(() => {
+      setFloatingReactions((current) =>
+        current.filter((item) => item.id !== reaction.id),
+      )
+    }, reaction.duration + reaction.delay + 120)
+  })
 }
 
 function getBurstStrengthFromCounts(counts) {

@@ -535,7 +535,7 @@
   color: #ffd2e1;
   opacity: 0;
   text-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
-  animation: heart-float 2.2s ease-out forwards;
+  animation: heart-float var(--heart-duration, 2200ms) ease-out forwards;
   animation-delay: var(--heart-delay);
   will-change: transform, opacity;
 }
