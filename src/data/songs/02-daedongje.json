@@ -4,9 +4,9 @@
   "isActive": true,
   "title": "대동제",
   "subtitle": "두 번째 곡 설명을 입력하세요.",
-  "themeColor": "#16252d",
-  "textColor": "#f6efe5",
-  "accentColor": "#ffd447",
+  "themeColor": "#2a2236",
+  "textColor": "#f5efe8",
+  "accentColor": "#f1c84b",
   "backgroundImage": "",
   "interactionSummary": "관객 바닥 인터렉션이 중심이 되는 장면",
   "interactionInstructions": [

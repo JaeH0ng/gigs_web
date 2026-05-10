@@ -4,9 +4,9 @@
   "isActive": true,
   "title": "홍묘",
   "subtitle": "열두 번째 곡 설명을 입력하세요.",
-  "themeColor": "#181d22",
-  "textColor": "#f6efe5",
-  "accentColor": "#ffdb5c",
+  "themeColor": "#1d3442",
+  "textColor": "#f6f1e8",
+  "accentColor": "#d65a4a",
   "backgroundImage": "",
   "interactionSummary": "피날레용 전체 공간 인터렉션",
   "interactionInstructions": [

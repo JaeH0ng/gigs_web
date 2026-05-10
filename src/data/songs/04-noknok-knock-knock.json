@@ -4,9 +4,9 @@
     "isActive": true,
     "title": "Knock Knock",
     "subtitle": "예상치 못한 이별과 쏟아지는 비 속에서 나온 노래",
-    "themeColor": "#18202a",
-    "textColor": "#f6efe5",
-    "accentColor": "#f1c84b",
+    "themeColor": "#161b22",
+  "textColor": "#edf1f3",
+  "accentColor": "#f1c84b",
     "backgroundImage": "",
     "interactionSummary": "비와 문 두드림의 감각을 활용한 사운드 인터렉션",
     "interactionInstructions": [

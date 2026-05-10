@@ -4,9 +4,9 @@
     "isActive": true,
     "title": "괜한 말",
     "subtitle": "지운 줄 알았지만 아직 남아 있던 사진과 마음에 대한 노래",
-    "themeColor": "#2a2028",
-    "textColor": "#f6efe5",
-    "accentColor": "#f1c84b",
+    "themeColor": "#241f26",
+  "textColor": "#f3ece6",
+  "accentColor": "#e8c36a",
     "backgroundImage": "",
     "interactionSummary": "기억과 잔상에 반응하는 조용한 인터렉션",
     "interactionInstructions": [

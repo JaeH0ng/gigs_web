@@ -4,9 +4,9 @@
   "isActive": true,
   "title": "바다",
   "subtitle": "여섯 번째 곡 설명을 입력하세요.",
-  "themeColor": "#28201d",
-  "textColor": "#f6efe5",
-  "accentColor": "#ffd447",
+  "themeColor": "#111f38",
+  "textColor": "#eef3f8",
+  "accentColor": "#f1c84b",
   "backgroundImage": "",
   "interactionSummary": "관객 바닥과 물체 1, 물체 2가 함께 반응하는 곡",
   "interactionInstructions": [
