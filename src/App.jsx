@@ -31,6 +31,104 @@ const endingTheme = {
   text: '#f6efe5',
 }
 
+const likertOptions = [
+  { value: 1, ko: '전혀 그렇지 않다', en: 'Strongly disagree' },
+  { value: 2, ko: '그렇지 않다', en: 'Disagree' },
+  { value: 3, ko: '보통이다', en: 'Neutral' },
+  { value: 4, ko: '그렇다', en: 'Agree' },
+  { value: 5, ko: '매우 그렇다', en: 'Strongly agree' },
+]
+
+const surveyQuestions = [
+  {
+    id: 'overall_satisfaction',
+    ko: '오늘 공연에 전반적으로 만족했다.',
+    en: 'Overall, I was satisfied with today’s performance.',
+  },
+  {
+    id: 'flow_immersion',
+    ko: '공연의 흐름이 자연스럽고 몰입하기 좋았다.',
+    en: 'The flow of the performance felt natural and immersive.',
+  },
+  {
+    id: 'space_fit',
+    ko: '공연 공간의 분위기가 곡과 잘 어울렸다.',
+    en: 'The atmosphere of the venue matched the songs well.',
+  },
+  {
+    id: 'emoji_participation',
+    ko: '웹페이지의 이모지 반응은 공연에 참여하고 있다는 느낌을 주었다.',
+    en: 'The emoji reactions on the webpage made me feel involved in the performance.',
+  },
+  {
+    id: 'shared_reactions_immersion',
+    ko: '관객들의 반응이 함께 공유되는 방식이 공연의 몰입감을 높였다.',
+    en: 'Sharing audience reactions increased my immersion in the performance.',
+  },
+  {
+    id: 'interaction_understanding',
+    ko: '인터렉션은 곡의 감정이나 분위기를 이해하는 데 도움이 되었다.',
+    en: 'The interactions helped me understand the emotions or mood of the songs.',
+  },
+  {
+    id: 'interaction_memorable',
+    ko: '인터렉션이 공연을 더 기억에 남게 만들었다.',
+    en: 'The interactions made the performance more memorable.',
+  },
+  {
+    id: 'active_participation',
+    ko: '기존의 일반적인 공연보다 더 능동적으로 참여한다고 느꼈다.',
+    en: 'Compared with a typical concert, I felt more actively involved.',
+  },
+  {
+    id: 'artistic_fit',
+    ko: '인터렉션 요소가 공연의 예술적 완성도를 해치지 않고 자연스럽게 어울렸다.',
+    en: 'The interactive elements felt natural and did not weaken the artistic quality.',
+  },
+  {
+    id: 'revisit_intent',
+    ko: '다시 비슷한 형식의 공연을 관람하고 싶다.',
+    en: 'I would like to attend a similar performance again.',
+  },
+]
+
+const featureSurveyQuestions = [
+  {
+    id: 'thunder_button_fit',
+    ko: 'Knock Knock의 천둥 버튼은 곡의 분위기와 잘 어울렸다.',
+    en: 'The thunder button in “Knock Knock” matched the mood of the song.',
+  },
+  {
+    id: 'hand_mannequin_interest',
+    ko: '누군가의의 손 모양 마네킹 인터렉션은 흥미로웠다.',
+    en: 'The hand mannequin interaction in “누군가의” was interesting.',
+  },
+]
+
+const notExperiencedOption = {
+  value: 0,
+  ko: '경험하지 못했다',
+  en: 'Did not experience',
+}
+
+const impressiveOptions = [
+  { value: 'music', ko: '음악', en: 'Music' },
+  { value: 'space', ko: '공간 연출', en: 'Spatial direction' },
+  { value: 'ceiling_projection', ko: '천장 프로젝션', en: 'Ceiling projection' },
+  { value: 'emoji_reactions', ko: '웹 이모지 반응', en: 'Web emoji reactions' },
+  { value: 'thunder_button', ko: '천둥 버튼', en: 'Thunder button' },
+  { value: 'hand_mannequin', ko: '손 모양 마네킹 인터렉션', en: 'Hand mannequin interaction' },
+  { value: 'shared_audience', ko: '관객들과 함께 참여하는 분위기', en: 'The shared audience atmosphere' },
+]
+
+const emptySurveyAnswers = {
+  ratings: Object.fromEntries(surveyQuestions.map((question) => [question.id, ''])),
+  featureRatings: Object.fromEntries(featureSurveyQuestions.map((question) => [question.id, ''])),
+  mostImpressive: '',
+  memorableMoment: '',
+  improvement: '',
+}
+
 function App() {
   useEffect(() => {
     const faviconHref = `${import.meta.env.BASE_URL}favicon.svg?v=${__APP_VERSION__}`
@@ -145,6 +243,10 @@ function IntroPage() {
 function EndingPage() {
   const navigate = useNavigate()
   const lastSong = performanceSongs[performanceSongs.length - 1]
+  const [surveyAnswers, setSurveyAnswers] = useState(emptySurveyAnswers)
+  const [surveyStatus, setSurveyStatus] = useState('idle')
+  const [surveyMessage, setSurveyMessage] = useState('')
+  const surveyClientIdRef = useRef(window.crypto.randomUUID())
   const swipeHandlers = useSwipeNavigation({
     onSwipeRight: () => {
       if (lastSong) {
@@ -160,17 +262,225 @@ function EndingPage() {
       accentColor={endingTheme.accent}
     >
       <section
-        className="intro-screen intro-screen--minimal"
+        className="intro-screen ending-screen"
         {...swipeHandlers}
       >
-        <p className="eyebrow">End</p>
-        <div className="placeholder-panel placeholder-panel--ending">
-          <p className="placeholder-note">마지막 페이지</p>
+        <header className="ending-hero">
+          <p className="eyebrow">End</p>
           <h1 className="intro-title">공연이 종료되었습니다</h1>
-        </div>
+          <p className="ending-copy">
+            아래 만족도 조사는 약 5분 정도 소요됩니다.
+            <span>Please take about 5 minutes to complete this survey.</span>
+          </p>
+        </header>
+
+        {surveyStatus === 'submitted' ? (
+          <SurveyCompleteCard />
+        ) : (
+          <form
+            className="survey-card"
+            data-no-swipe="true"
+            onSubmit={(event) =>
+              handleSurveySubmit({
+                event,
+                answers: surveyAnswers,
+                clientId: surveyClientIdRef.current,
+                setSurveyStatus,
+                setSurveyMessage,
+              })
+            }
+          >
+            <div className="section-heading">
+              <p className="eyebrow">Survey</p>
+              <h2>만족도 조사 참여</h2>
+            </div>
+
+            <div className="survey-note">
+              <p>1은 가장 낮은 동의, 5는 가장 높은 동의입니다.</p>
+              <p>1 means the lowest agreement, and 5 means the highest agreement.</p>
+            </div>
+
+            <div className="survey-question-list">
+              {surveyQuestions.map((question, index) => (
+                <SurveyScaleQuestion
+                  key={question.id}
+                  index={index + 1}
+                  question={question}
+                  value={surveyAnswers.ratings[question.id]}
+                  options={likertOptions}
+                  name={`rating-${question.id}`}
+                  onChange={(nextValue) =>
+                    setSurveyAnswers((current) => ({
+                      ...current,
+                      ratings: {
+                        ...current.ratings,
+                        [question.id]: nextValue,
+                      },
+                    }))
+                  }
+                />
+              ))}
+
+              {featureSurveyQuestions.map((question, index) => (
+                <SurveyScaleQuestion
+                  key={question.id}
+                  index={surveyQuestions.length + index + 1}
+                  question={question}
+                  value={surveyAnswers.featureRatings[question.id]}
+                  options={[notExperiencedOption, ...likertOptions]}
+                  name={`feature-${question.id}`}
+                  onChange={(nextValue) =>
+                    setSurveyAnswers((current) => ({
+                      ...current,
+                      featureRatings: {
+                        ...current.featureRatings,
+                        [question.id]: nextValue,
+                      },
+                    }))
+                  }
+                />
+              ))}
+
+              <fieldset className="survey-fieldset">
+                <legend>
+                  <span>13. 이번 공연에서 가장 인상 깊었던 요소는 무엇인가요?</span>
+                  <small>What was the most memorable element of this performance?</small>
+                </legend>
+                <div className="choice-grid">
+                  {impressiveOptions.map((option) => (
+                    <label key={option.value} className="choice-option">
+                      <input
+                        type="radio"
+                        name="most-impressive"
+                        value={option.value}
+                        checked={surveyAnswers.mostImpressive === option.value}
+                        onChange={(event) =>
+                          setSurveyAnswers((current) => ({
+                            ...current,
+                            mostImpressive: event.target.value,
+                          }))
+                        }
+                      />
+                      <span>
+                        {option.ko}
+                        <small>{option.en}</small>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <SurveyTextQuestion
+                index={14}
+                labelKo="가장 기억에 남은 순간이나 인터렉션을 적어주세요."
+                labelEn="Please write the moment or interaction you remember most."
+                value={surveyAnswers.memorableMoment}
+                onChange={(nextValue) =>
+                  setSurveyAnswers((current) => ({
+                    ...current,
+                    memorableMoment: nextValue,
+                  }))
+                }
+              />
+
+              <SurveyTextQuestion
+                index={15}
+                labelKo="개선되었으면 하는 점이 있다면 적어주세요."
+                labelEn="Please share anything you think could be improved."
+                value={surveyAnswers.improvement}
+                onChange={(nextValue) =>
+                  setSurveyAnswers((current) => ({
+                    ...current,
+                    improvement: nextValue,
+                  }))
+                }
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="survey-submit"
+              disabled={surveyStatus === 'submitting'}
+            >
+              {surveyStatus === 'submitting'
+                ? '제출 중 / Submitting'
+                : '제출하기 / Submit'}
+            </button>
+
+            {surveyMessage ? (
+              <p className={`survey-message survey-message--${surveyStatus}`}>
+                {surveyMessage}
+              </p>
+            ) : null}
+          </form>
+        )}
+
         <p className="swipe-hint">오른쪽으로 스와이프</p>
       </section>
     </MobileFrame>
+  )
+}
+
+function SurveyScaleQuestion({ index, question, value, options, name, onChange }) {
+  return (
+    <fieldset className="survey-fieldset">
+      <legend>
+        <span>{index}. {question.ko}</span>
+        <small>{question.en}</small>
+      </legend>
+      <div className="scale-options">
+        {options.map((option) => (
+          <label key={option.value} className="scale-option">
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              checked={value !== '' && Number(value) === option.value}
+              onChange={(event) => onChange(Number(event.target.value))}
+            />
+            <span>{option.value}</span>
+            <small>{option.ko}<br />{option.en}</small>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+function SurveyCompleteCard() {
+  return (
+    <section className="survey-complete-card" data-no-swipe="true" aria-live="polite">
+      <div className="survey-complete-mark" aria-hidden="true">✓</div>
+      <p className="eyebrow">Submitted</p>
+      <h2>제출이 완료되었습니다</h2>
+      <p>
+        소중한 의견이 저장되었습니다. 오늘 공연에 함께해 주셔서 감사합니다.
+      </p>
+      <p>
+        Your response has been saved. Thank you for being part of today’s performance.
+      </p>
+      <div className="survey-complete-summary">
+        <span>응답 완료</span>
+        <small>Survey completed</small>
+      </div>
+    </section>
+  )
+}
+
+function SurveyTextQuestion({ index, labelKo, labelEn, value, onChange }) {
+  return (
+    <label className="survey-text-field">
+      <span>
+        {index}. {labelKo}
+        <small>{labelEn}</small>
+      </span>
+      <textarea
+        value={value}
+        rows={4}
+        maxLength={600}
+        onChange={(event) => onChange(event.target.value)}
+      />
+    </label>
   )
 }
 
@@ -951,6 +1261,78 @@ async function handleReaction(
   if (error) {
     console.error('Failed to send reaction', error)
   }
+}
+
+async function handleSurveySubmit({
+  event,
+  answers,
+  clientId,
+  setSurveyStatus,
+  setSurveyMessage,
+}) {
+  event.preventDefault()
+
+  const missingRequiredRating = surveyQuestions.some(
+    (question) => answers.ratings[question.id] === '',
+  )
+
+  if (missingRequiredRating || !answers.mostImpressive) {
+    setSurveyStatus('error')
+    setSurveyMessage(
+      '필수 문항을 모두 선택해 주세요. / Please answer all required questions.',
+    )
+    return
+  }
+
+  const featureRatings = Object.fromEntries(
+    featureSurveyQuestions.map((question) => [
+      question.id,
+      answers.featureRatings[question.id] === ''
+        ? null
+        : Number(answers.featureRatings[question.id]),
+    ]),
+  )
+
+  const payload = {
+    client_id: clientId,
+    ratings: Object.fromEntries(
+      surveyQuestions.map((question) => [
+        question.id,
+        Number(answers.ratings[question.id]),
+      ]),
+    ),
+    feature_ratings: featureRatings,
+    most_impressive: answers.mostImpressive,
+    memorable_moment: answers.memorableMoment.trim() || null,
+    improvement: answers.improvement.trim() || null,
+  }
+
+  if (!supabaseEnabled) {
+    setSurveyStatus('error')
+    setSurveyMessage(
+      'Supabase 연결 전이라 응답을 저장하지 못했습니다. / Supabase is not connected, so the response was not saved.',
+    )
+    return
+  }
+
+  setSurveyStatus('submitting')
+  setSurveyMessage('')
+
+  const { error } = await supabase.from('audience_surveys').insert(payload)
+
+  if (error) {
+    console.error('Failed to submit survey', error)
+    setSurveyStatus('error')
+    setSurveyMessage(
+      '제출에 실패했습니다. 잠시 후 다시 시도해 주세요. / Submission failed. Please try again.',
+    )
+    return
+  }
+
+  setSurveyStatus('submitted')
+  setSurveyMessage(
+    '응답이 저장되었습니다. 참여해 주셔서 감사합니다. / Your response has been saved. Thank you.',
+  )
 }
 
 function spawnReactionBurst(setFloatingReactions, reactionType, variant, burstStrength = 1) {

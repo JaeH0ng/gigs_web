@@ -59,3 +59,34 @@ alter publication supabase_realtime add table public.song_reactions;
 - 같은 `song_id`를 보고 있는 다른 사용자들은 Realtime 구독으로 insert 이벤트를 받고,
   화면에 해당 타입의 이펙트가 떠오릅니다.
 - 본인이 누른 반응도 즉시 애니메이션으로 보입니다.
+
+## 5. 만족도 조사 테이블
+
+마지막 페이지의 관객 만족도 조사 응답을 저장하려면 Supabase SQL Editor에서 아래 SQL도 실행하세요.
+
+```sql
+create table if not exists public.audience_surveys (
+  id uuid primary key default gen_random_uuid(),
+  client_id text not null,
+  ratings jsonb not null,
+  feature_ratings jsonb not null,
+  most_impressive text not null,
+  memorable_moment text,
+  improvement text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.audience_surveys enable row level security;
+
+grant insert on public.audience_surveys to anon;
+grant insert on public.audience_surveys to authenticated;
+
+create policy "Allow public insert surveys"
+on public.audience_surveys
+for insert
+to anon, authenticated
+with check (true);
+```
+
+분석 시에는 `ratings`의 1-5점 척도 평균으로 전체 만족도, 몰입도, 능동적 참여감,
+재관람 의향 등을 계산하고, `feature_ratings`에서 `0`은 “경험하지 못했다”로 분리해서 평균에서 제외하면 됩니다.
