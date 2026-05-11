@@ -8,18 +8,18 @@
   "textColor": "#f6f1e8",
   "accentColor": "#d65a4a",
   "backgroundImage": "",
-  "interactionSummary": "피날레용 전체 공간 인터렉션",
+  "interactionSummary": "웹페이지의 이모지 반응을 통해 관객의 감정을 함께 공유하는 인터렉션",
   "interactionInstructions": [
-    "공연장의 모든 노란 표시 구역을 자유롭게 확인해 주세요.",
-    "피날레에서는 여러 구역의 반응이 한꺼번에 겹쳐집니다."
+    "곡이 진행되는 동안 웹페이지에서 like 등의 이모지를 눌러 감정을 남길 수 있습니다.",
+    "관객들이 남긴 반응은 함께 공유되며 공연장의 분위기와 연결됩니다."
   ],
   "interactionZones": {
-    "tentFacade": true,
+    "tentFacade": false,
     "audienceFloor": true,
-    "object1": true,
-    "object2": true,
-    "object3": true,
-    "object4": true
+    "object1": false,
+    "object2": false,
+    "object3": false,
+    "object4": false
   },
   "mapImage": "/assets/maps/song-12-map.svg",
   "lyrics": "[Verse]\n그때 기억나?\n우리 두 손 잡고 공원에 낙엽 밟으러 간 날들\n산수유 내음이 코 끝에 맴돌아\n눈 떼지 못한 채\n내게 뛰지 말라고 소릴 쳐도\n당신의 발걸음은 언제나 내 것을 다정히 포개고 있었어\n\n매일 졸라댔잖아, 날 좀 봐달라고\n그럴 때마다 그댄, 본 채 만 채\n그래도 있잖아, 그대와 함께 한 순간은\n전부 다 여름이었어\n\n[Chorus]\n처음 사랑을 배운 건\n마르지 않던 당신의 우물에서야\n그 덕에 나는 바다가 되어\n그 우물의 끝이 닿는 곳에서\n언제까지고 기다릴게\n붉은 닻 내린 요트 하나\n띄워놓고 기다릴게 태우러갈게\n다시 돌아가도 우린 서로를\n세상이 끝날 것 같이 사랑할까\n\n끝없을 것만 같던\n우물의 바닥이 보여\n항상 나를 비춰주던\n우물의 바닥이 보여\n그 덕에 난 바다 되어\n그댈 사랑한 이곳에서\n드넓은 세상 속에서\n워오\n\n붉은 닻 내린 요트 하나\n띄워놓고 기다릴게 태우러 갈게\n다시 돌아가도 우린 서로를\n세상이 끝날 것 같이 사랑할까\n\n[Outro]\n그대와 만든 것은\n그대와 남는 것은\n그대를 닮는 것은\n그대를 가진 것을\n\n그대와 만든 것은\n그대와 남는 것은\n그대를 닮는 것은\n그대를 가진 것을",

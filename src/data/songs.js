@@ -1,8 +1,8 @@
 export const interactionZoneLabels = {
-  tentFacade: '텐트 파사드',
-  audienceFloor: '관객 바닥',
-  object1: '물체 1',
-  object2: '물체 2',
+  tentFacade: '천장 천',
+  audienceFloor: '관객',
+  object1: '손 마네킹 1',
+  object2: '손 마네킹 2',
   object3: '물체 3',
   object4: '물체 4',
 }

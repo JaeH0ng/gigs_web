@@ -8,10 +8,10 @@
   "textColor": "#f5efe8",
   "accentColor": "#f1c84b",
   "backgroundImage": "",
-  "interactionSummary": "관객 바닥 인터렉션이 중심이 되는 장면",
+  "interactionSummary": "웹페이지의 이모지 반응을 통해 관객의 감정을 함께 공유하는 인터렉션",
   "interactionInstructions": [
-    "바닥에 표시된 노란 구역을 확인해 주세요.",
-    "주변 관객의 움직임이 이어질수록 공간감이 넓어집니다."
+    "곡이 진행되는 동안 웹페이지에서 like 등의 이모지를 눌러 감정을 남길 수 있습니다.",
+    "관객들이 남긴 반응은 함께 공유되며 공연장의 분위기와 연결됩니다."
   ],
   "interactionZones": {
     "tentFacade": false,
