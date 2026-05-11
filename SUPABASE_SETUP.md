@@ -59,6 +59,8 @@ alter publication supabase_realtime add table public.song_reactions;
 - 같은 `song_id`를 보고 있는 다른 사용자들은 Realtime 구독으로 insert 이벤트를 받고,
   화면에 해당 타입의 이펙트가 떠오릅니다.
 - 본인이 누른 반응도 즉시 애니메이션으로 보입니다.
+- `client_id`는 브라우저의 `localStorage`에 저장되는 익명 ID입니다. 같은 브라우저로 공연을 끝까지 이용하면
+  `song_reactions`와 `audience_surveys`에 같은 `client_id`가 저장되어, 반응 참여량과 설문 응답을 연결해 분석할 수 있습니다.
 
 ## 5. 만족도 조사 테이블
 
@@ -90,3 +92,4 @@ with check (true);
 
 분석 시에는 `ratings`의 1-5점 척도 평균으로 전체 만족도, 몰입도, 능동적 참여감,
 재관람 의향 등을 계산하고, `feature_ratings`에서 `0`은 “경험하지 못했다”로 분리해서 평균에서 제외하면 됩니다.
+`client_id`를 기준으로 `song_reactions`와 조인하면 관객별 이모지 반응 수와 만족도 점수를 함께 볼 수 있습니다.

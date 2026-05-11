@@ -129,6 +129,24 @@ const emptySurveyAnswers = {
   improvement: '',
 }
 
+const clientIdStorageKey = 'gigs-web-client-id'
+
+function getPersistentClientId() {
+  try {
+    const storedClientId = window.localStorage.getItem(clientIdStorageKey)
+
+    if (storedClientId) {
+      return storedClientId
+    }
+
+    const nextClientId = window.crypto.randomUUID()
+    window.localStorage.setItem(clientIdStorageKey, nextClientId)
+    return nextClientId
+  } catch {
+    return window.crypto.randomUUID()
+  }
+}
+
 function App() {
   useEffect(() => {
     const faviconHref = `${import.meta.env.BASE_URL}favicon.svg?v=${__APP_VERSION__}`
@@ -254,7 +272,7 @@ function EndingPage() {
   const [surveyAnswers, setSurveyAnswers] = useState(emptySurveyAnswers)
   const [surveyStatus, setSurveyStatus] = useState('idle')
   const [surveyMessage, setSurveyMessage] = useState('')
-  const surveyClientIdRef = useRef(window.crypto.randomUUID())
+  const surveyClientIdRef = useRef(getPersistentClientId())
   const swipeHandlers = useSwipeNavigation({
     onSwipeRight: () => {
       if (lastSong) {
@@ -507,7 +525,7 @@ function SongPage() {
   const [reactionError, setReactionError] = useState('')
   const [soundActionError, setSoundActionError] = useState('')
   const [cooldownRemainingMs, setCooldownRemainingMs] = useState(0)
-  const clientIdRef = useRef(window.crypto.randomUUID())
+  const clientIdRef = useRef(getPersistentClientId())
   const reactionCountsRef = useRef({})
   const soundAudioPoolRef = useRef([])
   const soundCooldownTimeoutRef = useRef(null)
