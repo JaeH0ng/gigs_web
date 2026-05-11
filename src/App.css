@@ -659,11 +659,12 @@
 }
 
 .panel-dock {
-  position: sticky;
-  bottom: 14px;
+  position: fixed;
+  left: max(18px, calc((100vw - 460px) / 2 + 18px));
+  bottom: max(18px, env(safe-area-inset-bottom));
   width: fit-content;
   margin-right: auto;
-  z-index: 3;
+  z-index: 6;
 }
 
 .sound-action-note {
