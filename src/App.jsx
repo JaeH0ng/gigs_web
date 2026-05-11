@@ -221,19 +221,27 @@ function IntroPage() {
       pageCue="next"
     >
       <section
-        className="intro-screen intro-screen--minimal"
+        className="intro-screen intro-screen--logo-only"
         {...swipeHandlers}
       >
-        <p className="eyebrow">Landing</p>
-        <div className="placeholder-panel">
+        <div className="landing-logo-stage">
           <LogoSlot
             src={landingLogoSrc}
             alt="공연 로고"
             className="landing-logo-slot"
             fallback="Logo"
           />
-          <p className="placeholder-note">랜딩 페이지</p>
-          <h1 className="intro-title">추후 디자인 적용 예정</h1>
+          <div className="landing-event-info">
+            <p className="landing-event-info__label">Live Performance</p>
+            <h1>블랙빌</h1>
+            <p>2026. 05. 25. Mon · 7:00 PM</p>
+            <p>감성달빛</p>
+          </div>
+          <div className="landing-notice">
+            <p>공연은 약 60분간 진행됩니다.</p>
+            <p>공연 종료 후 만족도 조사에 꼭 참여해 주세요.</p>
+            <span>The performance will run for about 60 minutes. Please join the short survey after the show.</span>
+          </div>
         </div>
       </section>
     </MobileFrame>
