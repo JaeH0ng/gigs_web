@@ -9,7 +9,7 @@ import {
   useParams,
 } from 'react-router-dom'
 import './App.css'
-import { interactionZoneLabels, performanceSongs } from './data/songs'
+import { performanceSongs } from './data/songs'
 import { supabase, supabaseEnabled } from './lib/supabase'
 
 const reactionTypes = [
@@ -218,6 +218,7 @@ function IntroPage() {
       themeColor={landingTheme.background}
       textColor={landingTheme.text}
       accentColor={landingTheme.accent}
+      pageCue="next"
     >
       <section
         className="intro-screen intro-screen--minimal"
@@ -234,7 +235,6 @@ function IntroPage() {
           <p className="placeholder-note">랜딩 페이지</p>
           <h1 className="intro-title">추후 디자인 적용 예정</h1>
         </div>
-        <p className="swipe-hint">왼쪽으로 스와이프</p>
       </section>
     </MobileFrame>
   )
@@ -260,6 +260,7 @@ function EndingPage() {
       themeColor={endingTheme.background}
       textColor={endingTheme.text}
       accentColor={endingTheme.accent}
+      pageCue="previous"
     >
       <section
         className="intro-screen ending-screen"
@@ -415,7 +416,6 @@ function EndingPage() {
           </form>
         )}
 
-        <p className="swipe-hint">오른쪽으로 스와이프</p>
       </section>
     </MobileFrame>
   )
@@ -495,7 +495,7 @@ function SongPage() {
   })
   const [floatingReactions, setFloatingReactions] = useState([])
   const [reactionCounts, setReactionCounts] = useState({})
-  const [channelStatus, setChannelStatus] = useState('idle')
+  const [, setChannelStatus] = useState('idle')
   const [reactionError, setReactionError] = useState('')
   const [soundActionError, setSoundActionError] = useState('')
   const [cooldownRemainingMs, setCooldownRemainingMs] = useState(0)
@@ -678,7 +678,6 @@ function SongPage() {
 
   const previousSong = songIndex > 0 ? performanceSongs[songIndex - 1] : null
   const nextSong = songIndex < performanceSongs.length - 1 ? performanceSongs[songIndex + 1] : null
-  const activeZones = Object.entries(song?.interactionZones ?? {}).filter(([, isEnabled]) => isEnabled)
   const direction = location.state?.direction === 'backward' ? 'backward' : 'forward'
   const hasMapImage = typeof song?.mapImage === 'string' && song.mapImage.trim().length > 0
   const swipeHandlers = useSwipeNavigation({
@@ -715,14 +714,6 @@ function SongPage() {
   const cooldownLabel = cooldownRemainingMs > 0
     ? `${(cooldownRemainingMs / 1000).toFixed(1)}`
     : null
-  const realtimeStatus = !supabaseEnabled
-    ? 'disabled'
-    : channelStatus === 'connected'
-      ? 'connected'
-      : channelStatus === 'error'
-        ? 'error'
-        : 'connecting'
-
   return (
     <MobileFrame
       themeColor={song.themeColor}
@@ -768,37 +759,17 @@ function SongPage() {
 
         <section className="info-card">
           <div className="section-heading">
-            <p className="eyebrow">Interaction</p>
-            <h2>이 곡의 인터렉션</h2>
+            <p className="eyebrow">Behind Story</p>
+            <h2>곡 이야기</h2>
           </div>
-          <div className="zone-tags">
-            {activeZones.length > 0 ? (
-              activeZones.map(([zoneKey]) => (
-                <span key={zoneKey} className="zone-tag">
-                  {interactionZoneLabels[zoneKey]}
-                </span>
-              ))
-            ) : (
-              <span className="zone-tag zone-tag--muted">현재 확정된 인터렉션 없음</span>
-            )}
-          </div>
-          <ul className="bullet-list">
-            {song.interactionInstructions.map((instruction) => (
-              <li key={instruction}>{instruction}</li>
+          <div className="prose-block prose-block--story-card">
+            {song.behindStory.split('\n').map((line, index) => (
+              <p key={`${song.id}-story-card-${index}`}>{line || <br />}</p>
             ))}
-          </ul>
+          </div>
           <div className="reaction-meta">
-            <span className={`realtime-badge realtime-badge--${realtimeStatus}`}>
-              {realtimeStatus === 'connected'
-                ? '실시간 연결됨'
-                : realtimeStatus === 'disabled'
-                  ? 'Supabase 연결 전'
-                  : realtimeStatus === 'error'
-                    ? '실시간 연결 오류'
-                    : '실시간 연결 중'}
-            </span>
             <span className="reaction-count">
-              {supabaseEnabled ? `총 반응 ${totalReactionCount}` : '로컬 미리보기'}
+              {supabaseEnabled ? `함께 남긴 반응 ${totalReactionCount}` : '미리보기'}
             </span>
           </div>
           {reactionError ? (
@@ -868,22 +839,13 @@ function SongPage() {
           </div>
         </div>
 
-        <p className="swipe-hint">오른쪽으로 이전, 왼쪽으로 다음</p>
-
         <div className="panel-dock">
           <button
             type="button"
-            className="dock-button"
+            className="lyrics-tab-button"
             onClick={() => setActivePanel({ songKey: song.id, type: 'lyrics' })}
           >
-            가사 보기
-          </button>
-          <button
-            type="button"
-            className="dock-button"
-            onClick={() => setActivePanel({ songKey: song.id, type: 'story' })}
-          >
-            곡 이야기
+            가사
           </button>
         </div>
 
@@ -955,7 +917,17 @@ function SongPage() {
   )
 }
 
-function MobileFrame({ themeColor, textColor, accentColor, backgroundImage, children }) {
+function MobileFrame({
+  themeColor,
+  textColor,
+  accentColor,
+  backgroundImage,
+  pageCue = 'both',
+  children,
+}) {
+  const showPreviousCue = pageCue === 'both' || pageCue === 'previous'
+  const showNextCue = pageCue === 'both' || pageCue === 'next'
+
   return (
     <main
       className="app-shell"
@@ -968,7 +940,17 @@ function MobileFrame({ themeColor, textColor, accentColor, backgroundImage, chil
     >
       <div className="ambient ambient--left" />
       <div className="ambient ambient--right" />
-      <div className="mobile-frame">{children}</div>
+      <div className="mobile-frame">
+        {children}
+        <div className="page-turn-cue" aria-hidden="true">
+          {showPreviousCue ? (
+            <span className="page-turn-cue__edge page-turn-cue__edge--left" />
+          ) : null}
+          {showNextCue ? (
+            <span className="page-turn-cue__edge page-turn-cue__edge--right" />
+          ) : null}
+        </div>
+      </div>
     </main>
   )
 }
