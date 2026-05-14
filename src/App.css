@@ -333,7 +333,7 @@
   isolation: isolate;
 }
 
-.song-screen > *:not(.time-transition-wash):not(.floating-reaction-dock):not(.panel-dock):not(.day-flow):not(.panel-overlay):not(.heart-stage) {
+.song-screen > *:not(.time-transition-wash):not(.floating-reaction-dock):not(.panel-dock):not(.panel-overlay):not(.heart-stage) {
   position: relative;
   z-index: 1;
 }
@@ -517,9 +517,9 @@
 }
 
 .header-logo-slot {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
+  width: min(176px, 52vw);
+  height: 52px;
+  border-radius: 14px;
   border: 1px dashed rgba(255, 255, 255, 0.18);
   display: grid;
   place-items: center;
@@ -530,12 +530,20 @@
 }
 
 .header-logo-slot.logo-slot--loaded {
-  border-style: solid;
-  background: rgba(255, 248, 230, 0.88);
-  box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  padding: 6px;
+  border: none;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent-color) 8%, rgba(5, 7, 10, 0.5)),
+      rgba(5, 7, 10, 0.28)
+    );
+  backdrop-filter: blur(12px) saturate(1.08);
+  box-shadow: none;
+  padding: 7px 10px;
+}
+
+.header-logo-slot.logo-slot--loaded .logo-image {
+  filter: invert(1);
 }
 
 .logo-image {
@@ -549,6 +557,12 @@
 .section-heading {
   display: grid;
   gap: 6px;
+}
+
+.song-hero .day-flow {
+  justify-self: stretch;
+  width: 100%;
+  margin: 2px 0 4px;
 }
 
 .map-card,
@@ -827,18 +841,16 @@
 .day-flow {
   position: relative;
   justify-self: center;
-  width: min(310px, calc(100vw - 84px));
-  margin: -2px auto 54px;
+  width: 100%;
+  margin: 0 auto;
   z-index: 5;
-  padding: 8px 10px 9px;
-  border-radius: 15px;
-  background: rgba(7, 8, 10, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(14px);
-  overflow: hidden;
+  padding: 10px 2px 9px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: visible;
 }
 
 .day-flow__track {

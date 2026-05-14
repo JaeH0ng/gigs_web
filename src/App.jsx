@@ -251,7 +251,7 @@ function IntroPage() {
           />
           <div className="landing-event-info">
             <p className="landing-event-info__label">Live Performance</p>
-            <h1>블랙빌</h1>
+            <h1>BlackBill</h1>
             <p>2026. 05. 25. Mon · 7:00 PM</p>
             <p>감성달빛</p>
           </div>
@@ -514,7 +514,7 @@ function SongPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { songId } = useParams()
-  const headerLogoSrc = `${import.meta.env.BASE_URL}assets/logos/header-logo.png?v=${__APP_VERSION__}`
+  const headerLogoSrc = `${import.meta.env.BASE_URL}assets/logos/header-logo2.png?v=${__APP_VERSION__}`
   const [activePanel, setActivePanel] = useState({
     songKey: null,
     type: null,
@@ -770,9 +770,22 @@ function SongPage() {
             className="header-logo-slot"
             fallback="Mark"
           />
-          <p className="eyebrow">
-            Track {String(songIndex + 1).padStart(2, '0')} / {String(performanceSongs.length).padStart(2, '0')}
-          </p>
+          <DayFlowTimeline
+            songs={performanceSongs}
+            activeIndex={songIndex}
+            onSelect={(targetSong, targetIndex) => {
+              if (targetIndex === songIndex) {
+                return
+              }
+
+              navigate(`/song/${targetSong.order}`, {
+                state: {
+                  direction: targetIndex > songIndex ? 'forward' : 'backward',
+                  pageDistance: Math.abs(targetIndex - songIndex),
+                },
+              })
+            }}
+          />
           <h1 className="song-title">{song.title}</h1>
         </header>
 
@@ -891,23 +904,6 @@ function SongPage() {
             {soundActionError || soundAction.helperText}
           </p>
         ) : null}
-
-        <DayFlowTimeline
-          songs={performanceSongs}
-          activeIndex={songIndex}
-          onSelect={(targetSong, targetIndex) => {
-            if (targetIndex === songIndex) {
-              return
-            }
-
-            navigate(`/song/${targetSong.order}`, {
-              state: {
-                direction: targetIndex > songIndex ? 'forward' : 'backward',
-                pageDistance: Math.abs(targetIndex - songIndex),
-              },
-            })
-          }}
-        />
 
         {visiblePanel ? (
           <div
