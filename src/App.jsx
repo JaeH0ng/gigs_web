@@ -746,12 +746,14 @@ function SongPage() {
       textColor={song.textColor}
       accentColor={song.accentColor}
       backgroundImage={song.backgroundImage}
+      skyPhase={song.skyPhase}
     >
       <article
         key={song.id}
-        className={`song-screen song-screen--${direction}`}
+        className={`song-screen song-screen--${direction} song-screen--sky-${song.skyPhase}`}
         {...swipeHandlers}
       >
+        <div className="time-transition-wash" aria-hidden="true" />
         <header className="song-hero">
           <LogoSlot
             src={headerLogoSrc}
@@ -881,6 +883,11 @@ function SongPage() {
           </p>
         ) : null}
 
+        <DayFlowTimeline
+          songs={performanceSongs}
+          activeIndex={songIndex}
+        />
+
         {visiblePanel ? (
           <div
             className="panel-overlay"
@@ -948,6 +955,7 @@ function MobileFrame({
   textColor,
   accentColor,
   backgroundImage,
+  skyPhase,
   pageCue = 'both',
   children,
 }) {
@@ -956,7 +964,7 @@ function MobileFrame({
 
   return (
     <main
-      className="app-shell"
+      className={`app-shell ${skyPhase ? `app-shell--sky-${skyPhase}` : ''}`}
       style={{
         '--theme-color': themeColor,
         '--text-color': textColor,
@@ -978,6 +986,57 @@ function MobileFrame({
         </div>
       </div>
     </main>
+  )
+}
+
+function DayFlowTimeline({ songs, activeIndex }) {
+  const progress = songs.length > 0
+    ? ((activeIndex + 1) / songs.length) * 100
+    : 100
+  const markerByIndex = {
+    0: 'sunset',
+    3: 'moon',
+    5: 'full-moon',
+    8: 'moon',
+    10: 'sunrise',
+    11: 'sun',
+  }
+
+  return (
+    <nav
+      className="day-flow"
+      aria-label="곡의 하루 흐름"
+      data-no-swipe="true"
+      style={{
+        '--day-flow-progress': `${progress}%`,
+      }}
+    >
+      <div className="day-flow__track">
+        {songs.map((timelineSong, index) => {
+          const markerType = markerByIndex[index]
+
+          return (
+            <span
+              key={timelineSong.id}
+              className={`day-flow__segment ${index === activeIndex ? 'day-flow__segment--active' : ''}`}
+              style={{
+                '--segment-color': timelineSong.timelineColor,
+                '--segment-accent': timelineSong.timelineAccent,
+              }}
+              aria-current={index === activeIndex ? 'step' : undefined}
+              aria-label={`${timelineSong.order}번 곡 ${timelineSong.title}`}
+            >
+              {markerType ? (
+                <span
+                  className={`day-flow__celestial day-flow__celestial--${markerType}`}
+                  aria-hidden="true"
+                />
+              ) : null}
+            </span>
+          )
+        })}
+      </div>
+    </nav>
   )
 }
 

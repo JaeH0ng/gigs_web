@@ -23,6 +23,69 @@ const songModules = import.meta.glob('./songs/*.json', {
 
 const assetVersion = __APP_VERSION__
 
+const dayFlowByOrder = {
+  1: {
+    skyPhase: 'dusk',
+    timelineColor: '#c87a3d',
+    timelineAccent: '#ffd36c',
+  },
+  2: {
+    skyPhase: 'pastel-sunset',
+    timelineColor: '#d99cc8',
+    timelineAccent: '#ffe38f',
+  },
+  3: {
+    skyPhase: 'dark-sea',
+    timelineColor: '#264872',
+    timelineAccent: '#89c8ff',
+  },
+  4: {
+    skyPhase: 'storm-rain',
+    timelineColor: '#1f2a36',
+    timelineAccent: '#f1c84b',
+  },
+  5: {
+    skyPhase: 'pre-midnight',
+    timelineColor: '#32283e',
+    timelineAccent: '#e8c36a',
+  },
+  6: {
+    skyPhase: 'dream-storm',
+    timelineColor: '#163b69',
+    timelineAccent: '#8ed9ff',
+  },
+  7: {
+    skyPhase: 'resolved-midnight',
+    timelineColor: '#263d65',
+    timelineAccent: '#e7c76a',
+  },
+  8: {
+    skyPhase: 'crisis-one-am',
+    timelineColor: '#4a1726',
+    timelineAccent: '#ff8a5f',
+  },
+  9: {
+    skyPhase: 'thaw-one-thirty',
+    timelineColor: '#1f4050',
+    timelineAccent: '#5fb9d4',
+  },
+  10: {
+    skyPhase: 'insomnia-room',
+    timelineColor: '#28304d',
+    timelineAccent: '#d7b35d',
+  },
+  11: {
+    skyPhase: 'after-sunrise',
+    timelineColor: '#8ca76d',
+    timelineAccent: '#ffe08a',
+  },
+  12: {
+    skyPhase: 'daylight',
+    timelineColor: '#72b6d2',
+    timelineAccent: '#ff725f',
+  },
+}
+
 function withBaseUrl(path) {
   if (!path || !path.startsWith('/')) {
     return path
@@ -54,6 +117,9 @@ function normalizeSong(song) {
       ...(song.interactionZones ?? {}),
     },
     backgroundImage: '',
+    skyPhase: dayFlowByOrder[song.order]?.skyPhase ?? 'dusk',
+    timelineColor: dayFlowByOrder[song.order]?.timelineColor ?? '#f3d449',
+    timelineAccent: dayFlowByOrder[song.order]?.timelineAccent ?? '#f3d449',
     mapImage: '/assets/maps/song-01-map.svg',
     soundAction: null,
     lyrics: '여기에 가사를 입력하세요.',

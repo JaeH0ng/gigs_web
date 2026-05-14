@@ -1,14 +1,16 @@
 .app-shell {
+  --sky-gradient: linear-gradient(180deg, rgba(29, 35, 40, 0.5), rgba(10, 12, 15, 0.9));
+  --sky-texture: linear-gradient(115deg, rgba(255, 255, 255, 0.05), transparent 34% 72%, rgba(255, 255, 255, 0.03));
   min-height: 100svh;
   padding: 10px;
   background-color: var(--theme-color);
   background-image:
     linear-gradient(180deg, rgba(7, 8, 10, 0.34), rgba(7, 8, 10, 0.78)),
-    radial-gradient(circle at top left, rgba(255, 221, 107, 0.14), transparent 28%),
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.06), transparent 24%),
+    var(--sky-texture),
+    var(--sky-gradient),
     var(--theme-image);
-  background-size: cover, auto, auto, cover;
-  background-position: center, top left, top right, center;
+  background-size: cover, cover, cover, cover;
+  background-position: center, center, center, center;
   color: var(--text-color);
   transition:
     background-color 0.45s ease,
@@ -16,6 +18,102 @@
     color 0.45s ease;
   position: relative;
   overflow: hidden;
+}
+
+.app-shell--sky-dusk {
+  --sky-gradient:
+    linear-gradient(180deg, #3d2118 0%, #8a4730 42%, #d48d52 72%, #2b1b16 100%);
+  --sky-texture:
+    linear-gradient(105deg, rgba(255, 210, 118, 0.2), transparent 42%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 12px);
+}
+
+.app-shell--sky-pastel-sunset {
+  --sky-gradient:
+    linear-gradient(180deg, #9c78b2 0%, #d99cc8 34%, #f2b98f 66%, #463657 100%);
+  --sky-texture:
+    linear-gradient(120deg, rgba(255, 246, 190, 0.22), transparent 38%),
+    repeating-linear-gradient(170deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 18px);
+}
+
+.app-shell--sky-dark-sea {
+  --sky-gradient:
+    linear-gradient(180deg, #08111e 0%, #122947 48%, #07111c 100%);
+  --sky-texture:
+    linear-gradient(180deg, transparent 54%, rgba(65, 135, 180, 0.16) 55%, rgba(4, 8, 13, 0.35) 100%),
+    repeating-linear-gradient(176deg, rgba(157, 213, 255, 0.035) 0 1px, transparent 1px 16px);
+}
+
+.app-shell--sky-storm-rain {
+  --sky-gradient:
+    linear-gradient(180deg, #090d12 0%, #172231 54%, #07090d 100%);
+  --sky-texture:
+    linear-gradient(110deg, rgba(255, 242, 142, 0.1), transparent 28%),
+    repeating-linear-gradient(102deg, rgba(206, 231, 255, 0.12) 0 1px, transparent 1px 12px);
+}
+
+.app-shell--sky-pre-midnight {
+  --sky-gradient:
+    linear-gradient(180deg, #15111c 0%, #2f243b 52%, #09080e 100%);
+  --sky-texture:
+    radial-gradient(circle at 72% 18%, rgba(244, 218, 151, 0.18), transparent 9%),
+    repeating-linear-gradient(140deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 20px);
+}
+
+.app-shell--sky-dream-storm {
+  --sky-gradient:
+    linear-gradient(180deg, #071528 0%, #123765 42%, #0a152a 72%, #05070c 100%);
+  --sky-texture:
+    radial-gradient(circle at 48% 20%, rgba(137, 217, 255, 0.24), transparent 17%),
+    repeating-linear-gradient(95deg, rgba(181, 230, 255, 0.06) 0 1px, transparent 1px 17px);
+}
+
+.app-shell--sky-resolved-midnight {
+  --sky-gradient:
+    linear-gradient(180deg, #0a1222 0%, #203756 54%, #080b12 100%);
+  --sky-texture:
+    radial-gradient(circle at 64% 16%, rgba(237, 226, 172, 0.22), transparent 8%),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 22px);
+}
+
+.app-shell--sky-crisis-one-am {
+  --sky-gradient:
+    linear-gradient(180deg, #14070b 0%, #3b111d 48%, #0b080d 100%);
+  --sky-texture:
+    linear-gradient(96deg, rgba(255, 92, 69, 0.22), transparent 38%),
+    repeating-linear-gradient(115deg, rgba(255, 145, 91, 0.07) 0 1px, transparent 1px 13px);
+}
+
+.app-shell--sky-thaw-one-thirty {
+  --sky-gradient:
+    linear-gradient(180deg, #071019 0%, #173748 55%, #080c12 100%);
+  --sky-texture:
+    radial-gradient(circle at 68% 20%, rgba(95, 185, 212, 0.2), transparent 11%),
+    repeating-linear-gradient(155deg, rgba(160, 225, 241, 0.04) 0 1px, transparent 1px 18px);
+}
+
+.app-shell--sky-insomnia-room {
+  --sky-gradient:
+    linear-gradient(180deg, #111522 0%, #252c45 45%, #0b0c12 100%);
+  --sky-texture:
+    linear-gradient(90deg, rgba(215, 179, 93, 0.09), transparent 30%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 26px);
+}
+
+.app-shell--sky-after-sunrise {
+  --sky-gradient:
+    linear-gradient(180deg, #7fa2bb 0%, #f2c783 40%, #4f654f 100%);
+  --sky-texture:
+    linear-gradient(125deg, rgba(255, 246, 172, 0.32), transparent 42%),
+    repeating-linear-gradient(175deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 18px);
+}
+
+.app-shell--sky-daylight {
+  --sky-gradient:
+    linear-gradient(180deg, #75b8d7 0%, #d9f0f6 48%, #477b86 100%);
+  --sky-texture:
+    linear-gradient(120deg, rgba(255, 244, 176, 0.22), transparent 34%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 24px);
 }
 
 .ambient {
@@ -51,6 +149,7 @@
   backdrop-filter: blur(18px);
   overflow: hidden;
   position: relative;
+  z-index: 1;
   perspective: 1600px;
 }
 
@@ -62,6 +161,47 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 16%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 36%);
   pointer-events: none;
+}
+
+.mobile-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+.app-shell--sky-storm-rain .mobile-frame::after {
+  opacity: 1;
+  background:
+    linear-gradient(100deg, transparent 0 47%, rgba(255, 241, 132, 0.38) 48%, transparent 50%),
+    repeating-linear-gradient(104deg, rgba(210, 231, 255, 0.2) 0 1px, transparent 1px 12px);
+  background-size: 100% 100%, 150px 150px;
+  animation: storm-rain-fall 0.46s linear infinite, lightning-flicker 7s steps(1, end) infinite;
+}
+
+.app-shell--sky-dream-storm .mobile-frame::after {
+  opacity: 0.74;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(118, 219, 255, 0.22), transparent 30%),
+    linear-gradient(180deg, transparent, rgba(13, 22, 40, 0.42));
+  animation: dream-sea-breathe 5s ease-in-out infinite;
+}
+
+.app-shell--sky-crisis-one-am .mobile-frame::after {
+  opacity: 0.55;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 82, 64, 0.2), transparent 28%),
+    linear-gradient(180deg, transparent, rgba(62, 7, 16, 0.28));
+  animation: crisis-pulse 2.6s ease-in-out infinite;
+}
+
+.app-shell--sky-insomnia-room .mobile-frame::after {
+  opacity: 0.78;
+  background:
+    linear-gradient(90deg, rgba(215, 179, 93, 0.08), transparent 34%),
+    radial-gradient(ellipse at center, transparent 38%, rgba(2, 4, 8, 0.44) 100%);
 }
 
 .page-turn-cue {
@@ -189,6 +329,22 @@
   align-content: start;
   gap: 12px;
   transform-origin: center center;
+  isolation: isolate;
+}
+
+.song-screen > *:not(.time-transition-wash) {
+  position: relative;
+  z-index: 1;
+}
+
+.time-transition-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent-color) 22%, transparent), transparent);
 }
 
 .eyebrow {
@@ -599,8 +755,8 @@
 .floating-reaction-dock {
   position: absolute;
   right: 14px;
-  bottom: 88px;
-  z-index: 3;
+  bottom: 118px;
+  z-index: 6;
 }
 
 .reaction-toolbar {
@@ -665,6 +821,156 @@
   width: fit-content;
   margin-right: auto;
   z-index: 6;
+}
+
+.day-flow {
+  position: fixed;
+  left: 50%;
+  bottom: max(62px, calc(env(safe-area-inset-bottom) + 62px));
+  width: min(310px, calc(100vw - 84px));
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 8px 10px 9px;
+  border-radius: 15px;
+  background: rgba(7, 8, 10, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+}
+
+.day-flow__track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2px;
+  min-height: 22px;
+  align-items: center;
+}
+
+.day-flow__track::before,
+.day-flow__track::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 8px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.day-flow__track::before {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.day-flow__track::after {
+  right: auto;
+  width: var(--day-flow-progress);
+  background: linear-gradient(90deg, rgba(255, 211, 108, 0.95), rgba(151, 216, 255, 0.88), rgba(255, 124, 91, 0.92));
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-color) 34%, transparent);
+  transition: width 0.56s ease;
+}
+
+.day-flow__segment {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  height: 22px;
+}
+
+.day-flow__segment::before,
+.day-flow__segment::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+}
+
+.day-flow__segment::before {
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  background: var(--segment-color);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.day-flow__segment::after {
+  left: 1px;
+  right: 1px;
+  top: 50%;
+  height: 8px;
+  background: var(--segment-color);
+  opacity: 0.48;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.day-flow__segment--active::before {
+  width: 17px;
+  height: 17px;
+  background: var(--segment-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--segment-accent) 18%, transparent),
+    0 0 18px color-mix(in srgb, var(--segment-accent) 54%, transparent);
+}
+
+.day-flow__segment--active::after {
+  background: var(--segment-accent);
+  opacity: 0.92;
+}
+
+.day-flow__celestial {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.day-flow__celestial--sunset,
+.day-flow__celestial--sunrise,
+.day-flow__celestial--sun {
+  background: #ffd76d;
+  box-shadow: 0 0 12px rgba(255, 215, 109, 0.62);
+}
+
+.day-flow__celestial--sunset {
+  clip-path: inset(46% 0 0 0);
+}
+
+.day-flow__celestial--sunrise {
+  clip-path: inset(0 0 46% 0);
+}
+
+.day-flow__celestial--moon,
+.day-flow__celestial--full-moon {
+  background: #f3ead2;
+  box-shadow: 0 0 12px rgba(243, 234, 210, 0.5);
+}
+
+.day-flow__celestial--moon::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  width: 12px;
+  height: 12px;
+  border-radius: inherit;
+  background: rgba(7, 8, 10, 0.86);
 }
 
 .sound-action-note {
@@ -1057,6 +1363,14 @@
   animation: page-turn-backward 0.48s ease both;
 }
 
+.song-screen--forward .time-transition-wash {
+  animation: time-wash-forward 0.72s ease both;
+}
+
+.song-screen--backward .time-transition-wash {
+  animation: time-wash-backward 0.72s ease both;
+}
+
 @keyframes page-turn-forward {
   0% {
     opacity: 0;
@@ -1080,6 +1394,78 @@
     opacity: 1;
     transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
     filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+}
+
+@keyframes time-wash-forward {
+  0% {
+    opacity: 0.72;
+    transform: translateX(-34%);
+    filter: hue-rotate(-14deg) brightness(1.16);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(34%);
+    filter: hue-rotate(0deg) brightness(1);
+  }
+}
+
+@keyframes time-wash-backward {
+  0% {
+    opacity: 0.64;
+    transform: translateX(34%);
+    filter: hue-rotate(14deg) brightness(1.12);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-34%);
+    filter: hue-rotate(0deg) brightness(1);
+  }
+}
+
+@keyframes storm-rain-fall {
+  0% {
+    background-position: center, 0 0;
+  }
+  100% {
+    background-position: center, -90px 150px;
+  }
+}
+
+@keyframes lightning-flicker {
+  0%,
+  89%,
+  94%,
+  100% {
+    filter: brightness(1);
+  }
+  90%,
+  92% {
+    filter: brightness(1.9);
+  }
+}
+
+@keyframes dream-sea-breathe {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+@keyframes crisis-pulse {
+  0%,
+  100% {
+    opacity: 0.38;
+    filter: saturate(1);
+  }
+  48% {
+    opacity: 0.72;
+    filter: saturate(1.35);
   }
 }
 
