@@ -33,5 +33,20 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(buildVersion),
   },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.names?.some((name) => name.endsWith('.css'))) {
+            return 'assets/index.css'
+          }
+
+          return 'assets/[name][extname]'
+        },
+      },
+    },
+  },
   plugins: [react(), buildVersionPlugin()],
 })
