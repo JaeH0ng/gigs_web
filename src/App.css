@@ -175,9 +175,10 @@
 .app-shell--sky-storm-rain .mobile-frame::after {
   opacity: 1;
   background:
-    linear-gradient(100deg, transparent 0 47%, rgba(255, 241, 132, 0.38) 48%, transparent 50%),
-    repeating-linear-gradient(104deg, rgba(210, 231, 255, 0.2) 0 1px, transparent 1px 12px);
-  background-size: 100% 100%, 150px 150px;
+    repeating-linear-gradient(102deg, rgba(218, 236, 255, 0.28) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(102deg, transparent 0 12px, rgba(172, 205, 228, 0.13) 12px 14px, transparent 14px 28px),
+    linear-gradient(180deg, rgba(217, 236, 255, 0.08), rgba(5, 8, 12, 0.08));
+  background-size: 130px 180px, 190px 260px, 100% 100%;
   animation: storm-rain-fall 0.46s linear infinite, lightning-flicker 7s steps(1, end) infinite;
 }
 
@@ -824,11 +825,10 @@
 }
 
 .day-flow {
-  position: fixed;
-  left: 50%;
-  bottom: max(62px, calc(env(safe-area-inset-bottom) + 62px));
+  position: relative;
+  justify-self: center;
   width: min(310px, calc(100vw - 84px));
-  transform: translateX(-50%);
+  margin: -2px auto 54px;
   z-index: 5;
   padding: 8px 10px 9px;
   border-radius: 15px;
@@ -1425,10 +1425,10 @@
 
 @keyframes storm-rain-fall {
   0% {
-    background-position: center, 0 0;
+    background-position: 0 0, 30px 0, center;
   }
   100% {
-    background-position: center, -90px 150px;
+    background-position: -82px 180px, -106px 260px, center;
   }
 }
 
@@ -1441,7 +1441,7 @@
   }
   90%,
   92% {
-    filter: brightness(1.9);
+    filter: brightness(1.45);
   }
 }
 
