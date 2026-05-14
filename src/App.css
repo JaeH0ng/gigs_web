@@ -325,6 +325,7 @@
 }
 
 .song-screen {
+  position: relative;
   min-height: calc(100svh - 20px);
   display: grid;
   align-content: start;
@@ -830,9 +831,9 @@
 }
 
 .panel-dock {
-  position: fixed;
-  left: max(18px, calc((100vw - 460px) / 2 + 18px));
-  bottom: max(18px, env(safe-area-inset-bottom));
+  position: absolute;
+  left: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom));
   width: fit-content;
   margin-right: auto;
   z-index: 8;
