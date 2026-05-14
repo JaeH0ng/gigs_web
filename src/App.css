@@ -1477,17 +1477,35 @@
   background: rgba(14, 16, 18, 0.88);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(16px);
-  padding: 16px 16px 18px;
+  padding: 20px 16px 18px;
   display: grid;
   gap: 12px;
   animation: panel-rise 0.28s ease both;
 }
 
 .panel-sheet__header {
+  position: relative;
   display: flex;
   align-items: start;
   justify-content: space-between;
   gap: 12px;
+  touch-action: none;
+  cursor: grab;
+}
+
+.panel-sheet__header:active {
+  cursor: grabbing;
+}
+
+.panel-sheet__grabber {
+  position: absolute;
+  left: 50%;
+  top: -11px;
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.38);
+  transform: translateX(-50%);
 }
 
 .panel-sheet__header h2 {

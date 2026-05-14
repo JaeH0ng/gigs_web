@@ -531,6 +531,11 @@ function SongPage() {
   const soundCooldownTimeoutRef = useRef(null)
   const soundTickerRef = useRef(null)
   const previousSoundIndexRef = useRef(-1)
+  const panelDragRef = useRef({
+    x: 0,
+    y: 0,
+    active: false,
+  })
 
   const song = useMemo(() => {
     return performanceSongs.find(
@@ -723,12 +728,91 @@ function SongPage() {
       }
     },
   })
+  const visiblePanel = song && activePanel.songKey === song.id ? activePanel.type : null
+
+  useEffect(() => {
+    if (!visiblePanel) {
+      return undefined
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setActivePanel({ songKey: null, type: null })
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [visiblePanel])
+
+  function closeActivePanel() {
+    setActivePanel({ songKey: null, type: null })
+  }
+
+  function toggleLyricsPanel() {
+    setActivePanel((currentPanel) => {
+      if (currentPanel.songKey === song.id && currentPanel.type === 'lyrics') {
+        return { songKey: null, type: null }
+      }
+
+      return { songKey: song.id, type: 'lyrics' }
+    })
+  }
+
+  function startPanelDrag(event) {
+    panelDragRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      active: true,
+    }
+
+    if (typeof event.currentTarget.setPointerCapture === 'function') {
+      event.currentTarget.setPointerCapture(event.pointerId)
+    }
+  }
+
+  function endPanelDrag(event) {
+    if (!panelDragRef.current.active) {
+      return
+    }
+
+    if (typeof event.currentTarget.releasePointerCapture === 'function') {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId)
+      } catch {
+        // Ignore release failures when capture has already been cleared.
+      }
+    }
+
+    const deltaX = event.clientX - panelDragRef.current.x
+    const deltaY = event.clientY - panelDragRef.current.y
+
+    panelDragRef.current = {
+      x: 0,
+      y: 0,
+      active: false,
+    }
+
+    if (deltaY > 48 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+      closeActivePanel()
+    }
+  }
+
+  function cancelPanelDrag() {
+    panelDragRef.current = {
+      x: 0,
+      y: 0,
+      active: false,
+    }
+  }
 
   if (!song) {
     return <Navigate to="/intro" replace />
   }
 
-  const visiblePanel = activePanel.songKey === song.id ? activePanel.type : null
   const totalReactionCount = reactionTypes.reduce(
     (sum, reaction) => sum + (reactionCounts[reaction.id] ?? 0),
     0,
@@ -893,7 +977,8 @@ function SongPage() {
           <button
             type="button"
             className="lyrics-tab-button"
-            onClick={() => setActivePanel({ songKey: song.id, type: 'lyrics' })}
+            aria-expanded={visiblePanel === 'lyrics'}
+            onClick={toggleLyricsPanel}
           >
             가사
           </button>
@@ -910,13 +995,19 @@ function SongPage() {
             className="panel-overlay"
             role="dialog"
             aria-modal="true"
-            onClick={() => setActivePanel({ songKey: null, type: null })}
+            onClick={closeActivePanel}
           >
             <section
               className="panel-sheet"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="panel-sheet__header">
+              <div
+                className="panel-sheet__header"
+                onPointerDown={startPanelDrag}
+                onPointerUp={endPanelDrag}
+                onPointerCancel={cancelPanelDrag}
+              >
+                <span className="panel-sheet__grabber" aria-hidden="true" />
                 <div>
                   <p className="eyebrow">
                     {visiblePanel === 'lyrics' ? 'Lyrics' : 'Behind Story'}
@@ -928,7 +1019,7 @@ function SongPage() {
                 <button
                   type="button"
                   className="panel-close"
-                  onClick={() => setActivePanel({ songKey: null, type: null })}
+                  onClick={closeActivePanel}
                   aria-label="닫기"
                 >
                   닫기
