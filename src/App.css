@@ -332,7 +332,7 @@
   isolation: isolate;
 }
 
-.song-screen > *:not(.time-transition-wash) {
+.song-screen > *:not(.time-transition-wash):not(.floating-reaction-dock):not(.panel-dock):not(.day-flow):not(.panel-overlay):not(.heart-stage) {
   position: relative;
   z-index: 1;
 }
@@ -755,8 +755,8 @@
 .floating-reaction-dock {
   position: absolute;
   right: 14px;
-  bottom: 118px;
-  z-index: 6;
+  bottom: 112px;
+  z-index: 7;
 }
 
 .reaction-toolbar {
@@ -820,7 +820,7 @@
   bottom: max(18px, env(safe-area-inset-bottom));
   width: fit-content;
   margin-right: auto;
-  z-index: 6;
+  z-index: 8;
 }
 
 .day-flow {
@@ -829,7 +829,7 @@
   bottom: max(62px, calc(env(safe-area-inset-bottom) + 62px));
   width: min(310px, calc(100vw - 84px));
   transform: translateX(-50%);
-  z-index: 6;
+  z-index: 5;
   padding: 8px 10px 9px;
   border-radius: 15px;
   background: rgba(7, 8, 10, 0.42);
