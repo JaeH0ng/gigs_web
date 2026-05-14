@@ -838,6 +838,7 @@
     0 14px 34px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(14px);
+  overflow: hidden;
 }
 
 .day-flow__track {
@@ -875,10 +876,22 @@
 }
 
 .day-flow__segment {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
   position: relative;
   z-index: 1;
   min-width: 0;
   height: 22px;
+}
+
+.day-flow__segment:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--segment-accent) 72%, white);
+  outline-offset: 3px;
+  border-radius: 999px;
 }
 
 .day-flow__segment::before,
@@ -929,12 +942,70 @@
   opacity: 0.92;
 }
 
+.day-flow__segment--break {
+  transform: translateY(-2px);
+}
+
+.day-flow__segment--break::after {
+  height: 13px;
+  opacity: 0.96;
+  background:
+    linear-gradient(90deg, rgba(15, 3, 8, 0.62), transparent 16% 84%, rgba(15, 3, 8, 0.62)),
+    var(--segment-color);
+  box-shadow:
+    0 -5px 12px rgba(255, 197, 107, 0.26),
+    0 5px 12px rgba(80, 6, 22, 0.38);
+}
+
+.day-flow__segment--break::before {
+  width: 13px;
+  height: 13px;
+  background: #6d1724;
+  box-shadow:
+    0 0 0 4px rgba(255, 90, 78, 0.16),
+    0 0 18px rgba(255, 74, 74, 0.58);
+}
+
+.day-flow__segment--break .day-flow__fracture {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  width: 12px;
+  height: 28px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.92;
+}
+
+.day-flow__segment--break .day-flow__fracture::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 0;
+  width: 2px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 229, 196, 0.86);
+  filter: drop-shadow(0 0 4px rgba(255, 109, 82, 0.72));
+  clip-path: polygon(0 0, 100% 0, 68% 34%, 100% 34%, 45% 100%, 0 100%, 31% 56%, 0 56%);
+  transform: rotate(4deg);
+}
+
+.day-flow__segment--break + .day-flow__segment {
+  transform: translateY(3px);
+}
+
+.day-flow__segment:has(+ .day-flow__segment--break) {
+  transform: translateY(2px);
+}
+
 .day-flow__celestial {
   position: absolute;
   left: 50%;
-  top: -4px;
-  width: 12px;
-  height: 12px;
+  top: -6px;
+  width: 15px;
+  height: 15px;
   border-radius: 999px;
   transform: translateX(-50%);
   pointer-events: none;
@@ -942,6 +1013,7 @@
 }
 
 .day-flow__celestial--sunset,
+.day-flow__celestial--glow-sunset,
 .day-flow__celestial--sunrise,
 .day-flow__celestial--sun {
   background: #ffd76d;
@@ -952,25 +1024,132 @@
   clip-path: inset(46% 0 0 0);
 }
 
+.day-flow__celestial--glow-sunset {
+  top: -7px;
+  width: 20px;
+  height: 14px;
+  border-radius: 20px 20px 4px 4px;
+  background:
+    linear-gradient(180deg, #ffd96d 0 48%, #f28a4b 49% 100%);
+  clip-path: inset(0 0 34% 0);
+  box-shadow:
+    0 0 12px rgba(255, 170, 85, 0.72),
+    0 7px 0 -2px rgba(236, 130, 92, 0.58),
+    -8px 8px 0 -4px rgba(217, 113, 186, 0.42),
+    8px 8px 0 -4px rgba(255, 204, 113, 0.48);
+}
+
+.day-flow__celestial--glow-sunset::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 230, 145, 0.82);
+  box-shadow:
+    0 4px 0 rgba(239, 145, 108, 0.45),
+    0 8px 0 rgba(203, 116, 183, 0.24);
+}
+
 .day-flow__celestial--sunrise {
-  clip-path: inset(0 0 46% 0);
+  top: -6px;
+  width: 19px;
+  height: 15px;
+  border-radius: 18px 18px 3px 3px;
+  background:
+    linear-gradient(180deg, #ffe28a 0 58%, #ffb45f 59% 100%);
+  clip-path: inset(0 0 36% 0);
+  box-shadow:
+    0 0 13px rgba(255, 226, 138, 0.72),
+    0 7px 0 -2px rgba(255, 216, 122, 0.44);
+}
+
+.day-flow__celestial--sunrise::after {
+  content: '';
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 240, 182, 0.86);
+  box-shadow: 0 4px 0 rgba(255, 187, 105, 0.36);
 }
 
 .day-flow__celestial--moon,
+.day-flow__celestial--crescent,
 .day-flow__celestial--full-moon {
   background: #f3ead2;
   box-shadow: 0 0 12px rgba(243, 234, 210, 0.5);
 }
 
-.day-flow__celestial--moon::after {
+.day-flow__celestial--moon::after,
+.day-flow__celestial--crescent::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: -1px;
+  width: 15px;
+  height: 15px;
+  border-radius: inherit;
+  background: rgba(7, 8, 10, 0.86);
+}
+
+.day-flow__celestial--cloud,
+.day-flow__celestial--storm {
+  top: -5px;
+  width: 20px;
+  height: 12px;
+  border-radius: 999px;
+  background: #dce6e8;
+  box-shadow:
+    -5px 2px 0 -1px #c8d4d8,
+    5px 2px 0 -1px #eef4f0,
+    0 0 12px rgba(214, 231, 238, 0.42);
+}
+
+.day-flow__celestial--cloud::before,
+.day-flow__celestial--storm::before {
   content: '';
   position: absolute;
   left: 4px;
-  top: -1px;
-  width: 12px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: inherit;
+}
+
+.day-flow__celestial--storm::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 9px;
+  width: 7px;
   height: 12px;
-  border-radius: inherit;
-  background: rgba(7, 8, 10, 0.86);
+  background: #ffd84d;
+  clip-path: polygon(46% 0, 100% 0, 62% 43%, 100% 43%, 22% 100%, 44% 54%, 0 54%);
+  filter: drop-shadow(0 0 5px rgba(255, 216, 77, 0.68));
+}
+
+.day-flow__celestial--storm {
+  box-shadow:
+    -5px 2px 0 -1px #b8c5cb,
+    5px 2px 0 -1px #dce6e8,
+    0 0 12px rgba(188, 217, 230, 0.44);
+}
+
+.day-flow__rain {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 12px;
+  height: 8px;
+  background:
+    linear-gradient(110deg, transparent 0 13%, #91d9ff 14% 21%, transparent 22% 42%, #91d9ff 43% 50%, transparent 51% 72%, #91d9ff 73% 80%, transparent 81%);
+  opacity: 0.9;
 }
 
 .sound-action-note {
@@ -1356,25 +1535,40 @@
 }
 
 .song-screen--forward {
-  animation: page-turn-forward 0.48s ease both;
+  animation: page-turn-forward var(--page-turn-duration, 0.48s) ease both;
 }
 
 .song-screen--backward {
-  animation: page-turn-backward 0.48s ease both;
+  animation: page-turn-backward var(--page-turn-duration, 0.48s) ease both;
 }
 
 .song-screen--forward .time-transition-wash {
-  animation: time-wash-forward 0.72s ease both;
+  animation: time-wash-forward var(--time-wash-duration, 0.72s) ease both;
 }
 
 .song-screen--backward .time-transition-wash {
-  animation: time-wash-backward 0.72s ease both;
+  animation: time-wash-backward var(--time-wash-duration, 0.72s) ease both;
+}
+
+.song-screen--multi-turn .time-transition-wash::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 18px,
+      rgba(255, 248, 220, 0.3) 18px 20px,
+      transparent 20px 42px
+    );
+  animation: page-stack-flutter var(--time-wash-duration, 0.72s) ease both;
 }
 
 @keyframes page-turn-forward {
   0% {
     opacity: 0;
-    transform: translate3d(28px, 0, 0) rotateY(-16deg) scale(0.985);
+    transform: translate3d(var(--page-turn-distance, 28px), 0, 0) rotateY(var(--page-turn-rotate-negative, -16deg)) scale(0.985);
     filter: drop-shadow(-14px 0 18px rgba(0, 0, 0, 0.2));
   }
   100% {
@@ -1387,13 +1581,27 @@
 @keyframes page-turn-backward {
   0% {
     opacity: 0;
-    transform: translate3d(-28px, 0, 0) rotateY(16deg) scale(0.985);
+    transform: translate3d(var(--page-turn-distance-negative, -28px), 0, 0) rotateY(var(--page-turn-rotate, 16deg)) scale(0.985);
     filter: drop-shadow(14px 0 18px rgba(0, 0, 0, 0.2));
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
     filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+}
+
+@keyframes page-stack-flutter {
+  0% {
+    opacity: 0.54;
+    transform: translateX(-18%) skewX(-8deg);
+  }
+  55% {
+    opacity: 0.28;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(22%) skewX(-8deg);
   }
 }
 

@@ -33,21 +33,25 @@ const dayFlowByOrder = {
     skyPhase: 'pastel-sunset',
     timelineColor: '#d99cc8',
     timelineAccent: '#ffe38f',
+    timelineIcon: 'glow-sunset',
   },
   3: {
     skyPhase: 'dark-sea',
     timelineColor: '#264872',
     timelineAccent: '#89c8ff',
+    timelineIcon: 'crescent',
   },
   4: {
     skyPhase: 'storm-rain',
     timelineColor: '#1f2a36',
     timelineAccent: '#f1c84b',
+    timelineIcon: 'storm',
   },
   5: {
     skyPhase: 'pre-midnight',
     timelineColor: '#32283e',
     timelineAccent: '#e8c36a',
+    timelineIcon: 'cloud',
   },
   6: {
     skyPhase: 'dream-storm',
@@ -63,6 +67,7 @@ const dayFlowByOrder = {
     skyPhase: 'crisis-one-am',
     timelineColor: '#4a1726',
     timelineAccent: '#ff8a5f',
+    timelineBreak: true,
   },
   9: {
     skyPhase: 'thaw-one-thirty',
@@ -73,6 +78,7 @@ const dayFlowByOrder = {
     skyPhase: 'insomnia-room',
     timelineColor: '#28304d',
     timelineAccent: '#d7b35d',
+    timelineIcon: 'sunrise',
   },
   11: {
     skyPhase: 'after-sunrise',
@@ -83,6 +89,7 @@ const dayFlowByOrder = {
     skyPhase: 'daylight',
     timelineColor: '#72b6d2',
     timelineAccent: '#ff725f',
+    timelineIcon: 'sun',
   },
 }
 
@@ -120,6 +127,8 @@ function normalizeSong(song) {
     skyPhase: dayFlowByOrder[song.order]?.skyPhase ?? 'dusk',
     timelineColor: dayFlowByOrder[song.order]?.timelineColor ?? '#f3d449',
     timelineAccent: dayFlowByOrder[song.order]?.timelineAccent ?? '#f3d449',
+    timelineIcon: dayFlowByOrder[song.order]?.timelineIcon ?? '',
+    timelineBreak: dayFlowByOrder[song.order]?.timelineBreak ?? false,
     mapImage: '/assets/maps/song-01-map.svg',
     soundAction: null,
     lyrics: '여기에 가사를 입력하세요.',

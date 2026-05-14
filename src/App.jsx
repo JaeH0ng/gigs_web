@@ -705,18 +705,19 @@ function SongPage() {
   const previousSong = songIndex > 0 ? performanceSongs[songIndex - 1] : null
   const nextSong = songIndex < performanceSongs.length - 1 ? performanceSongs[songIndex + 1] : null
   const direction = location.state?.direction === 'backward' ? 'backward' : 'forward'
+  const pageDistance = Math.max(1, Number(location.state?.pageDistance) || 1)
   const hasMapImage = typeof song?.mapImage === 'string' && song.mapImage.trim().length > 0
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (nextSong) {
-        navigate(`/song/${nextSong.order}`, { state: { direction: 'forward' } })
+        navigate(`/song/${nextSong.order}`, { state: { direction: 'forward', pageDistance: 1 } })
       } else {
         navigate('/ending', { state: { direction: 'forward' } })
       }
     },
     onSwipeRight: () => {
       if (previousSong) {
-        navigate(`/song/${previousSong.order}`, { state: { direction: 'backward' } })
+        navigate(`/song/${previousSong.order}`, { state: { direction: 'backward', pageDistance: 1 } })
       } else {
         navigate('/intro', { state: { direction: 'backward' } })
       }
@@ -750,7 +751,15 @@ function SongPage() {
     >
       <article
         key={song.id}
-        className={`song-screen song-screen--${direction} song-screen--sky-${song.skyPhase}`}
+        className={`song-screen song-screen--${direction} ${pageDistance > 1 ? 'song-screen--multi-turn' : ''} song-screen--sky-${song.skyPhase}`}
+        style={{
+          '--page-turn-distance': `${Math.min(28 + pageDistance * 8, 84)}px`,
+          '--page-turn-distance-negative': `-${Math.min(28 + pageDistance * 8, 84)}px`,
+          '--page-turn-rotate': `${Math.min(16 + pageDistance * 4, 42)}deg`,
+          '--page-turn-rotate-negative': `-${Math.min(16 + pageDistance * 4, 42)}deg`,
+          '--page-turn-duration': `${Math.min(0.48 + pageDistance * 0.07, 1.08)}s`,
+          '--time-wash-duration': `${Math.min(0.72 + pageDistance * 0.06, 1.24)}s`,
+        }}
         {...swipeHandlers}
       >
         <div className="time-transition-wash" aria-hidden="true" />
@@ -886,6 +895,18 @@ function SongPage() {
         <DayFlowTimeline
           songs={performanceSongs}
           activeIndex={songIndex}
+          onSelect={(targetSong, targetIndex) => {
+            if (targetIndex === songIndex) {
+              return
+            }
+
+            navigate(`/song/${targetSong.order}`, {
+              state: {
+                direction: targetIndex > songIndex ? 'forward' : 'backward',
+                pageDistance: Math.abs(targetIndex - songIndex),
+              },
+            })
+          }}
         />
 
         {visiblePanel ? (
@@ -989,18 +1010,10 @@ function MobileFrame({
   )
 }
 
-function DayFlowTimeline({ songs, activeIndex }) {
+function DayFlowTimeline({ songs, activeIndex, onSelect }) {
   const progress = songs.length > 0
     ? ((activeIndex + 1) / songs.length) * 100
     : 100
-  const markerByIndex = {
-    0: 'sunset',
-    3: 'moon',
-    5: 'full-moon',
-    8: 'moon',
-    10: 'sunrise',
-    11: 'sun',
-  }
 
   return (
     <nav
@@ -1013,26 +1026,35 @@ function DayFlowTimeline({ songs, activeIndex }) {
     >
       <div className="day-flow__track">
         {songs.map((timelineSong, index) => {
-          const markerType = markerByIndex[index]
+          const markerType = timelineSong.timelineIcon
 
           return (
-            <span
+            <button
+              type="button"
               key={timelineSong.id}
-              className={`day-flow__segment ${index === activeIndex ? 'day-flow__segment--active' : ''}`}
+              className={`day-flow__segment ${index === activeIndex ? 'day-flow__segment--active' : ''} ${timelineSong.timelineBreak ? 'day-flow__segment--break' : ''}`}
               style={{
                 '--segment-color': timelineSong.timelineColor,
                 '--segment-accent': timelineSong.timelineAccent,
               }}
               aria-current={index === activeIndex ? 'step' : undefined}
               aria-label={`${timelineSong.order}번 곡 ${timelineSong.title}`}
+              onClick={() => onSelect?.(timelineSong, index)}
             >
               {markerType ? (
                 <span
                   className={`day-flow__celestial day-flow__celestial--${markerType}`}
                   aria-hidden="true"
-                />
+                >
+                  {markerType === 'storm' ? (
+                    <span className="day-flow__rain" />
+                  ) : null}
+                </span>
               ) : null}
-            </span>
+              {timelineSong.timelineBreak ? (
+                <span className="day-flow__fracture" aria-hidden="true" />
+              ) : null}
+            </button>
           )
         })}
       </div>
