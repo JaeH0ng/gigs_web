@@ -72,7 +72,8 @@ create table if not exists public.audience_surveys (
   client_id text not null,
   ratings jsonb not null,
   feature_ratings jsonb not null,
-  most_impressive text not null,
+  interaction_ratings jsonb not null default '{}'::jsonb,
+  most_impressive text[] not null,
   memorable_moment text,
   improvement text,
   created_at timestamptz not null default now()
@@ -89,6 +90,27 @@ for insert
 to anon, authenticated
 with check (true);
 ```
+
+기존 `audience_surveys` 테이블을 이미 만든 상태라면 아래 마이그레이션을 추가로 실행하세요.
+
+```sql
+alter table public.audience_surveys
+add column if not exists interaction_ratings jsonb not null default '{}'::jsonb;
+
+alter table public.audience_surveys
+alter column most_impressive type text[]
+using case
+  when most_impressive is null then array[]::text[]
+  else array[most_impressive]
+end;
+```
+
+저장 구조는 다음과 같습니다.
+
+- `client_id`: 기존 페이지 반응과 같은 localStorage 기반 id입니다. `song_reactions.client_id`와 연결해 분석할 수 있습니다.
+- `ratings`: 전반 만족도, 흐름, 공간 구도 편안함 등 공통 문항 점수입니다.
+- `interaction_ratings`: 인터렉션 문항을 `projection`, `web_page`, `physical_touch`별로 나눠 저장합니다.
+- `most_impressive`: 복수 선택 결과가 `text[]` 배열로 저장됩니다.
 
 분석 시에는 `ratings`의 1-5점 척도 평균으로 전체 만족도, 몰입도, 능동적 참여감,
 재관람 의향 등을 계산하고, `feature_ratings`에서 `0`은 “경험하지 못했다”로 분리해서 평균에서 제외하면 됩니다.

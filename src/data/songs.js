@@ -129,7 +129,11 @@ function normalizeSong(song) {
     timelineAccent: dayFlowByOrder[song.order]?.timelineAccent ?? '#f3d449',
     timelineIcon: dayFlowByOrder[song.order]?.timelineIcon ?? '',
     timelineBreak: dayFlowByOrder[song.order]?.timelineBreak ?? false,
-    mapImage: '/assets/maps/song-01-map.svg',
+    performanceGuide: {
+      type: 'watch',
+      ko: '무대를 바라보며 곡의 흐름을 따라가 주세요.',
+      en: 'Watch the stage and follow the flow of the song.',
+    },
     soundAction: null,
     lyrics: '여기에 가사를 입력하세요.',
     behindStory: '여기에 비하인드 스토리를 입력하세요.',
@@ -152,7 +156,6 @@ function normalizeSong(song) {
 
   return {
     ...normalizedSong,
-    mapImage: withBaseUrl(normalizedSong.mapImage),
     backgroundImage: withBaseUrl(normalizedSong.backgroundImage),
     soundAction: normalizedSoundAction,
   }

@@ -30,18 +30,16 @@
 
 .app-shell--sky-pastel-sunset {
   --sky-gradient:
-    linear-gradient(180deg, #9c78b2 0%, #d99cc8 34%, #f2b98f 66%, #463657 100%);
+    linear-gradient(180deg, #8fcde8 0%, #c1b4e8 38%, #f6b4bd 72%, #f7dcc2 100%);
   --sky-texture:
-    linear-gradient(120deg, rgba(255, 246, 190, 0.22), transparent 38%),
-    repeating-linear-gradient(170deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 18px);
+    linear-gradient(120deg, rgba(255, 255, 255, 0.16), transparent 42%);
 }
 
 .app-shell--sky-dark-sea {
   --sky-gradient:
     linear-gradient(180deg, #08111e 0%, #122947 48%, #07111c 100%);
   --sky-texture:
-    linear-gradient(180deg, transparent 54%, rgba(65, 135, 180, 0.16) 55%, rgba(4, 8, 13, 0.35) 100%),
-    repeating-linear-gradient(176deg, rgba(157, 213, 255, 0.035) 0 1px, transparent 1px 16px);
+    linear-gradient(180deg, rgba(2, 7, 15, 0.1), rgba(2, 6, 12, 0.42));
 }
 
 .app-shell--sky-storm-rain {
@@ -49,15 +47,15 @@
     linear-gradient(180deg, #090d12 0%, #172231 54%, #07090d 100%);
   --sky-texture:
     linear-gradient(110deg, rgba(255, 242, 142, 0.1), transparent 28%),
-    repeating-linear-gradient(102deg, rgba(206, 231, 255, 0.12) 0 1px, transparent 1px 12px);
+    radial-gradient(ellipse at 50% 0%, rgba(195, 217, 232, 0.12), transparent 42%);
 }
 
 .app-shell--sky-pre-midnight {
   --sky-gradient:
-    linear-gradient(180deg, #15111c 0%, #2f243b 52%, #09080e 100%);
+    linear-gradient(180deg, #120f12 0%, #24191a 52%, #080707 100%);
   --sky-texture:
-    radial-gradient(circle at 72% 18%, rgba(244, 218, 151, 0.18), transparent 9%),
-    repeating-linear-gradient(140deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 20px);
+    radial-gradient(circle at 65% 22%, rgba(232, 128, 58, 0.14), transparent 12%),
+    linear-gradient(180deg, rgba(255, 232, 180, 0.04), transparent 38%);
 }
 
 .app-shell--sky-dream-storm {
@@ -70,10 +68,10 @@
 
 .app-shell--sky-resolved-midnight {
   --sky-gradient:
-    linear-gradient(180deg, #0a1222 0%, #203756 54%, #080b12 100%);
+    linear-gradient(180deg, #030713 0%, #0a1934 54%, #040711 100%);
   --sky-texture:
-    radial-gradient(circle at 64% 16%, rgba(237, 226, 172, 0.22), transparent 8%),
-    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 22px);
+    radial-gradient(circle at 64% 16%, rgba(187, 225, 255, 0.14), transparent 11%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 28%);
 }
 
 .app-shell--sky-crisis-one-am {
@@ -86,10 +84,10 @@
 
 .app-shell--sky-thaw-one-thirty {
   --sky-gradient:
-    linear-gradient(180deg, #071019 0%, #173748 55%, #080c12 100%);
+    linear-gradient(180deg, #4a3439 0%, #6a4651 48%, #3a2730 100%);
   --sky-texture:
-    radial-gradient(circle at 68% 20%, rgba(95, 185, 212, 0.2), transparent 11%),
-    repeating-linear-gradient(155deg, rgba(160, 225, 241, 0.04) 0 1px, transparent 1px 18px);
+    radial-gradient(circle at 70% 18%, rgba(188, 168, 91, 0.2), transparent 15%),
+    linear-gradient(155deg, rgba(226, 99, 173, 0.12), transparent 42%);
 }
 
 .app-shell--sky-insomnia-room {
@@ -97,7 +95,7 @@
     linear-gradient(180deg, #111522 0%, #252c45 45%, #0b0c12 100%);
   --sky-texture:
     linear-gradient(90deg, rgba(215, 179, 93, 0.09), transparent 30%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 26px);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 42%);
 }
 
 .app-shell--sky-after-sunrise {
@@ -110,10 +108,9 @@
 
 .app-shell--sky-daylight {
   --sky-gradient:
-    linear-gradient(180deg, #75b8d7 0%, #d9f0f6 48%, #477b86 100%);
+    linear-gradient(180deg, #92aab0 0%, #1f7d88 46%, #063f47 100%);
   --sky-texture:
-    linear-gradient(120deg, rgba(255, 244, 176, 0.22), transparent 34%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 24px);
+    linear-gradient(120deg, rgba(255, 255, 255, 0.1), transparent 34%);
 }
 
 .ambient {
@@ -157,6 +154,7 @@
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 0;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 16%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 36%);
@@ -172,22 +170,125 @@
   opacity: 0;
 }
 
-.app-shell--sky-storm-rain .mobile-frame::after {
-  opacity: 1;
+.app-shell--sky-pastel-sunset .mobile-frame::before {
   background:
-    repeating-linear-gradient(102deg, rgba(218, 236, 255, 0.28) 0 1px, transparent 1px 13px),
-    repeating-linear-gradient(102deg, transparent 0 12px, rgba(172, 205, 228, 0.13) 12px 14px, transparent 14px 28px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(24, 18, 36, 0.3)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-pastel-sunset .mobile-frame::after {
+  opacity: 0.18;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 20% 26%, rgba(255, 255, 255, 0.86) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 72% 42%, rgba(255, 255, 255, 0.74) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 48% 64%, rgba(255, 255, 255, 0.62) 0 1px, transparent 1.8px);
+  background-size: 120px 140px, 160px 180px, 140px 160px;
+  animation: pastel-cloud-drift 26s linear infinite;
+}
+
+.app-shell--sky-dark-sea .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(2, 6, 13, 0.16), rgba(2, 6, 12, 0.5)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-dark-sea .mobile-frame::after {
+  opacity: 0.18;
+  background:
+    linear-gradient(180deg, transparent 0 48%, rgba(65, 115, 150, 0.12) 49% 100%),
+    radial-gradient(ellipse at 50% 100%, rgba(180, 220, 245, 0.14), transparent 42%);
+  animation: beach-wave-pulse 7s ease-in-out infinite;
+}
+
+.app-shell--sky-pre-midnight .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(8, 7, 8, 0.08), rgba(8, 7, 8, 0.54)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-pre-midnight .mobile-frame::after {
+  opacity: 0.28;
+  background:
+    radial-gradient(circle at 52% 42%, rgba(210, 120, 55, 0.16), transparent 26%),
+    linear-gradient(180deg, transparent 42%, rgba(4, 4, 5, 0.28) 100%);
+}
+
+.app-shell--sky-storm-rain .mobile-frame::after {
+  opacity: 0.82;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='190' viewBox='0 0 84 190'%3E%3Cg stroke='%23dcecff' stroke-linecap='round'%3E%3Cline x1='9' y1='-24' x2='7' y2='62' opacity='.5'/%3E%3Cline x1='28' y1='18' x2='27' y2='116' opacity='.42'/%3E%3Cline x1='49' y1='-8' x2='47' y2='78' opacity='.34'/%3E%3Cline x1='72' y1='42' x2='70' y2='152' opacity='.48'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='116' height='260' viewBox='0 0 116 260'%3E%3Cg stroke='%239fcae8' stroke-linecap='round'%3E%3Cline x1='16' y1='20' x2='15' y2='122' opacity='.26'/%3E%3Cline x1='43' y1='-34' x2='42' y2='74' opacity='.22'/%3E%3Cline x1='78' y1='86' x2='77' y2='206' opacity='.3'/%3E%3Cline x1='104' y1='10' x2='102' y2='98' opacity='.2'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='160' viewBox='0 0 48 160'%3E%3Cg stroke='%23ecf7ff' stroke-linecap='round'%3E%3Cline x1='10' y1='28' x2='9' y2='90' opacity='.28'/%3E%3Cline x1='35' y1='-10' x2='34' y2='56' opacity='.24'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(225, 238, 255, 0.1), transparent 30%, rgba(5, 8, 12, 0.08)),
+    radial-gradient(ellipse at 50% 100%, rgba(218, 235, 255, 0.08), transparent 44%),
     linear-gradient(180deg, rgba(217, 236, 255, 0.08), rgba(5, 8, 12, 0.08));
-  background-size: 130px 180px, 190px 260px, 100% 100%;
-  animation: storm-rain-fall 0.46s linear infinite, lightning-flicker 7s steps(1, end) infinite;
+  background-size: 84px 190px, 116px 260px, 48px 160px, 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0 0, 32px -62px, 12px -34px, center, center, center;
+  filter: none;
+  animation: storm-rain-fall 0.62s linear infinite, lightning-flicker 8s steps(1, end) infinite;
 }
 
 .app-shell--sky-dream-storm .mobile-frame::after {
-  opacity: 0.74;
+  opacity: 0.34;
   background:
-    radial-gradient(circle at 50% 22%, rgba(118, 219, 255, 0.22), transparent 30%),
-    linear-gradient(180deg, transparent, rgba(13, 22, 40, 0.42));
+    radial-gradient(circle at 50% 20%, rgba(115, 223, 255, 0.22), transparent 18%),
+    linear-gradient(180deg, transparent 22%, rgba(3, 11, 24, 0.18) 100%);
   animation: dream-sea-breathe 5s ease-in-out infinite;
+}
+
+.app-shell--sky-dream-storm .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(3, 9, 22, 0.05), rgba(3, 8, 18, 0.44)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, 100% auto, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat;
+}
+
+.app-shell--sky-resolved-midnight .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(2, 5, 14, 0.1), rgba(2, 5, 12, 0.42)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-resolved-midnight .mobile-frame::after {
+  opacity: 0.2;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(180, 220, 255, 0.12), transparent 27%),
+    linear-gradient(180deg, transparent 0 54%, rgba(1, 4, 10, 0.18) 100%);
+  background-size: cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-thaw-one-thirty .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(42, 30, 34, 0.46), rgba(62, 35, 49, 0.58)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, 100% auto, cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.app-shell--sky-thaw-one-thirty .mobile-frame::after {
+  opacity: 0.28;
+  background:
+    radial-gradient(circle at 68% 20%, rgba(178, 156, 83, 0.16), transparent 18%),
+    linear-gradient(180deg, rgba(32, 24, 28, 0.08), rgba(24, 18, 21, 0.38) 100%);
 }
 
 .app-shell--sky-crisis-one-am .mobile-frame::after {
@@ -199,10 +300,35 @@
 }
 
 .app-shell--sky-insomnia-room .mobile-frame::after {
-  opacity: 0.78;
+  opacity: 0.42;
   background:
-    linear-gradient(90deg, rgba(215, 179, 93, 0.08), transparent 34%),
+    radial-gradient(circle at 22% 50%, rgba(221, 171, 98, 0.16), transparent 22%),
     radial-gradient(ellipse at center, transparent 38%, rgba(2, 4, 8, 0.44) 100%);
+}
+
+.app-shell--sky-insomnia-room .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(6, 8, 14, 0.08), rgba(6, 8, 14, 0.48)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-daylight .mobile-frame::before {
+  background:
+    linear-gradient(180deg, rgba(5, 33, 39, 0.04), rgba(4, 33, 39, 0.42)),
+    var(--theme-image),
+    var(--sky-gradient);
+  background-size: cover, cover, cover;
+  background-position: center;
+}
+
+.app-shell--sky-daylight .mobile-frame::after {
+  opacity: 0.14;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 32%),
+    linear-gradient(180deg, transparent 46%, rgba(1, 26, 31, 0.28) 100%);
 }
 
 .page-turn-cue {
@@ -580,39 +706,323 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.map-image {
-  display: block;
-  width: 100%;
+.guide-panel {
+  position: relative;
+  min-height: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-
-.map-placeholder {
-  min-height: 220px;
-  padding: 18px;
   display: grid;
-  align-content: center;
-  gap: 10px;
-  text-align: center;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(255, 217, 77, 0.06), transparent 55%),
-    rgba(255, 255, 255, 0.02);
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--accent-color) 32%, transparent), transparent 28%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01) 52%),
+    rgba(0, 0, 0, 0.18);
 }
 
-.map-placeholder strong {
-  font-size: 1.02rem;
+.guide-animation {
+  position: relative;
+  min-height: 166px;
+  overflow: hidden;
 }
 
-.map-placeholder p,
-.map-placeholder__eyebrow {
+.guide-hand,
+.guide-pointer,
+.guide-sight {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.28));
+  font-size: 4.4rem;
+  line-height: 1;
+  transform: translateX(-50%);
+  transform-origin: 50% 85%;
+  will-change: transform;
+}
+
+.guide-hand {
+  animation: guideWave 1.18s ease-in-out infinite;
+}
+
+.guide-pointer {
+  animation: guideFingerWag 1.08s ease-in-out infinite;
+}
+
+.guide-sight {
+  animation: guideBreathe 1.8s ease-in-out infinite;
+}
+
+.guide-star {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: color-mix(in srgb, var(--accent-color) 82%, white);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent-color) 70%, transparent));
+  animation: guideStarFloat 1.6s ease-in-out infinite;
+}
+
+.guide-star--one {
+  left: 30%;
+  top: 72px;
+}
+
+.guide-star--two {
+  right: 28%;
+  top: 106px;
+  transform: scale(0.72);
+  animation-delay: 0.24s;
+}
+
+.guide-drag-object {
+  position: absolute;
+  left: 30%;
+  top: 92px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent-color) 78%, white);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--accent-color) 54%, transparent);
+  animation: guideDragObject 1.8s ease-in-out infinite;
+}
+
+.guide-copy {
+  display: grid;
+  gap: 3px;
+  padding: 14px 16px 16px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.28) 22%);
+}
+
+.guide-copy p,
+.guide-copy strong {
   margin: 0;
 }
 
-.map-placeholder__eyebrow {
-  color: color-mix(in srgb, var(--accent-color) 82%, white);
-  font-size: 0.76rem;
-  letter-spacing: 0.22em;
+.guide-copy strong {
+  font-size: 1.04rem;
+}
+
+.guide-copy p {
+  color: color-mix(in srgb, var(--text-color) 82%, white);
+  font-size: 0.84rem;
+  line-height: 1.36;
+}
+
+.guide-copy__eyebrow {
+  color: color-mix(in srgb, var(--accent-color) 84%, white) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+.guide-panel--wave .guide-pointer,
+.guide-panel--wave .guide-sight,
+.guide-panel--wave .guide-chain,
+.guide-panel--wave .guide-star,
+.guide-panel--wave .guide-drag-object,
+.guide-panel--finger .guide-hand,
+.guide-panel--finger .guide-sight,
+.guide-panel--finger .guide-chain,
+.guide-panel--finger .guide-star,
+.guide-panel--finger .guide-drag-object,
+.guide-panel--watch .guide-hand,
+.guide-panel--watch .guide-pointer,
+.guide-panel--watch .guide-chain,
+.guide-panel--watch .guide-star,
+.guide-panel--watch .guide-drag-object,
+.guide-panel--star-wave .guide-pointer,
+.guide-panel--star-wave .guide-sight,
+.guide-panel--star-wave .guide-chain,
+.guide-panel--star-wave .guide-drag-object,
+.guide-panel--grab-drag .guide-pointer,
+.guide-panel--grab-drag .guide-sight,
+.guide-panel--grab-drag .guide-chain,
+.guide-panel--hand-chain .guide-hand,
+.guide-panel--hand-chain .guide-pointer,
+.guide-panel--hand-chain .guide-sight,
+.guide-panel--hand-chain .guide-star,
+.guide-panel--hand-chain .guide-drag-object,
+.guide-panel--grab-drag .guide-star {
+  display: none;
+}
+
+.guide-chain {
+  position: absolute;
+  left: 50%;
+  bottom: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.28));
+  animation: guideChainSway 1.7s ease-in-out infinite;
+}
+
+.guide-chain::before {
+  content: "";
+  position: absolute;
+  left: 42px;
+  right: 42px;
+  top: 39px;
+  height: 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-color) 76%, white);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-color) 46%, transparent);
+}
+
+.guide-chain__mannequin {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 74px;
+  color: #f2c79c;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.guide-chain__mannequin--left {
+  transform: rotate(16deg);
+}
+
+.guide-chain__mannequin--right {
+  transform: scaleX(-1) rotate(16deg);
+}
+
+.guide-chain__person {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 30px;
+  height: 52px;
+  margin: 0 1px;
+}
+
+.guide-chain__person::before,
+.guide-chain__person::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.guide-chain__person::before {
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.guide-chain__person::after {
+  bottom: 0;
+  width: 24px;
+  height: 30px;
+  border-radius: 12px 12px 7px 7px;
+}
+
+.guide-chain__person:nth-child(3),
+.guide-chain__person:nth-child(5) {
+  animation: guideBreathe 1.7s ease-in-out infinite;
+  animation-delay: 0.14s;
+}
+
+.guide-panel--grab-drag .guide-hand {
+  animation: guideGrabDrag 1.8s ease-in-out infinite;
+}
+
+@keyframes guideWave {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-12deg);
+  }
+
+  50% {
+    transform: translateX(-50%) rotate(15deg);
+  }
+}
+
+@keyframes guideFingerWag {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-9deg);
+  }
+
+  50% {
+    transform: translateX(-50%) rotate(10deg);
+  }
+}
+
+@keyframes guideBreathe {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+@keyframes guideStarFloat {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: translateY(8px) rotate(-8deg) scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-12px) rotate(10deg) scale(1.12);
+  }
+}
+
+@keyframes guideGrabDrag {
+  0%,
+  100% {
+    transform: translateX(-92%) translateY(0) rotate(-7deg);
+  }
+
+  42%,
+  62% {
+    transform: translateX(-50%) translateY(-5px) rotate(0deg);
+  }
+
+  82% {
+    transform: translateX(-8%) translateY(-2px) rotate(7deg);
+  }
+}
+
+@keyframes guideDragObject {
+  0%,
+  100% {
+    transform: translateX(0) rotate(-4deg);
+  }
+
+  42% {
+    transform: translateX(64px) rotate(4deg);
+  }
+
+  82% {
+    transform: translateX(128px) rotate(8deg);
+  }
+}
+
+@keyframes guideChainSway {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-2deg);
+  }
+
+  50% {
+    transform: translateX(-50%) rotate(2deg);
+  }
 }
 
 .bullet-list {
@@ -859,7 +1269,7 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 2px;
-  min-height: 22px;
+  min-height: 30px;
   align-items: center;
 }
 
@@ -898,7 +1308,7 @@
   position: relative;
   z-index: 1;
   min-width: 0;
-  height: 22px;
+  height: 30px;
 }
 
 .day-flow__segment:focus-visible {
@@ -948,6 +1358,16 @@
   box-shadow:
     0 0 0 4px color-mix(in srgb, var(--segment-accent) 18%, transparent),
     0 0 18px color-mix(in srgb, var(--segment-accent) 54%, transparent);
+}
+
+.day-flow__segment--active:has(.day-flow__celestial)::before {
+  width: 28px;
+  height: 28px;
+  background: color-mix(in srgb, var(--segment-accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--segment-accent) 58%, white);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--segment-accent) 12%, transparent),
+    0 0 20px color-mix(in srgb, var(--segment-accent) 46%, transparent);
 }
 
 .day-flow__segment--active::after {
@@ -1021,8 +1441,19 @@
   height: 15px;
   border-radius: 999px;
   transform: translateX(-50%);
+  transform-origin: center;
   pointer-events: none;
   z-index: 3;
+  transition:
+    top 0.28s ease,
+    transform 0.28s ease,
+    filter 0.28s ease;
+}
+
+.day-flow__segment--active .day-flow__celestial {
+  top: -8px;
+  transform: translateX(-50%) scale(1.42);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--segment-accent) 54%, transparent));
 }
 
 .day-flow__celestial--sunset,
@@ -1274,6 +1705,102 @@
   text-align: center;
 }
 
+.interaction-matrix {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.interaction-matrix__question {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.interaction-matrix__prompt {
+  display: grid;
+  gap: 3px;
+}
+
+.interaction-matrix__prompt strong {
+  color: var(--text-color);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.interaction-matrix__prompt small,
+.interaction-matrix__target small {
+  color: color-mix(in srgb, var(--text-color) 62%, white);
+  font-size: 0.68rem;
+  font-weight: 400;
+}
+
+.interaction-matrix__targets {
+  display: grid;
+  gap: 9px;
+}
+
+.interaction-matrix__target {
+  display: grid;
+  grid-template-columns: minmax(72px, 0.78fr) minmax(0, 1.4fr);
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.interaction-matrix__target > span {
+  display: grid;
+  gap: 2px;
+  color: color-mix(in srgb, var(--text-color) 88%, white);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.24;
+}
+
+.interaction-score-row {
+  display: grid;
+  grid-template-columns: 1.25fr repeat(5, 1fr);
+  gap: 4px;
+}
+
+.interaction-score-option {
+  min-width: 0;
+  cursor: pointer;
+}
+
+.interaction-score-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.interaction-score-option span {
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.055);
+  color: color-mix(in srgb, var(--text-color) 78%, white);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.interaction-score-option--na span {
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+}
+
+.interaction-score-option input:checked + span {
+  border-color: color-mix(in srgb, var(--accent-color) 74%, white);
+  background: color-mix(in srgb, var(--accent-color) 28%, rgba(7, 8, 10, 0.38));
+  color: #fff7c8;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
 .scale-option input:checked + span,
 .choice-option input:checked + span {
   border-color: color-mix(in srgb, var(--accent-color) 74%, white);
@@ -1359,7 +1886,7 @@
 }
 
 .survey-complete-card {
-  min-height: 56svh;
+  min-height: 64svh;
   display: grid;
   align-content: center;
   justify-items: center;
@@ -1377,20 +1904,20 @@
   animation: survey-complete-pop 0.42s ease both;
 }
 
-.survey-complete-mark {
-  width: 76px;
-  height: 76px;
-  border-radius: 999px;
+.survey-complete-logo {
+  width: min(132px, 36vw);
+  aspect-ratio: 452 / 547;
+  border-radius: 18px;
   display: grid;
   place-items: center;
-  color: #102015;
-  background: linear-gradient(180deg, #d9ffd6, #8cff9e);
-  border: 1px solid rgba(255, 255, 255, 0.56);
+  color: color-mix(in srgb, var(--text-color) 70%, white);
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 249, 229, 0.96), rgba(245, 235, 205, 0.74) 58%, rgba(255, 255, 255, 0.08) 72%, transparent 76%);
+  border: 0;
   box-shadow:
-    0 0 34px rgba(140, 255, 165, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  font-size: 2.3rem;
-  font-weight: 900;
+    0 18px 42px rgba(0, 0, 0, 0.24),
+    0 0 34px rgba(255, 239, 184, 0.18);
+  padding: 10px;
 }
 
 .survey-complete-card h2 {
@@ -1405,6 +1932,35 @@
   max-width: 30rem;
   color: color-mix(in srgb, var(--text-color) 78%, white);
   line-height: 1.6;
+}
+
+.survey-complete-follow {
+  width: min(100%, 330px);
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(7, 8, 10, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.survey-complete-follow strong {
+  color: color-mix(in srgb, var(--accent-color) 78%, white);
+  font-size: 1.02rem;
+}
+
+.survey-complete-follow p {
+  color: color-mix(in srgb, var(--text-color) 82%, white);
+  font-size: 0.9rem;
+}
+
+.survey-complete-follow a {
+  justify-self: center;
+  color: #fff1a8;
+  font-weight: 800;
+  text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .survey-complete-summary {
@@ -1664,10 +2220,10 @@
 
 @keyframes storm-rain-fall {
   0% {
-    background-position: 0 0, 30px 0, center;
+    background-position: 0 0, 32px -62px, 12px -34px, center, center, center;
   }
   100% {
-    background-position: -82px 180px, -106px 260px, center;
+    background-position: -8px 190px, 26px 198px, 8px 160px, center, center, center;
   }
 }
 
@@ -1684,6 +2240,27 @@
   }
 }
 
+@keyframes pastel-cloud-drift {
+  0% {
+    transform: translateX(-10px) translateY(0);
+  }
+  100% {
+    transform: translateX(14px) translateY(6px);
+  }
+}
+
+@keyframes beach-wave-pulse {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateY(8px) scale(1);
+  }
+  50% {
+    opacity: 0.78;
+    transform: translateY(-8px) scale(1.03);
+  }
+}
+
 @keyframes dream-sea-breathe {
   0%,
   100% {
@@ -1693,6 +2270,25 @@
   50% {
     opacity: 0.8;
     transform: translateY(-6px) scale(1.02);
+  }
+}
+
+@keyframes starfield-drift {
+  0% {
+    background-position: 0 0, 18px 0, 8px 0, 34px 0, 20px 0, 42px 0, 12px 0;
+  }
+  100% {
+    background-position: 0 100px, 18px 128px, 8px 118px, 34px 144px, 20px 132px, 42px 160px, 12px 116px;
+  }
+}
+
+@keyframes yacht-drift {
+  0%,
+  100% {
+    transform: translateX(-5px) translateY(0);
+  }
+  50% {
+    transform: translateX(6px) translateY(4px);
   }
 }
 

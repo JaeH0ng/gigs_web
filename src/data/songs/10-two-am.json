@@ -7,7 +7,7 @@
   "themeColor": "#20263a",
   "textColor": "#f2efe8",
   "accentColor": "#d7b35d",
-  "backgroundImage": "",
+  "backgroundImage": "/assets/backgrounds/two-am-room.png",
   "interactionSummary": "이모지로 지금의 감정을 함께 남겨주세요.",
   "interactionInstructions": [
     "이모지로 지금의 감정을 함께 남겨주세요."
@@ -20,7 +20,11 @@
     "object3": false,
     "object4": false
   },
-  "mapImage": "/assets/maps/song-10-map.svg",
+  "performanceGuide": {
+    "type": "wave",
+    "ko": "노래에 맞춰 손을 천천히 흔들어 주세요.",
+    "en": "Slowly wave your hand along with the song."
+  },
   "lyrics": "(Please 답을 정해 두지 말아 줘)\n(Please 답을 정해 두지 말아 줘)\n\n[1절]\n새벽 두 시\n어쩜 우린\n잠들지 않으면 안 될 거야\n끝없이 밀려오는 생각에\n무력하게 휩쓸릴 테니\n죽은 듯이 자는 척을 해 도망치듯이\n눈 마주치면 잡힐 듯이\n이건 나의 상상 속 숨바꼭질 No\n더 이상 도망치긴 싫어\n\n걱정은 파도처럼\n밀려오는 새벽 두 시지만 걱정 마\n달은 선명하게\n너만을 오롯이 비추고 있으니\n몽롱한 색채에 온몸을 맡겨\n두 눈 따윈 멀어도 좋아\n내가 나의 밝은 등불이 될 테니까\n이 밤은 나로 가득할 테니까\n\n[2절]\n단순히 무대 위에 올랐단 이유로\n사랑받고 싶은 게 아냐\n불안함에 잠 못 들고 뒤척이던 새벽도\nI just wanna be me\n\n망가져 보지도 않고 어떻게 완성을 알까\n이불 밖으로 나오지 않았던 소년의\n어린 시절의 꿈, 무대 위에서\n\n그럼 행동해 What? 그냥 행동해\n왔던 대로 해 그냥 네 걸 해 넌\n뭘 해도 돼\n너 하나만 믿고 달려왔잖아\n막연했던 외로움도 소중한 걸\n\n언젠가\n우린 다시 만날 거라고 Yeah\n그래, 그땐 반갑게 인사해\n너와 날 응원해\n여전히 내가 불편해?\n(Please 답을 정해 두지 말아 줘)\n\n그럼 행동해 What? 그냥 행동해\n왔던 대로 해 그냥 네 걸 해 넌\n뭘 해도 돼\n너 하나만 믿고 올라왔잖아\n마주했던 두려움도 설렘으로\n\n언젠가\n우린 다시 만날 거라고 Yeah\n그래, 그땐 반갑게 인사해\n즐거울 게 뻔해\n그날을 위해 건배해\n(Please 답을 정해 두지 말아 줘)\n\nOh 정상에서 만나요\nOh 그건 우리의 업 Go up",
   "behindStory": "저는 한동안 주중 아침 7시부터 9시까지 독서실 청소 아르바이트를 했습니다. 다음 날이 무너지지 않으려면 늦어도 새벽 두 시에는 잠들어야 했지만, 자주 뒤척이곤 했습니다. 이 곡은 그 시간에 스스로에게 들려주던 자장가 같은 노래입니다.\nFor a while, I worked a study room cleaning job from 7 to 9 a.m. on weekdays. To keep the next day from falling apart, I had to sleep by 2 a.m., but I often could not. This song is like a lullaby I sang to myself in those hours."
 }

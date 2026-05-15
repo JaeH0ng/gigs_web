@@ -56,24 +56,9 @@ const surveyQuestions = [
     en: 'The atmosphere of the venue matched the songs well.',
   },
   {
-    id: 'emoji_participation',
-    ko: '웹페이지의 이모지 반응은 공연에 참여하고 있다는 느낌을 주었다.',
-    en: 'The emoji reactions on the webpage made me feel involved in the performance.',
-  },
-  {
-    id: 'shared_reactions_immersion',
-    ko: '관객들의 반응이 함께 공유되는 방식이 공연의 몰입감을 높였다.',
-    en: 'Sharing audience reactions increased my immersion in the performance.',
-  },
-  {
-    id: 'interaction_understanding',
-    ko: '인터렉션은 곡의 감정이나 분위기를 이해하는 데 도움이 되었다.',
-    en: 'The interactions helped me understand the emotions or mood of the songs.',
-  },
-  {
-    id: 'interaction_memorable',
-    ko: '인터렉션이 공연을 더 기억에 남게 만들었다.',
-    en: 'The interactions made the performance more memorable.',
+    id: 'floor_seating_comfort',
+    ko: '돗자리에 앉아 인터렉션에 참여하는 공연장의 공간 구도가 편안했다.',
+    en: 'The floor-seating layout for participating in the interactions felt comfortable.',
   },
   {
     id: 'active_participation',
@@ -92,24 +77,41 @@ const surveyQuestions = [
   },
 ]
 
-const featureSurveyQuestions = [
+const interactionSurveyTargets = [
   {
-    id: 'thunder_button_fit',
-    ko: 'Knock Knock의 천둥 버튼은 곡의 분위기와 잘 어울렸다.',
-    en: 'The thunder button in “Knock Knock” matched the mood of the song.',
+    id: 'projection',
+    ko: '빔프로젝터',
+    en: 'Projection',
   },
   {
-    id: 'hand_mannequin_interest',
-    ko: '누군가의의 손 모양 마네킹 인터렉션은 흥미로웠다.',
-    en: 'The hand mannequin interaction in “누군가의” was interesting.',
+    id: 'web_page',
+    ko: '웹 페이지',
+    en: 'Web page',
+  },
+  {
+    id: 'physical_touch',
+    ko: '실물 터치',
+    en: 'Physical touch',
   },
 ]
 
-const notExperiencedOption = {
-  value: 0,
-  ko: '경험하지 못했다',
-  en: 'Did not experience',
-}
+const interactionSurveyQuestions = [
+  {
+    id: 'mood_understanding',
+    ko: '곡의 감정이나 분위기를 이해하는 데 도움이 되었다.',
+    en: 'It helped me understand the emotion or mood of the songs.',
+  },
+  {
+    id: 'participation_immersion',
+    ko: '공연에 참여하고 몰입하고 있다는 느낌을 주었다.',
+    en: 'It made me feel involved and immersed in the performance.',
+  },
+  {
+    id: 'interaction_comfort',
+    ko: '참여 방식이 직관적이고 부담스럽지 않았다.',
+    en: 'The way of participating felt intuitive and comfortable.',
+  },
+]
 
 const impressiveOptions = [
   { value: 'music', ko: '음악', en: 'Music' },
@@ -123,8 +125,13 @@ const impressiveOptions = [
 
 const emptySurveyAnswers = {
   ratings: Object.fromEntries(surveyQuestions.map((question) => [question.id, ''])),
-  featureRatings: Object.fromEntries(featureSurveyQuestions.map((question) => [question.id, ''])),
-  mostImpressive: '',
+  interactionRatings: Object.fromEntries(
+    interactionSurveyQuestions.map((question) => [
+      question.id,
+      Object.fromEntries(interactionSurveyTargets.map((target) => [target.id, ''])),
+    ]),
+  ),
+  mostImpressive: [],
   memorableMoment: '',
   improvement: '',
 }
@@ -268,9 +275,14 @@ function IntroPage() {
 
 function EndingPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const lastSong = performanceSongs[performanceSongs.length - 1]
   const [surveyAnswers, setSurveyAnswers] = useState(emptySurveyAnswers)
-  const [surveyStatus, setSurveyStatus] = useState('idle')
+  const [surveyStatus, setSurveyStatus] = useState(() => {
+    const searchParams = new URLSearchParams(location.search)
+
+    return searchParams.get('submitted') === '1' ? 'submitted' : 'idle'
+  })
   const [surveyMessage, setSurveyMessage] = useState('')
   const surveyClientIdRef = useRef(getPersistentClientId())
   const swipeHandlers = useSwipeNavigation({
@@ -348,43 +360,45 @@ function EndingPage() {
                 />
               ))}
 
-              {featureSurveyQuestions.map((question, index) => (
-                <SurveyScaleQuestion
-                  key={question.id}
-                  index={surveyQuestions.length + index + 1}
-                  question={question}
-                  value={surveyAnswers.featureRatings[question.id]}
-                  options={[notExperiencedOption, ...likertOptions]}
-                  name={`feature-${question.id}`}
-                  onChange={(nextValue) =>
-                    setSurveyAnswers((current) => ({
-                      ...current,
-                      featureRatings: {
-                        ...current.featureRatings,
-                        [question.id]: nextValue,
+              <InteractionMatrixQuestion
+                index={surveyQuestions.length + 1}
+                questions={interactionSurveyQuestions}
+                targets={interactionSurveyTargets}
+                answers={surveyAnswers.interactionRatings}
+                options={likertOptions}
+                onChange={(questionId, targetId, nextValue) =>
+                  setSurveyAnswers((current) => ({
+                    ...current,
+                    interactionRatings: {
+                      ...current.interactionRatings,
+                      [questionId]: {
+                        ...current.interactionRatings[questionId],
+                        [targetId]: nextValue,
                       },
-                    }))
-                  }
-                />
-              ))}
+                    },
+                  }))
+                }
+              />
 
               <fieldset className="survey-fieldset">
                 <legend>
-                  <span>13. 이번 공연에서 가장 인상 깊었던 요소는 무엇인가요?</span>
-                  <small>What was the most memorable element of this performance?</small>
+                  <span>{surveyQuestions.length + 2}. 이번 공연에서 가장 인상 깊었던 요소는 무엇인가요? 복수 선택이 가능합니다.</span>
+                  <small>What were the most memorable elements of this performance? You may select multiple options.</small>
                 </legend>
                 <div className="choice-grid">
                   {impressiveOptions.map((option) => (
                     <label key={option.value} className="choice-option">
                       <input
-                        type="radio"
+                        type="checkbox"
                         name="most-impressive"
                         value={option.value}
-                        checked={surveyAnswers.mostImpressive === option.value}
+                        checked={surveyAnswers.mostImpressive.includes(option.value)}
                         onChange={(event) =>
                           setSurveyAnswers((current) => ({
                             ...current,
-                            mostImpressive: event.target.value,
+                            mostImpressive: event.target.checked
+                              ? [...current.mostImpressive, event.target.value]
+                              : current.mostImpressive.filter((value) => value !== event.target.value),
                           }))
                         }
                       />
@@ -398,7 +412,7 @@ function EndingPage() {
               </fieldset>
 
               <SurveyTextQuestion
-                index={14}
+                index={surveyQuestions.length + 3}
                 labelKo="가장 기억에 남은 순간이나 인터렉션을 적어주세요."
                 labelEn="Please write the moment or interaction you remember most."
                 value={surveyAnswers.memorableMoment}
@@ -411,7 +425,7 @@ function EndingPage() {
               />
 
               <SurveyTextQuestion
-                index={15}
+                index={surveyQuestions.length + 4}
                 labelKo="개선되었으면 하는 점이 있다면 적어주세요."
                 labelEn="Please share anything you think could be improved."
                 value={surveyAnswers.improvement}
@@ -473,10 +487,79 @@ function SurveyScaleQuestion({ index, question, value, options, name, onChange }
   )
 }
 
+function InteractionMatrixQuestion({
+  index,
+  questions,
+  targets,
+  answers,
+  options,
+  onChange,
+}) {
+  return (
+    <fieldset className="survey-fieldset survey-fieldset--matrix">
+      <legend>
+        <span>{index}. 인터렉션 경험을 영역별로 평가해 주세요.</span>
+        <small>Please rate each type of interaction separately.</small>
+      </legend>
+      <div className="interaction-matrix">
+        {questions.map((question) => (
+          <div key={question.id} className="interaction-matrix__question">
+            <div className="interaction-matrix__prompt">
+              <strong>{question.ko}</strong>
+              <small>{question.en}</small>
+            </div>
+            <div className="interaction-matrix__targets">
+              {targets.map((target) => (
+                <div key={target.id} className="interaction-matrix__target">
+                  <span>
+                    {target.ko}
+                    <small>{target.en}</small>
+                  </span>
+                  <div
+                    className="interaction-score-row"
+                    role="radiogroup"
+                    aria-label={`${question.ko} - ${target.ko}`}
+                  >
+                    {options.map((option) => (
+                      <label
+                        key={option.value}
+                        className="interaction-score-option"
+                        title={`${option.ko} / ${option.en}`}
+                      >
+                        <input
+                          type="radio"
+                          name={`interaction-${question.id}-${target.id}`}
+                          value={option.value}
+                          checked={String(answers[question.id]?.[target.id] ?? '') === String(option.value)}
+                          onChange={(event) =>
+                            onChange(question.id, target.id, event.target.value)
+                          }
+                        />
+                        <span>{option.value}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
 function SurveyCompleteCard() {
+  const landingLogoSrc = `${import.meta.env.BASE_URL}assets/logos/landing-logo.png?v=${__APP_VERSION__}`
+
   return (
     <section className="survey-complete-card" data-no-swipe="true" aria-live="polite">
-      <div className="survey-complete-mark" aria-hidden="true">✓</div>
+      <LogoSlot
+        src={landingLogoSrc}
+        alt="BlackBill 로고"
+        className="survey-complete-logo"
+        fallback="BlackBill"
+      />
       <p className="eyebrow">Submitted</p>
       <h2>제출이 완료되었습니다</h2>
       <p>
@@ -485,6 +568,13 @@ function SurveyCompleteCard() {
       <p>
         Your response has been saved. Thank you for being part of today’s performance.
       </p>
+      <div className="survey-complete-follow">
+        <strong>공연이 마음에 드셨나요?</strong>
+        <p>
+          이러한 공연의 기획이 마음에 드신다면, 팀 BlackBill의 행보에 집중해 주세요!
+        </p>
+        <a href="mailto:devblackbill@gmail.com">devblackbill@gmail.com</a>
+      </div>
       <div className="survey-complete-summary">
         <span>응답 완료</span>
         <small>Survey completed</small>
@@ -507,6 +597,43 @@ function SurveyTextQuestion({ index, labelKo, labelEn, value, onChange }) {
         onChange={(event) => onChange(event.target.value)}
       />
     </label>
+  )
+}
+
+function PerformanceGuide({ guide, title }) {
+  const safeGuide = {
+    type: 'watch',
+    ko: '무대를 바라보며 곡의 흐름을 따라가 주세요.',
+    en: 'Watch the stage and follow the flow of the song.',
+    ...guide,
+  }
+  const handSymbol = safeGuide.type === 'grab-drag' ? '✋' : '👋'
+
+  return (
+    <div className={`guide-panel guide-panel--${safeGuide.type}`}>
+      <div className="guide-animation" aria-hidden="true">
+        <div className="guide-star guide-star--one" />
+        <div className="guide-star guide-star--two" />
+        <div className="guide-drag-object" />
+        <span className="guide-hand">{handSymbol}</span>
+        <span className="guide-pointer">☝️</span>
+        <span className="guide-sight">👀</span>
+        <div className="guide-chain">
+          <span className="guide-chain__mannequin guide-chain__mannequin--left">✋</span>
+          <span className="guide-chain__person" />
+          <span className="guide-chain__person" />
+          <span className="guide-chain__person" />
+          <span className="guide-chain__person" />
+          <span className="guide-chain__mannequin guide-chain__mannequin--right">✋</span>
+        </div>
+      </div>
+      <div className="guide-copy">
+        <p className="guide-copy__eyebrow">Performance Guide</p>
+        <strong>{title}</strong>
+        <p>{safeGuide.ko}</p>
+        <p lang="en">{safeGuide.en}</p>
+      </div>
+    </div>
   )
 }
 
@@ -711,7 +838,6 @@ function SongPage() {
   const nextSong = songIndex < performanceSongs.length - 1 ? performanceSongs[songIndex + 1] : null
   const direction = location.state?.direction === 'backward' ? 'backward' : 'forward'
   const pageDistance = Math.max(1, Number(location.state?.pageDistance) || 1)
-  const hasMapImage = typeof song?.mapImage === 'string' && song.mapImage.trim().length > 0
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (nextSong) {
@@ -875,19 +1001,7 @@ function SongPage() {
 
         <section className="map-card">
           <div className="map-frame">
-            {hasMapImage ? (
-              <img
-                src={song.mapImage}
-                alt={`${song.title} 공연장 도면`}
-                className="map-image"
-              />
-            ) : (
-              <div className="map-placeholder">
-                <p className="map-placeholder__eyebrow">Venue Map Pending</p>
-                <strong>공연장 도면 준비 전</strong>
-                <p>지금은 인터렉션 정보만 확인할 수 있습니다.</p>
-              </div>
-            )}
+            <PerformanceGuide guide={song.performanceGuide} title={song.title} />
           </div>
         </section>
 
@@ -1451,8 +1565,13 @@ async function handleSurveySubmit({
   const missingRequiredRating = surveyQuestions.some(
     (question) => answers.ratings[question.id] === '',
   )
+  const missingInteractionRating = interactionSurveyQuestions.some((question) =>
+    interactionSurveyTargets.some(
+      (target) => answers.interactionRatings[question.id]?.[target.id] === '',
+    ),
+  )
 
-  if (missingRequiredRating || !answers.mostImpressive) {
+  if (missingRequiredRating || missingInteractionRating || answers.mostImpressive.length === 0) {
     setSurveyStatus('error')
     setSurveyMessage(
       '필수 문항을 모두 선택해 주세요. / Please answer all required questions.',
@@ -1460,12 +1579,17 @@ async function handleSurveySubmit({
     return
   }
 
-  const featureRatings = Object.fromEntries(
-    featureSurveyQuestions.map((question) => [
+  const interactionRatings = Object.fromEntries(
+    interactionSurveyQuestions.map((question) => [
       question.id,
-      answers.featureRatings[question.id] === ''
-        ? null
-        : Number(answers.featureRatings[question.id]),
+      Object.fromEntries(
+        interactionSurveyTargets.map((target) => [
+          target.id,
+          answers.interactionRatings[question.id][target.id] === ''
+            ? null
+            : Number(answers.interactionRatings[question.id][target.id]),
+        ]),
+      ),
     ]),
   )
 
@@ -1477,7 +1601,8 @@ async function handleSurveySubmit({
         Number(answers.ratings[question.id]),
       ]),
     ),
-    feature_ratings: featureRatings,
+    feature_ratings: {},
+    interaction_ratings: interactionRatings,
     most_impressive: answers.mostImpressive,
     memorable_moment: answers.memorableMoment.trim() || null,
     improvement: answers.improvement.trim() || null,
