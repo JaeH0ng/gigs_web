@@ -230,6 +230,7 @@ function IntroPage() {
   const navigate = useNavigate()
   const firstSong = performanceSongs[0]
   const landingLogoSrc = `${import.meta.env.BASE_URL}assets/logos/landing-logo.png?v=${__APP_VERSION__}`
+  const guideMapSrc = `${import.meta.env.BASE_URL}assets/maps/song-10-map.svg?v=${__APP_VERSION__}`
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: () => {
       if (firstSong) {
@@ -244,9 +245,10 @@ function IntroPage() {
       textColor={landingTheme.text}
       accentColor={landingTheme.accent}
       pageCue="next"
+      className="app-shell--intro-guide"
     >
       <section
-        className="intro-screen intro-screen--logo-only"
+        className="intro-screen intro-screen--logo-only intro-screen--landing"
         {...swipeHandlers}
       >
         <div className="landing-logo-stage">
@@ -267,6 +269,58 @@ function IntroPage() {
             <p>공연 종료 후 만족도 조사에 꼭 참여해 주세요.</p>
             <span>The performance will run for about 60 minutes. Please join the short survey after the show.</span>
           </div>
+          <a className="landing-scroll-cue" href="#performance-guide" data-no-swipe="true">
+            <span>공연 가이드 보기</span>
+            <span lang="en">Scroll for performance guide</span>
+          </a>
+        </div>
+      </section>
+      <section
+        id="performance-guide"
+        className="intro-screen intro-screen--performance-guide"
+      >
+        <div className="venue-guide-hero">
+          <div className="section-heading">
+            <p className="eyebrow">Performance Guide</p>
+            <h2>공연장 안내</h2>
+          </div>
+          <p>
+            이 공연은 무대와 관객석, 천장 프로젝션, 웹 페이지, 실물 오브젝트가 함께 반응하는 참여형 공연입니다.
+          </p>
+          <p lang="en">
+            This performance connects the stage, audience area, ceiling projection, web page, and physical objects into one participatory space.
+          </p>
+        </div>
+
+        <figure className="venue-map-card">
+          <img src={guideMapSrc} alt="공연장 안내도" />
+          <figcaption>
+            <span>관객은 바닥 좌석에서 노래별 안내에 따라 반응을 남기거나, 손을 흔들고, 오브젝트를 만지며 공연에 참여합니다.</span>
+            <span lang="en">From the floor-seating area, you can react, wave, touch objects, and follow each song’s guide.</span>
+          </figcaption>
+        </figure>
+
+        <div className="venue-guide-grid">
+          <article className="venue-guide-item">
+            <strong>천장 프로젝션과 곡별 움직임</strong>
+            <p>곡마다 안내되는 손 흔들기, 검지 움직이기, 바라보기 같은 작은 행동이 천장 천 위의 빛과 장면으로 이어집니다.</p>
+            <p lang="en">Small actions guided by each song, such as waving, moving your index finger, or watching, connect to light and imagery on the ceiling fabric.</p>
+          </article>
+          <article className="venue-guide-item">
+            <strong>웹 이모지와 특수 사운드</strong>
+            <p>각 곡 화면에서 감정을 이모지로 남기고, 특정 곡에서는 천둥 소리 같은 효과를 더해 공연의 분위기를 함께 만듭니다.</p>
+            <p lang="en">On each song page, you can leave an emoji for your feeling, and in certain songs add effects such as thunder to shape the atmosphere together.</p>
+          </article>
+          <article className="venue-guide-item">
+            <strong>실물 오브젝트</strong>
+            <p>일부 곡에서는 손 모양 마네킹을 함께 잡거나, 준비된 물체를 원하는 곳으로 끌어 옮길 수 있습니다.</p>
+            <p lang="en">In some songs, you may hold the hand-shaped mannequin or drag a prepared object to where you want it.</p>
+          </article>
+          <article className="venue-guide-item">
+            <strong>함께 만드는 관객석</strong>
+            <p>정답은 없습니다. 주변 관객과 같은 공간에 머물며 편안한 만큼만 참여해 주세요.</p>
+            <p lang="en">There is no single correct response. Stay with the people around you and participate as much as feels comfortable.</p>
+          </article>
         </div>
       </section>
     </MobileFrame>
@@ -1179,6 +1233,7 @@ function MobileFrame({
   backgroundImage,
   skyPhase,
   pageCue = 'both',
+  className = '',
   children,
 }) {
   const showPreviousCue = pageCue === 'both' || pageCue === 'previous'
@@ -1186,7 +1241,7 @@ function MobileFrame({
 
   return (
     <main
-      className={`app-shell ${skyPhase ? `app-shell--sky-${skyPhase}` : ''}`}
+      className={`app-shell ${skyPhase ? `app-shell--sky-${skyPhase}` : ''} ${className}`}
       style={{
         '--theme-color': themeColor,
         '--text-color': textColor,
