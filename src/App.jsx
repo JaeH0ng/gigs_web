@@ -672,15 +672,15 @@ function PerformanceGuide({ guide, title }) {
         <span className="guide-hand">{handSymbol}</span>
         <span className="guide-pointer">☝️</span>
         <span className="guide-sight">👀</span>
-        <div className="guide-conch-device">
-          <span>Conch</span>
+        <div className="guide-shell-device">
+          <span>Shell</span>
         </div>
         <div className="guide-object-set">
           <span className="guide-object-chip guide-object-chip--stick">
             <span>Drum stick</span>
           </span>
-          <span className="guide-object-chip guide-object-chip--neck">
-            <span>Guitar neck</span>
+          <span className="guide-object-chip guide-object-chip--pickup-guard">
+            <span>Guitar</span>
           </span>
           <span className="guide-object-chip guide-object-chip--kalimba">
             <span>Kalimba</span>
