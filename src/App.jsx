@@ -1358,6 +1358,8 @@ function LogoSlot({ src, alt, className, fallback }) {
 }
 
 function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
+  const swipeThreshold = 38
+  const verticalToleranceRatio = 1.35
   const gestureStateRef = useRef({
     x: 0,
     y: 0,
@@ -1405,7 +1407,10 @@ function useSwipeNavigation({ onSwipeLeft, onSwipeRight }) {
 
     resetGesture()
 
-    if (Math.abs(deltaX) < 56 || Math.abs(deltaX) < Math.abs(deltaY)) {
+    if (
+      Math.abs(deltaX) < swipeThreshold ||
+      Math.abs(deltaX) * verticalToleranceRatio < Math.abs(deltaY)
+    ) {
       return
     }
 
