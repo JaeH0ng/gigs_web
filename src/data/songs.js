@@ -23,69 +23,69 @@ const songModules = import.meta.glob('./songs/*.json', {
 
 const assetVersion = __APP_VERSION__
 
-const dayFlowByOrder = {
-  1: {
+const dayFlowBySongId = {
+  'twenty-eight': {
     skyPhase: 'dusk',
     timelineColor: '#c87a3d',
     timelineAccent: '#ffd36c',
   },
-  2: {
+  daedongje: {
     skyPhase: 'pastel-sunset',
     timelineColor: '#d99cc8',
     timelineAccent: '#ffe38f',
     timelineIcon: 'glow-sunset',
   },
-  3: {
+  wharf: {
     skyPhase: 'dark-sea',
     timelineColor: '#264872',
     timelineAccent: '#89c8ff',
     timelineIcon: 'crescent',
   },
-  4: {
+  'noknok-knock-knock': {
     skyPhase: 'storm-rain',
     timelineColor: '#1f2a36',
     timelineAccent: '#f1c84b',
     timelineIcon: 'storm',
   },
-  5: {
+  'needless-words': {
     skyPhase: 'pre-midnight',
     timelineColor: '#32283e',
     timelineAccent: '#e8c36a',
     timelineIcon: 'cloud',
   },
-  6: {
+  sea: {
     skyPhase: 'dream-storm',
     timelineColor: '#163b69',
     timelineAccent: '#8ed9ff',
   },
-  7: {
+  'boy-and-girl': {
     skyPhase: 'resolved-midnight',
     timelineColor: '#263d65',
     timelineAccent: '#e7c76a',
   },
-  8: {
+  psyche: {
     skyPhase: 'crisis-one-am',
     timelineColor: '#4a1726',
     timelineAccent: '#ff8a5f',
     timelineBreak: true,
   },
-  9: {
+  someones: {
     skyPhase: 'thaw-one-thirty',
     timelineColor: '#1f4050',
     timelineAccent: '#5fb9d4',
   },
-  10: {
+  'two-am': {
     skyPhase: 'insomnia-room',
     timelineColor: '#28304d',
     timelineAccent: '#d7b35d',
     timelineIcon: 'sunrise',
   },
-  11: {
+  'look-at-me-please': {
     skyPhase: 'after-sunrise',
     timelineColor: '#8ca76d',
     timelineAccent: '#ffe08a',
   },
-  12: {
+  'hongmyo-red-anchor': {
     skyPhase: 'daylight',
     timelineColor: '#72b6d2',
     timelineAccent: '#ff725f',
@@ -105,6 +105,7 @@ function withBaseUrl(path) {
 }
 
 function normalizeSong(song) {
+  const dayFlow = dayFlowBySongId[song.id] ?? {}
   const normalizedSong = {
     id: '',
     order: 1,
@@ -124,11 +125,11 @@ function normalizeSong(song) {
       ...(song.interactionZones ?? {}),
     },
     backgroundImage: '',
-    skyPhase: dayFlowByOrder[song.order]?.skyPhase ?? 'dusk',
-    timelineColor: dayFlowByOrder[song.order]?.timelineColor ?? '#f3d449',
-    timelineAccent: dayFlowByOrder[song.order]?.timelineAccent ?? '#f3d449',
-    timelineIcon: dayFlowByOrder[song.order]?.timelineIcon ?? '',
-    timelineBreak: dayFlowByOrder[song.order]?.timelineBreak ?? false,
+    skyPhase: dayFlow.skyPhase ?? 'dusk',
+    timelineColor: dayFlow.timelineColor ?? '#f3d449',
+    timelineAccent: dayFlow.timelineAccent ?? '#f3d449',
+    timelineIcon: dayFlow.timelineIcon ?? '',
+    timelineBreak: dayFlow.timelineBreak ?? false,
     performanceGuide: {
       type: 'watch',
       ko: '무대를 바라보며 곡의 흐름을 따라가 주세요.',
