@@ -4,27 +4,36 @@
 
 ## 데이터 개요
 
-- 설문 응답: 5명
-- 리액션 이벤트: 100건
-- 리액션 참여 클라이언트: 6명
-- 리액션 곡 수: 11곡
-- 설문-리액션 매칭 응답자: 4명
-- 설문만 있고 리액션 로그가 없는 응답자: 1명
-- 리액션만 있고 설문이 없는 클라이언트: 2명
+| 항목 | 값 | 의미 |
+| --- | --- | --- |
+| 설문 응답 | 5명 | 공연 후 만족도/상호작용 평가 |
+| 리액션 이벤트 | 100건 | 공연 중 웹 아이콘 인터랙션 로그 |
+| 리액션 참여 클라이언트 | 6명 | 리액션을 1회 이상 남긴 익명 클라이언트 |
+| 리액션 발생 곡 | 11곡 | Psyche 제외 11곡에서 리액션 기록 |
+| 설문-리액션 매칭 | 4/5명 | 설문 응답자의 80%가 리액션 로그와 연결 |
+| 설문만 있음 | 1명 | 설문은 제출했지만 리액션 로그 없음 |
+| 리액션만 있음 | 2명 | 리액션은 있으나 설문 제출 없음 |
+
+## 읽는 순서
+
+1. 핵심 해석 요약에서 전체 결론을 먼저 봅니다.
+2. ID 연결 분석에서 같은 client_id로 묶인 "실제 참여 행동"과 "사후 평가"의 관계를 확인합니다.
+3. 설문 응답, 상호작용 평가, 인상 깊었던 요소, 서술형 응답을 보며 왜 그런 결과가 나왔는지 확인합니다.
+4. 곡별 리액션과 리액션 타입별 집계에서 공연 중 실제 행동 분포를 봅니다.
+5. 질문 및 답변 형식, 원자료 수치표는 검산용 부록처럼 사용합니다.
 
 ## 핵심 해석 요약
 
 이 레포트는 두 종류의 데이터를 함께 봅니다. 첫째, 공연 후 설문 응답은 관객이 공연을 어떻게 평가했는지 보여줍니다. 둘째, 공연 중 웹사이트 리액션 로그는 관객이 실제로 어느 곡에서 얼마나 참여했는지 보여줍니다. 두 데이터는 같은 client_id로 연결되어 있으므로, 익명 응답자 단위로 "실제 참여 행동"과 "사후 평가"를 함께 해석할 수 있습니다.
 
-주요 결과는 다음과 같습니다.
-
-- 설문에서 가장 높게 평가된 항목은 공간 적합도 평균 5점입니다. 공연 공간의 분위기와 곡의 결합은 매우 긍정적으로 받아들여졌다고 볼 수 있습니다.
-- 가장 낮게 평가된 항목은 바닥 착석 편안함 평균 3.4점입니다. 공연의 예술적/공간적 방향성보다 물리적 관람 환경 쪽에 개선 여지가 있다는 신호입니다.
-- 상호작용 평가에서 가장 높은 항목은 분위기 이해 - 웹 페이지 평균 4.8점이고, 가장 낮은 항목은 참여 몰입 - 웹 페이지 평균 3.8점입니다. 즉, 상호작용 방식마다 관객이 느낀 도움/몰입/편안함이 다르게 나타났습니다.
-- 가장 많이 선택된 인상 깊은 요소는 천장 프로젝션이며, 4명(80%)이 선택했습니다.
-- 곡별 리액션 총량 상위 곡은 부둣가 16건, Knock Knock 15건, 대동제 11건, 소년과 소녀 10건, 새벽두시 10건입니다.
-- 가장 많이 사용된 리액션 타입은 좋아요 37건(37%)입니다.
-- ID 연결 분석에서는 4명의 설문 응답자가 리액션 로그와 연결되었습니다. 이 연결 데이터에서 가장 강한 탐색적 관계는 "리액션한 곡 수"와 "전반적 만족도" 사이이며, Pearson r=0.922입니다.
+| 핵심 발견 | 근거 수치 | 해석 |
+| --- | --- | --- |
+| 공간/곡 분위기 결합은 가장 강하게 긍정 평가됨 | 공간 적합도 평균 5점, 5점 응답 5/5명 | 공연의 장소성과 곡 분위기는 관객에게 명확하게 전달된 것으로 볼 수 있습니다. |
+| 물리적 관람 환경은 개선 여지가 큼 | 바닥 착석 편안함 평균 3.4점, 4-5점 비율 40% | 콘텐츠보다 바닥 착석, 시야, 방석, 동선 같은 환경 설계가 다음 개선 우선순위입니다. |
+| 웹 페이지는 분위기 이해에는 강하지만 몰입감은 상대적으로 낮음 | 분위기 이해 - 웹 페이지 평균 4.8점 / 참여 몰입 - 웹 페이지 평균 3.8점 | 웹 인터랙션이 곡 이해에는 도움이 되었지만, 참여 몰입을 높이는 방식은 더 다듬을 여지가 있습니다. |
+| 가장 기억에 남은 요소는 천장 프로젝션 | 천장 프로젝션 4/5명 선택(80%) | 관객의 사후 기억에 가장 강하게 남은 시각적 장치로 볼 수 있습니다. |
+| 리액션은 일부 곡에 집중됨 | 부둣가 16건, Knock Knock 15건, 대동제 11건 | 상위 곡은 곡의 장면 전환이나 인터랙션 구조가 관객 행동을 더 잘 유도했을 가능성이 있습니다. |
+| 참여 폭과 만족도 사이에 탐색적 관계가 보임 | 리액션한 곡 수 ↔ 전반적 만족도, Pearson r=0.922, N=5 | 여러 곡에 걸쳐 리액션을 남긴 관객일수록 전반 만족도도 높게 나타났습니다. 단, 표본이 작아 인과관계가 아니라 경향으로 해석해야 합니다. |
 
 주의할 점은 표본이 작다는 것입니다. 따라서 이 결과는 "증명"이라기보다, 공연에서 어떤 참여 경험이 긍정적 평가와 함께 나타났는지 보여주는 탐색적 근거로 해석하는 것이 안전합니다.
 
@@ -73,30 +82,6 @@
 | 리액션만 2 | 7 | 6 | 스물여덟 | 2 | 반짝임 | 3 |
 
 해석: 이 표는 공연 중 리액션은 남겼지만 설문을 제출하지 않은 참여자를 보여줍니다. 이들은 설문 평가와 연결할 수는 없지만, 실제 공연 중 참여 총량을 해석할 때는 포함해야 합니다. 즉, 곡별 리액션 총량과 리액션 타입별 총량은 이 참여자들의 행동도 포함한 전체 현장 반응입니다.
-
-## 질문 및 답변 형식
-
-| 문항 | 질문 | Question | 답변 방식 | 답변 선택지 |
-| --- | --- | --- | --- | --- |
-| 전반적 만족도 | 오늘 공연에 전반적으로 만족했다. | Overall, I was satisfied with today’s performance. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 흐름/몰입도 | 공연의 흐름이 자연스럽고 몰입하기 좋았다. | The flow of the performance felt natural and immersive. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 공간 적합도 | 공연 공간의 분위기가 곡과 잘 어울렸다. | The atmosphere of the venue matched the songs well. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 바닥 착석 편안함 | 돗자리에 앉아 인터렉션에 참여하는 공연장의 공간 구도가 편안했다. | The floor-seating layout for participating in the interactions felt comfortable. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 능동적 참여도 | 기존의 일반적인 공연보다 더 능동적으로 참여한다고 느꼈다. | Compared with a typical concert, I felt more actively involved. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 예술적 적합도 | 인터렉션 요소가 공연의 예술적 완성도를 해치지 않고 자연스럽게 어울렸다. | The interactive elements felt natural and did not weaken the artistic quality. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 재관람 의향 | 다시 비슷한 형식의 공연을 관람하고 싶다. | I would like to attend a similar performance again. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 분위기 이해 - 빔프로젝터 | 곡의 감정이나 분위기를 이해하는 데 도움이 되었다. - 빔프로젝터 | It helped me understand the emotion or mood of the songs. - Projection | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 분위기 이해 - 웹 페이지 | 곡의 감정이나 분위기를 이해하는 데 도움이 되었다. - 웹 페이지 | It helped me understand the emotion or mood of the songs. - Web page | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 분위기 이해 - 실물 터치 | 곡의 감정이나 분위기를 이해하는 데 도움이 되었다. - 실물 터치 | It helped me understand the emotion or mood of the songs. - Physical touch | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 참여 몰입 - 빔프로젝터 | 공연에 참여하고 몰입하고 있다는 느낌을 주었다. - 빔프로젝터 | It made me feel involved and immersed in the performance. - Projection | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 참여 몰입 - 웹 페이지 | 공연에 참여하고 몰입하고 있다는 느낌을 주었다. - 웹 페이지 | It made me feel involved and immersed in the performance. - Web page | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 참여 몰입 - 실물 터치 | 공연에 참여하고 몰입하고 있다는 느낌을 주었다. - 실물 터치 | It made me feel involved and immersed in the performance. - Physical touch | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 상호작용 편안함 - 빔프로젝터 | 참여 방식이 직관적이고 부담스럽지 않았다. - 빔프로젝터 | The way of participating felt intuitive and comfortable. - Projection | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 상호작용 편안함 - 웹 페이지 | 참여 방식이 직관적이고 부담스럽지 않았다. - 웹 페이지 | The way of participating felt intuitive and comfortable. - Web page | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 상호작용 편안함 - 실물 터치 | 참여 방식이 직관적이고 부담스럽지 않았다. - 실물 터치 | The way of participating felt intuitive and comfortable. - Physical touch | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
-| 인상 깊었던 요소 | 이번 공연에서 가장 인상 깊었던 요소는 무엇인가요? 복수 선택이 가능합니다. | What were the most memorable elements of this performance? You may select multiple options. | 복수 선택형 체크박스 | 음악(Music), 공간 연출(Spatial direction), 천장 프로젝션(Ceiling projection), 웹 이모지 반응(Web emoji reactions), 천둥 버튼(Thunder button), 손 모양 마네킹 인터렉션(Hand mannequin interaction), 관객들과 함께 참여하는 분위기(The shared audience atmosphere) |
-| 기억에 남는 순간 | 가장 기억에 남은 순간이나 인터렉션을 적어주세요. | Please write the moment or interaction you remember most. | 자유 서술형 | 응답자가 직접 작성 |
-| 개선점 | 개선되었으면 하는 점이 있다면 적어주세요. | Please share anything you think could be improved. | 자유 서술형 | 응답자가 직접 작성 |
 
 ## 설문 응답 요약
 
@@ -409,6 +394,32 @@ Question: Please share anything you think could be improved.
 ![리액션 타입별 비중](charts/reaction_type_pie.svg)
 
 ![리액션 타입별 총량](charts/reaction_type_counts.svg)
+
+## 질문 및 답변 형식
+
+이 섹션은 각 결과가 어떤 설문 문항에서 나온 값인지 확인하기 위한 참고 표입니다.
+
+| 문항 | 질문 | Question | 답변 방식 | 답변 선택지 |
+| --- | --- | --- | --- | --- |
+| 전반적 만족도 | 오늘 공연에 전반적으로 만족했다. | Overall, I was satisfied with today’s performance. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 흐름/몰입도 | 공연의 흐름이 자연스럽고 몰입하기 좋았다. | The flow of the performance felt natural and immersive. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 공간 적합도 | 공연 공간의 분위기가 곡과 잘 어울렸다. | The atmosphere of the venue matched the songs well. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 바닥 착석 편안함 | 돗자리에 앉아 인터렉션에 참여하는 공연장의 공간 구도가 편안했다. | The floor-seating layout for participating in the interactions felt comfortable. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 능동적 참여도 | 기존의 일반적인 공연보다 더 능동적으로 참여한다고 느꼈다. | Compared with a typical concert, I felt more actively involved. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 예술적 적합도 | 인터렉션 요소가 공연의 예술적 완성도를 해치지 않고 자연스럽게 어울렸다. | The interactive elements felt natural and did not weaken the artistic quality. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 재관람 의향 | 다시 비슷한 형식의 공연을 관람하고 싶다. | I would like to attend a similar performance again. | 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 분위기 이해 - 빔프로젝터 | 곡의 감정이나 분위기를 이해하는 데 도움이 되었다. - 빔프로젝터 | It helped me understand the emotion or mood of the songs. - Projection | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 분위기 이해 - 웹 페이지 | 곡의 감정이나 분위기를 이해하는 데 도움이 되었다. - 웹 페이지 | It helped me understand the emotion or mood of the songs. - Web page | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 분위기 이해 - 실물 터치 | 곡의 감정이나 분위기를 이해하는 데 도움이 되었다. - 실물 터치 | It helped me understand the emotion or mood of the songs. - Physical touch | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 참여 몰입 - 빔프로젝터 | 공연에 참여하고 몰입하고 있다는 느낌을 주었다. - 빔프로젝터 | It made me feel involved and immersed in the performance. - Projection | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 참여 몰입 - 웹 페이지 | 공연에 참여하고 몰입하고 있다는 느낌을 주었다. - 웹 페이지 | It made me feel involved and immersed in the performance. - Web page | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 참여 몰입 - 실물 터치 | 공연에 참여하고 몰입하고 있다는 느낌을 주었다. - 실물 터치 | It made me feel involved and immersed in the performance. - Physical touch | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 상호작용 편안함 - 빔프로젝터 | 참여 방식이 직관적이고 부담스럽지 않았다. - 빔프로젝터 | The way of participating felt intuitive and comfortable. - Projection | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 상호작용 편안함 - 웹 페이지 | 참여 방식이 직관적이고 부담스럽지 않았다. - 웹 페이지 | The way of participating felt intuitive and comfortable. - Web page | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 상호작용 편안함 - 실물 터치 | 참여 방식이 직관적이고 부담스럽지 않았다. - 실물 터치 | The way of participating felt intuitive and comfortable. - Physical touch | 영역별 5점 리커트 척도 단일 선택 | 1=전혀 그렇지 않다(Strongly disagree), 2=그렇지 않다(Disagree), 3=보통이다(Neutral), 4=그렇다(Agree), 5=매우 그렇다(Strongly agree) |
+| 인상 깊었던 요소 | 이번 공연에서 가장 인상 깊었던 요소는 무엇인가요? 복수 선택이 가능합니다. | What were the most memorable elements of this performance? You may select multiple options. | 복수 선택형 체크박스 | 음악(Music), 공간 연출(Spatial direction), 천장 프로젝션(Ceiling projection), 웹 이모지 반응(Web emoji reactions), 천둥 버튼(Thunder button), 손 모양 마네킹 인터렉션(Hand mannequin interaction), 관객들과 함께 참여하는 분위기(The shared audience atmosphere) |
+| 기억에 남는 순간 | 가장 기억에 남은 순간이나 인터렉션을 적어주세요. | Please write the moment or interaction you remember most. | 자유 서술형 | 응답자가 직접 작성 |
+| 개선점 | 개선되었으면 하는 점이 있다면 적어주세요. | Please share anything you think could be improved. | 자유 서술형 | 응답자가 직접 작성 |
 
 ## 원자료 수치표
 

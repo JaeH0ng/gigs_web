@@ -952,33 +952,76 @@ const mostEngagedClient = [...joinedClientSummary].sort((a, b) => b.reaction_tot
 const broadestEngagementClient = [...joinedClientSummary].sort((a, b) => b.active_song_count - a.active_song_count)[0]
 const noReactionSurveyClients = joinedClientSummary.filter((row) => row.has_reaction_log === 'no')
 const strongestCorrelation = notableCorrelationRows[0]
+const dataOverviewRows = [
+  { item: '설문 응답', value: `${parsedSurveys.length}명`, note: '공연 후 만족도/상호작용 평가' },
+  { item: '리액션 이벤트', value: `${reactionRows.length}건`, note: '공연 중 웹 아이콘 인터랙션 로그' },
+  { item: '리액션 참여 클라이언트', value: `${new Set(reactionRows.map((row) => row.client_id)).size}명`, note: '리액션을 1회 이상 남긴 익명 클라이언트' },
+  { item: '리액션 발생 곡', value: `${new Set(reactionRows.map((row) => row.song_id)).size}곡`, note: 'Psyche 제외 11곡에서 리액션 기록' },
+  { item: '설문-리액션 매칭', value: `${matchedClientIds.length}/${parsedSurveys.length}명`, note: `설문 응답자의 ${pct(matchedClientIds.length, parsedSurveys.length)}%가 리액션 로그와 연결` },
+  { item: '설문만 있음', value: `${surveyOnlyClientIds.length}명`, note: '설문은 제출했지만 리액션 로그 없음' },
+  { item: '리액션만 있음', value: `${reactionOnlyClientIds.length}명`, note: '리액션은 있으나 설문 제출 없음' },
+]
+const coreFindingRows = [
+  {
+    finding: '공간/곡 분위기 결합은 가장 강하게 긍정 평가됨',
+    evidence: `${topSurvey[0].label} 평균 ${topSurvey[0].mean}점, 5점 응답 ${topSurvey[0].score_5}/${topSurvey[0].n}명`,
+    interpretation: '공연의 장소성과 곡 분위기는 관객에게 명확하게 전달된 것으로 볼 수 있습니다.',
+  },
+  {
+    finding: '물리적 관람 환경은 개선 여지가 큼',
+    evidence: `${lowestSurvey.label} 평균 ${lowestSurvey.mean}점, 4-5점 비율 ${lowestSurvey.top2_pct}%`,
+    interpretation: '콘텐츠보다 바닥 착석, 시야, 방석, 동선 같은 환경 설계가 다음 개선 우선순위입니다.',
+  },
+  {
+    finding: '웹 페이지는 분위기 이해에는 강하지만 몰입감은 상대적으로 낮음',
+    evidence: `${topInteraction.label} 평균 ${topInteraction.mean}점 / ${lowestInteraction.label} 평균 ${lowestInteraction.mean}점`,
+    interpretation: '웹 인터랙션이 곡 이해에는 도움이 되었지만, 참여 몰입을 높이는 방식은 더 다듬을 여지가 있습니다.',
+  },
+  {
+    finding: '가장 기억에 남은 요소는 천장 프로젝션',
+    evidence: `${topFeature.label} ${topFeature.count}/${parsedSurveys.length}명 선택(${topFeature.pct_of_respondents}%)`,
+    interpretation: '관객의 사후 기억에 가장 강하게 남은 시각적 장치로 볼 수 있습니다.',
+  },
+  {
+    finding: '리액션은 일부 곡에 집중됨',
+    evidence: topSongs.slice(0, 3).map((row) => `${row.title} ${row.total}건`).join(', '),
+    interpretation: '상위 곡은 곡의 장면 전환이나 인터랙션 구조가 관객 행동을 더 잘 유도했을 가능성이 있습니다.',
+  },
+  {
+    finding: '참여 폭과 만족도 사이에 탐색적 관계가 보임',
+    evidence: `${strongestCorrelation.metric_label} ↔ ${strongestCorrelation.survey_metric_label}, Pearson r=${strongestCorrelation.pearson_r}, N=${strongestCorrelation.n}`,
+    interpretation: '여러 곡에 걸쳐 리액션을 남긴 관객일수록 전반 만족도도 높게 나타났습니다. 단, 표본이 작아 인과관계가 아니라 경향으로 해석해야 합니다.',
+  },
+]
 const report = `# 공연 이후 관객 리액션 및 설문 결과 분석
 
 생성일: ${new Date().toISOString().slice(0, 10)}
 
 ## 데이터 개요
 
-- 설문 응답: ${parsedSurveys.length}명
-- 리액션 이벤트: ${reactionRows.length}건
-- 리액션 참여 클라이언트: ${new Set(reactionRows.map((row) => row.client_id)).size}명
-- 리액션 곡 수: ${new Set(reactionRows.map((row) => row.song_id)).size}곡
-- 설문-리액션 매칭 응답자: ${matchedClientIds.length}명
-- 설문만 있고 리액션 로그가 없는 응답자: ${surveyOnlyClientIds.length}명
-- 리액션만 있고 설문이 없는 클라이언트: ${reactionOnlyClientIds.length}명
+${markdownTable(dataOverviewRows, [
+  ['항목', 'item'],
+  ['값', 'value'],
+  ['의미', 'note'],
+])}
+
+## 읽는 순서
+
+1. 핵심 해석 요약에서 전체 결론을 먼저 봅니다.
+2. ID 연결 분석에서 같은 client_id로 묶인 "실제 참여 행동"과 "사후 평가"의 관계를 확인합니다.
+3. 설문 응답, 상호작용 평가, 인상 깊었던 요소, 서술형 응답을 보며 왜 그런 결과가 나왔는지 확인합니다.
+4. 곡별 리액션과 리액션 타입별 집계에서 공연 중 실제 행동 분포를 봅니다.
+5. 질문 및 답변 형식, 원자료 수치표는 검산용 부록처럼 사용합니다.
 
 ## 핵심 해석 요약
 
 이 레포트는 두 종류의 데이터를 함께 봅니다. 첫째, 공연 후 설문 응답은 관객이 공연을 어떻게 평가했는지 보여줍니다. 둘째, 공연 중 웹사이트 리액션 로그는 관객이 실제로 어느 곡에서 얼마나 참여했는지 보여줍니다. 두 데이터는 같은 client_id로 연결되어 있으므로, 익명 응답자 단위로 "실제 참여 행동"과 "사후 평가"를 함께 해석할 수 있습니다.
 
-주요 결과는 다음과 같습니다.
-
-- 설문에서 가장 높게 평가된 항목은 ${topSurvey[0].label} 평균 ${topSurvey[0].mean}점입니다. 공연 공간의 분위기와 곡의 결합은 매우 긍정적으로 받아들여졌다고 볼 수 있습니다.
-- 가장 낮게 평가된 항목은 ${lowestSurvey.label} 평균 ${lowestSurvey.mean}점입니다. 공연의 예술적/공간적 방향성보다 물리적 관람 환경 쪽에 개선 여지가 있다는 신호입니다.
-- 상호작용 평가에서 가장 높은 항목은 ${topInteraction.label} 평균 ${topInteraction.mean}점이고, 가장 낮은 항목은 ${lowestInteraction.label} 평균 ${lowestInteraction.mean}점입니다. 즉, 상호작용 방식마다 관객이 느낀 도움/몰입/편안함이 다르게 나타났습니다.
-- 가장 많이 선택된 인상 깊은 요소는 ${topFeature.label}이며, ${topFeature.count}명(${topFeature.pct_of_respondents}%)이 선택했습니다.
-- 곡별 리액션 총량 상위 곡은 ${topSongs.map((row) => `${row.title} ${row.total}건`).join(', ')}입니다.
-- 가장 많이 사용된 리액션 타입은 ${topReactionType.label} ${topReactionType.total}건(${topReactionType.pct_of_reactions}%)입니다.
-- ID 연결 분석에서는 ${matchedClientIds.length}명의 설문 응답자가 리액션 로그와 연결되었습니다. 이 연결 데이터에서 가장 강한 탐색적 관계는 "${strongestCorrelation.metric_label}"와 "${strongestCorrelation.survey_metric_label}" 사이이며, Pearson r=${strongestCorrelation.pearson_r}입니다.
+${markdownTable(coreFindingRows, [
+  ['핵심 발견', 'finding'],
+  ['근거 수치', 'evidence'],
+  ['해석', 'interpretation'],
+])}
 
 주의할 점은 표본이 작다는 것입니다. 따라서 이 결과는 "증명"이라기보다, 공연에서 어떤 참여 경험이 긍정적 평가와 함께 나타났는지 보여주는 탐색적 근거로 해석하는 것이 안전합니다.
 
@@ -1037,16 +1080,6 @@ ${reactionOnlySummary.length ? markdownTable(reactionOnlySummary, [
 ]) : '없음'}
 
 해석: 이 표는 공연 중 리액션은 남겼지만 설문을 제출하지 않은 참여자를 보여줍니다. 이들은 설문 평가와 연결할 수는 없지만, 실제 공연 중 참여 총량을 해석할 때는 포함해야 합니다. 즉, 곡별 리액션 총량과 리액션 타입별 총량은 이 참여자들의 행동도 포함한 전체 현장 반응입니다.
-
-## 질문 및 답변 형식
-
-${markdownTable(questionOverview, [
-  ['문항', 'label'],
-  ['질문', 'question_ko'],
-  ['Question', 'question_en'],
-  ['답변 방식', 'answer_type'],
-  ['답변 선택지', 'answer_options'],
-])}
 
 ## 설문 응답 요약
 
@@ -1151,6 +1184,18 @@ ${markdownTable(reactionsByType, [
 ![리액션 타입별 비중](charts/reaction_type_pie.svg)
 
 ![리액션 타입별 총량](charts/reaction_type_counts.svg)
+
+## 질문 및 답변 형식
+
+이 섹션은 각 결과가 어떤 설문 문항에서 나온 값인지 확인하기 위한 참고 표입니다.
+
+${markdownTable(questionOverview, [
+  ['문항', 'label'],
+  ['질문', 'question_ko'],
+  ['Question', 'question_en'],
+  ['답변 방식', 'answer_type'],
+  ['답변 선택지', 'answer_options'],
+])}
 
 ## 원자료 수치표
 
