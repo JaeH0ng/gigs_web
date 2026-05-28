@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="326" viewBox="0 0 960 326">
+  <style>
+    .bg { fill: #fbfaf7; }
+    .title { font: 700 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1f2528; }
+    .label { font: 500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #293236; }
+    .value, .legend { font: 500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #293236; }
+    .heat-value { font: 700 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #fffdf8; }
+  </style>
+  <rect class="bg" width="100%" height="100%" />
+  
+    <text x="24" y="34" class="title">설문 척도 문항 평균</text>
+    
+      <text x="208" y="75" text-anchor="end" class="label">공간 적합도</text>
+      <rect x="220" y="60" width="644" height="18" rx="3" fill="#2f6f73" />
+      <text x="872" y="75" class="value">5</text>
+      <text x="208" y="109" text-anchor="end" class="label">예술적 적합도</text>
+      <rect x="220" y="94" width="489.44" height="18" rx="3" fill="#d99058" />
+      <text x="717.44" y="109" class="value">3.8</text>
+      <text x="208" y="143" text-anchor="end" class="label">흐름/몰입도</text>
+      <rect x="220" y="128" width="515.2" height="18" rx="3" fill="#6b7fb8" />
+      <text x="743.2" y="143" class="value">4</text>
+      <text x="208" y="177" text-anchor="end" class="label">재관람 의향</text>
+      <rect x="220" y="162" width="540.96" height="18" rx="3" fill="#b65f6b" />
+      <text x="768.96" y="177" class="value">4.2</text>
+      <text x="208" y="211" text-anchor="end" class="label">능동적 참여도</text>
+      <rect x="220" y="196" width="566.72" height="18" rx="3" fill="#6d8f45" />
+      <text x="794.72" y="211" class="value">4.4</text>
+      <text x="208" y="245" text-anchor="end" class="label">전반적 만족도</text>
+      <rect x="220" y="230" width="515.2" height="18" rx="3" fill="#8f6bb8" />
+      <text x="743.2" y="245" class="value">4</text>
+      <text x="208" y="279" text-anchor="end" class="label">바닥 착석 편안함</text>
+      <rect x="220" y="264" width="437.91999999999996" height="18" rx="3" fill="#2f6f73" />
+      <text x="665.92" y="279" class="value">3.4</text>
+  
+</svg>

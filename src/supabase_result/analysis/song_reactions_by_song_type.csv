@@ -1,0 +1,49 @@
+song_id,title,reaction_type,reaction_label,count,pct_in_song
+twenty-eight,스물여덟,clap,박수,3,75
+twenty-eight,스물여덟,like,좋아요,0,0
+twenty-eight,스물여덟,spark,반짝임,1,25
+twenty-eight,스물여덟,wave,파도,0,0
+daedongje,대동제,clap,박수,3,27.3
+daedongje,대동제,like,좋아요,5,45.5
+daedongje,대동제,spark,반짝임,0,0
+daedongje,대동제,wave,파도,3,27.3
+wharf,부둣가,clap,박수,5,31.3
+wharf,부둣가,like,좋아요,5,31.3
+wharf,부둣가,spark,반짝임,1,6.3
+wharf,부둣가,wave,파도,5,31.3
+boy-and-girl,소년과 소녀,clap,박수,1,10
+boy-and-girl,소년과 소녀,like,좋아요,5,50
+boy-and-girl,소년과 소녀,spark,반짝임,4,40
+boy-and-girl,소년과 소녀,wave,파도,0,0
+needless-words,괜한 말,clap,박수,3,60
+needless-words,괜한 말,like,좋아요,0,0
+needless-words,괜한 말,spark,반짝임,1,20
+needless-words,괜한 말,wave,파도,1,20
+noknok-knock-knock,Knock Knock,clap,박수,5,33.3
+noknok-knock-knock,Knock Knock,like,좋아요,4,26.7
+noknok-knock-knock,Knock Knock,spark,반짝임,5,33.3
+noknok-knock-knock,Knock Knock,wave,파도,1,6.7
+sea,바다,clap,박수,2,22.2
+sea,바다,like,좋아요,3,33.3
+sea,바다,spark,반짝임,1,11.1
+sea,바다,wave,파도,3,33.3
+psyche,Psyche,clap,박수,0,0
+psyche,Psyche,like,좋아요,0,0
+psyche,Psyche,spark,반짝임,0,0
+psyche,Psyche,wave,파도,0,0
+someones,누군가의,clap,박수,4,80
+someones,누군가의,like,좋아요,1,20
+someones,누군가의,spark,반짝임,0,0
+someones,누군가의,wave,파도,0,0
+hongmyo-red-anchor,홍묘,clap,박수,0,0
+hongmyo-red-anchor,홍묘,like,좋아요,6,85.7
+hongmyo-red-anchor,홍묘,spark,반짝임,1,14.3
+hongmyo-red-anchor,홍묘,wave,파도,0,0
+two-am,새벽두시,clap,박수,5,50
+two-am,새벽두시,like,좋아요,4,40
+two-am,새벽두시,spark,반짝임,1,10
+two-am,새벽두시,wave,파도,0,0
+look-at-me-please,"날 좀 봐줘요, 좀 봐줘요",clap,박수,4,50
+look-at-me-please,"날 좀 봐줘요, 좀 봐줘요",like,좋아요,4,50
+look-at-me-please,"날 좀 봐줘요, 좀 봐줘요",spark,반짝임,0,0
+look-at-me-please,"날 좀 봐줘요, 좀 봐줘요",wave,파도,0,0

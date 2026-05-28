@@ -1,0 +1,3 @@
+question,label,n_responses,response_rate_pct,avg_chars,min_chars,max_chars
+memorable_moment,기억에 남는 순간,4,80,81,32,138
+improvement,개선점,3,60,168.7,16,262

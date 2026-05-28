@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="292" viewBox="0 0 820 292">
+  <style>
+    .bg { fill: #fbfaf7; }
+    .title { font: 700 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1f2528; }
+    .label { font: 500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #293236; }
+    .value, .legend { font: 500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #293236; }
+    .heat-value { font: 700 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #fffdf8; }
+  </style>
+  <rect class="bg" width="100%" height="100%" />
+  
+    <text x="24" y="34" class="title">인상 깊었던 요소 선택 수</text>
+    
+      <text x="208" y="75" text-anchor="end" class="label">천장 프로젝션</text>
+      <rect x="220" y="60" width="504" height="18" rx="3" fill="#2f6f73" />
+      <text x="732" y="75" class="value">4</text>
+      <text x="208" y="109" text-anchor="end" class="label">음악</text>
+      <rect x="220" y="94" width="378" height="18" rx="3" fill="#d99058" />
+      <text x="606" y="109" class="value">3</text>
+      <text x="208" y="143" text-anchor="end" class="label">천둥 버튼</text>
+      <rect x="220" y="128" width="378" height="18" rx="3" fill="#6b7fb8" />
+      <text x="606" y="143" class="value">3</text>
+      <text x="208" y="177" text-anchor="end" class="label">관객 공동 참여</text>
+      <rect x="220" y="162" width="252" height="18" rx="3" fill="#b65f6b" />
+      <text x="480" y="177" class="value">2</text>
+      <text x="208" y="211" text-anchor="end" class="label">공간</text>
+      <rect x="220" y="196" width="126" height="18" rx="3" fill="#6d8f45" />
+      <text x="354" y="211" class="value">1</text>
+      <text x="208" y="245" text-anchor="end" class="label">손 마네킹</text>
+      <rect x="220" y="230" width="126" height="18" rx="3" fill="#8f6bb8" />
+      <text x="354" y="245" class="value">1</text>
+  
+</svg>
