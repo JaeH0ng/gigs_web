@@ -1,0 +1,6 @@
+participant,has_reaction_log,reaction_total,active_song_count,reactions_per_active_song,top_song,top_song_reactions,dominant_reaction,dominant_reaction_count,avg_rating,overall_satisfaction,flow_immersion,active_participation,revisit_intent,avg_interaction_rating,selected_impressive_count,selected_impressive
+응답자 1,yes,10,6,1.67,Knock Knock,3,반짝임,5,3.71,4,3,3,4,4.33,3,음악; 천장 프로젝션; 손 모양 마네킹 인터렉션
+응답자 2,no,0,0,0,,0,,0,3.14,3,3,4,3,3.11,1,천둥 버튼
+응답자 3,yes,7,4,1.75,"날 좀 봐줘요, 좀 봐줘요",3,박수,3,4.43,4,5,5,4,4.56,2,관객들과 함께 참여하는 분위기; 천장 프로젝션
+응답자 4,yes,65,11,5.91,부둣가,12,좋아요,31,5,5,5,5,5,5,3,음악; 천둥 버튼; 천장 프로젝션
+응답자 5,yes,3,2,1.5,새벽두시,2,좋아요,2,4.29,4,4,5,5,4.67,5,음악; 천둥 버튼; 관객들과 함께 참여하는 분위기; 공간 연출; 천장 프로젝션

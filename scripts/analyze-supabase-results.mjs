@@ -211,6 +211,17 @@ function stddev(values) {
   return Math.sqrt(variance)
 }
 
+function pearson(xValues, yValues) {
+  if (xValues.length !== yValues.length || xValues.length < 2) return null
+  const xMean = mean(xValues)
+  const yMean = mean(yValues)
+  const numerator = xValues.reduce((sum, x, index) => sum + (x - xMean) * (yValues[index] - yMean), 0)
+  const xDenominator = Math.sqrt(xValues.reduce((sum, x) => sum + (x - xMean) ** 2, 0))
+  const yDenominator = Math.sqrt(yValues.reduce((sum, y) => sum + (y - yMean) ** 2, 0))
+  if (xDenominator === 0 || yDenominator === 0) return null
+  return numerator / (xDenominator * yDenominator)
+}
+
 function round(value, digits = 2) {
   return Number(value.toFixed(digits))
 }
@@ -415,6 +426,44 @@ function svgHeatmap(rows) {
   writeSvg('interaction_ratings_heatmap.svg', width, height, `
     <text x="24" y="36" class="title">상호작용 평가 평균</text>
     ${cells.join('')}
+  `)
+}
+
+function svgScatterChart({ title, rows, xKey, yKey, xLabel, yLabel, fileName }) {
+  const width = 820
+  const height = 460
+  const margin = { top: 70, right: 56, bottom: 72, left: 82 }
+  const plotWidth = width - margin.left - margin.right
+  const plotHeight = height - margin.top - margin.bottom
+  const xValues = rows.map((row) => row[xKey])
+  const yValues = rows.map((row) => row[yKey])
+  const xMax = Math.max(1, ...xValues)
+  const yMin = Math.min(1, ...yValues)
+  const yMax = Math.max(5, ...yValues)
+  const xScale = (value) => margin.left + (value / xMax) * plotWidth
+  const yScale = (value) => margin.top + plotHeight - ((value - yMin) / (yMax - yMin || 1)) * plotHeight
+  const points = rows.map((row) => `
+    <circle cx="${xScale(row[xKey])}" cy="${yScale(row[yKey])}" r="7" fill="#2f6f73" />
+    <text x="${xScale(row[xKey]) + 10}" y="${yScale(row[yKey]) - 8}" class="value">${escapeXml(row.participant)}</text>
+  `).join('')
+  const xTicks = [0, Math.round(xMax / 2), xMax].map((tick) => `
+    <text x="${xScale(tick)}" y="${height - 36}" text-anchor="middle" class="value">${tick}</text>
+    <line x1="${xScale(tick)}" x2="${xScale(tick)}" y1="${margin.top}" y2="${margin.top + plotHeight}" stroke="#e1ded7" />
+  `).join('')
+  const yTicks = [1, 2, 3, 4, 5].map((tick) => `
+    <text x="${margin.left - 12}" y="${yScale(tick) + 5}" text-anchor="end" class="value">${tick}</text>
+    <line x1="${margin.left}" x2="${margin.left + plotWidth}" y1="${yScale(tick)}" y2="${yScale(tick)}" stroke="#e1ded7" />
+  `).join('')
+
+  writeSvg(fileName, width, height, `
+    <text x="24" y="36" class="title">${escapeXml(title)}</text>
+    ${xTicks}
+    ${yTicks}
+    <line x1="${margin.left}" x2="${margin.left + plotWidth}" y1="${margin.top + plotHeight}" y2="${margin.top + plotHeight}" stroke="#293236" />
+    <line x1="${margin.left}" x2="${margin.left}" y1="${margin.top}" y2="${margin.top + plotHeight}" stroke="#293236" />
+    ${points}
+    <text x="${margin.left + plotWidth / 2}" y="${height - 10}" text-anchor="middle" class="label">${escapeXml(xLabel)}</text>
+    <text x="24" y="${margin.top + plotHeight / 2}" transform="rotate(-90 24 ${margin.top + plotHeight / 2})" text-anchor="middle" class="label">${escapeXml(yLabel)}</text>
   `)
 }
 
@@ -645,6 +694,119 @@ for (const song of reactionsBySong) {
   }
 }
 
+const surveyClients = new Set(parsedSurveys.map((row) => row.client_id))
+const reactionClients = new Set(reactionRows.map((row) => row.client_id))
+const matchedClientIds = [...surveyClients].filter((clientId) => reactionClients.has(clientId))
+const reactionOnlyClientIds = [...reactionClients].filter((clientId) => !surveyClients.has(clientId))
+const surveyOnlyClientIds = [...surveyClients].filter((clientId) => !reactionClients.has(clientId))
+const clientAlias = new Map(parsedSurveys.map((row, index) => [row.client_id, `응답자 ${index + 1}`]))
+
+function topEntry(entries) {
+  if (!entries.length) return ['', 0]
+  return entries.sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])))[0]
+}
+
+function averageRatings(row) {
+  const ratingValues = ratingQuestions.map((question) => row.ratings[question]).filter(Number.isFinite)
+  return round(mean(ratingValues))
+}
+
+function averageInteractionRatings(row) {
+  const values = []
+  for (const dimension of Object.keys(interactionDimensionLabels)) {
+    for (const channel of Object.keys(interactionChannelLabels)) {
+      const value = row.interaction_ratings?.[dimension]?.[channel]
+      if (Number.isFinite(value)) values.push(value)
+    }
+  }
+  return round(mean(values))
+}
+
+const joinedClientSummary = parsedSurveys.map((survey, index) => {
+  const rows = reactionRows.filter((row) => row.client_id === survey.client_id)
+  const songCounts = new Map()
+  const typeCounts = new Map()
+  for (const row of rows) {
+    songCounts.set(row.song_id, (songCounts.get(row.song_id) ?? 0) + 1)
+    typeCounts.set(row.reaction_type, (typeCounts.get(row.reaction_type) ?? 0) + 1)
+  }
+  const [topSongId, topSongCount] = topEntry([...songCounts.entries()])
+  const [topReactionType, topReactionCount] = topEntry([...typeCounts.entries()])
+  const selectedFeatures = survey.most_impressive.map((feature) => featureOptionTexts[feature]?.ko ?? feature)
+
+  return {
+    participant: clientAlias.get(survey.client_id) ?? `응답자 ${index + 1}`,
+    has_reaction_log: rows.length > 0 ? 'yes' : 'no',
+    reaction_total: rows.length,
+    active_song_count: songCounts.size,
+    reactions_per_active_song: songCounts.size ? round(rows.length / songCounts.size) : 0,
+    top_song: songMeta.get(topSongId)?.title ?? topSongId,
+    top_song_reactions: topSongCount,
+    dominant_reaction: reactionTypeLabels[topReactionType] ?? topReactionType,
+    dominant_reaction_count: topReactionCount,
+    avg_rating: averageRatings(survey),
+    overall_satisfaction: survey.ratings.overall_satisfaction,
+    flow_immersion: survey.ratings.flow_immersion,
+    active_participation: survey.ratings.active_participation,
+    revisit_intent: survey.ratings.revisit_intent,
+    avg_interaction_rating: averageInteractionRatings(survey),
+    selected_impressive_count: survey.most_impressive.length,
+    selected_impressive: selectedFeatures.join('; '),
+  }
+})
+
+const reactionOnlySummary = reactionOnlyClientIds.map((clientId, index) => {
+  const rows = reactionRows.filter((row) => row.client_id === clientId)
+  const songCounts = new Map()
+  const typeCounts = new Map()
+  for (const row of rows) {
+    songCounts.set(row.song_id, (songCounts.get(row.song_id) ?? 0) + 1)
+    typeCounts.set(row.reaction_type, (typeCounts.get(row.reaction_type) ?? 0) + 1)
+  }
+  const [topSongId, topSongCount] = topEntry([...songCounts.entries()])
+  const [topReactionType, topReactionCount] = topEntry([...typeCounts.entries()])
+  return {
+    participant: `리액션만 ${index + 1}`,
+    reaction_total: rows.length,
+    active_song_count: songCounts.size,
+    top_song: songMeta.get(topSongId)?.title ?? topSongId,
+    top_song_reactions: topSongCount,
+    dominant_reaction: reactionTypeLabels[topReactionType] ?? topReactionType,
+    dominant_reaction_count: topReactionCount,
+  }
+})
+
+const correlationTargets = [
+  ['avg_rating', '전체 설문 평균'],
+  ['overall_satisfaction', '전반적 만족도'],
+  ['flow_immersion', '흐름/몰입도'],
+  ['active_participation', '능동적 참여도'],
+  ['revisit_intent', '재관람 의향'],
+  ['avg_interaction_rating', '상호작용 평가 평균'],
+  ['selected_impressive_count', '인상 깊었던 요소 선택 수'],
+]
+const correlationMetrics = [
+  ['reaction_total', '총 리액션 수'],
+  ['active_song_count', '리액션한 곡 수'],
+]
+const engagementCorrelations = []
+for (const [metric, metricLabel] of correlationMetrics) {
+  for (const [target, targetLabel] of correlationTargets) {
+    const xValues = joinedClientSummary.map((row) => row[metric]).filter(Number.isFinite)
+    const yValues = joinedClientSummary.map((row) => row[target]).filter(Number.isFinite)
+    const r = pearson(xValues, yValues)
+    engagementCorrelations.push({
+      metric,
+      metric_label: metricLabel,
+      survey_metric: target,
+      survey_metric_label: targetLabel,
+      n: Math.min(xValues.length, yValues.length),
+      pearson_r: r == null ? '' : round(r, 3),
+      note: '표본이 작아 탐색적 지표로만 해석',
+    })
+  }
+}
+
 const questionOverview = [
   ...surveyRatingSummary.map((summary) => ({
     question_id: summary.question,
@@ -695,6 +857,19 @@ writeCsv('open_text_summary.csv', openTextSummary, ['question', 'label', 'n_resp
 writeCsv('song_reactions_by_song.csv', reactionsBySong, ['song_id', 'order', 'title', 'total', 'unique_clients', 'reactions_per_client', ...reactionTypes])
 writeCsv('song_reactions_by_type.csv', reactionsByType, ['reaction_type', 'label', 'total', 'unique_clients', 'pct_of_reactions'])
 writeCsv('song_reactions_by_song_type.csv', reactionsBySongType, ['song_id', 'title', 'reaction_type', 'reaction_label', 'count', 'pct_in_song'])
+writeCsv('joined_client_summary.csv', joinedClientSummary, [
+  'participant', 'has_reaction_log', 'reaction_total', 'active_song_count', 'reactions_per_active_song',
+  'top_song', 'top_song_reactions', 'dominant_reaction', 'dominant_reaction_count',
+  'avg_rating', 'overall_satisfaction', 'flow_immersion', 'active_participation', 'revisit_intent',
+  'avg_interaction_rating', 'selected_impressive_count', 'selected_impressive',
+])
+writeCsv('reaction_only_clients_summary.csv', reactionOnlySummary, [
+  'participant', 'reaction_total', 'active_song_count', 'top_song', 'top_song_reactions',
+  'dominant_reaction', 'dominant_reaction_count',
+])
+writeCsv('engagement_rating_correlations.csv', engagementCorrelations, [
+  'metric', 'metric_label', 'survey_metric', 'survey_metric_label', 'n', 'pearson_r', 'note',
+])
 
 svgBarChart({
   title: '설문 척도 문항 평균',
@@ -743,9 +918,31 @@ svgPieChart({
   rows: reactionsByType.map((row) => ({ label: row.label, count: row.total })),
   fileName: 'reaction_type_pie.svg',
 })
+svgScatterChart({
+  title: '응답자별 리액션 수와 전체 설문 평균',
+  rows: joinedClientSummary,
+  xKey: 'reaction_total',
+  yKey: 'avg_rating',
+  xLabel: '총 리액션 수',
+  yLabel: '전체 설문 평균',
+  fileName: 'joined_reactions_vs_avg_rating.svg',
+})
+svgScatterChart({
+  title: '응답자별 리액션한 곡 수와 전반적 만족도',
+  rows: joinedClientSummary,
+  xKey: 'active_song_count',
+  yKey: 'overall_satisfaction',
+  xLabel: '리액션한 곡 수',
+  yLabel: '전반적 만족도',
+  fileName: 'joined_active_songs_vs_satisfaction.svg',
+})
 
 const topSurvey = [...surveyRatingSummary].sort((a, b) => b.mean - a.mean)
 const topSongs = [...reactionsBySong].sort((a, b) => b.total - a.total).slice(0, 5)
+const notableCorrelationRows = [...engagementCorrelations]
+  .filter((row) => row.pearson_r !== '')
+  .sort((a, b) => Math.abs(b.pearson_r) - Math.abs(a.pearson_r))
+  .slice(0, 8)
 const report = `# 공연 이후 관객 리액션 및 설문 결과 분석
 
 생성일: ${new Date().toISOString().slice(0, 10)}
@@ -756,6 +953,57 @@ const report = `# 공연 이후 관객 리액션 및 설문 결과 분석
 - 리액션 이벤트: ${reactionRows.length}건
 - 리액션 참여 클라이언트: ${new Set(reactionRows.map((row) => row.client_id)).size}명
 - 리액션 곡 수: ${new Set(reactionRows.map((row) => row.song_id)).size}곡
+- 설문-리액션 매칭 응답자: ${matchedClientIds.length}명
+- 설문만 있고 리액션 로그가 없는 응답자: ${surveyOnlyClientIds.length}명
+- 리액션만 있고 설문이 없는 클라이언트: ${reactionOnlyClientIds.length}명
+
+## ID 연결 분석
+
+설문과 공연 중 웹 인터렉션은 같은 client_id를 사용하므로, 익명 응답자 단위로 실제 행동량과 사후 평가를 연결해 볼 수 있습니다. 단, 설문 응답자가 5명으로 적기 때문에 상관계수는 결론이라기보다 탐색적 단서로 해석해야 합니다.
+
+### 응답자별 행동-설문 요약
+
+${markdownTable(joinedClientSummary, [
+  ['응답자', 'participant'],
+  ['리액션 로그', 'has_reaction_log'],
+  ['총 리액션', 'reaction_total'],
+  ['리액션한 곡 수', 'active_song_count'],
+  ['1곡당 리액션', 'reactions_per_active_song'],
+  ['최다 리액션 곡', 'top_song'],
+  ['주 리액션', 'dominant_reaction'],
+  ['전체 설문 평균', 'avg_rating'],
+  ['전반 만족', 'overall_satisfaction'],
+  ['능동 참여', 'active_participation'],
+  ['재관람', 'revisit_intent'],
+  ['상호작용 평균', 'avg_interaction_rating'],
+  ['인상 요소 수', 'selected_impressive_count'],
+])}
+
+![리액션 수와 설문 평균](charts/joined_reactions_vs_avg_rating.svg)
+
+![리액션한 곡 수와 전반적 만족도](charts/joined_active_songs_vs_satisfaction.svg)
+
+### 탐색적 상관
+
+${markdownTable(notableCorrelationRows, [
+  ['행동 지표', 'metric_label'],
+  ['설문 지표', 'survey_metric_label'],
+  ['N', 'n'],
+  ['Pearson r', 'pearson_r'],
+  ['비고', 'note'],
+])}
+
+### 설문 없이 리액션만 있는 클라이언트
+
+${reactionOnlySummary.length ? markdownTable(reactionOnlySummary, [
+  ['참여자', 'participant'],
+  ['총 리액션', 'reaction_total'],
+  ['리액션한 곡 수', 'active_song_count'],
+  ['최다 리액션 곡', 'top_song'],
+  ['최다 곡 리액션 수', 'top_song_reactions'],
+  ['주 리액션', 'dominant_reaction'],
+  ['주 리액션 수', 'dominant_reaction_count'],
+]) : '없음'}
 
 ## 질문 및 답변 형식
 
@@ -903,6 +1151,9 @@ ${markdownTable(interactionSummary, [
 - song_reactions_by_song.csv
 - song_reactions_by_type.csv
 - song_reactions_by_song_type.csv
+- joined_client_summary.csv
+- reaction_only_clients_summary.csv
+- engagement_rating_correlations.csv
 - charts/*.svg
 `
 
