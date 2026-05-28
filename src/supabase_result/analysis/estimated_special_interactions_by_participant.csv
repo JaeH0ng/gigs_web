@@ -1,0 +1,6 @@
+song_id,song_title,action_type,label,participant,observed_song_reactions,estimated_count,source,allocation_basis
+noknok-knock-knock,Knock Knock,thunder_button,천둥 버튼,응답자 4,6,4,녹화 청취 기반 추정,Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중
+noknok-knock-knock,Knock Knock,thunder_button,천둥 버튼,리액션만 1,4,2,녹화 청취 기반 추정,Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중
+noknok-knock-knock,Knock Knock,thunder_button,천둥 버튼,응답자 1,3,2,녹화 청취 기반 추정,Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중
+noknok-knock-knock,Knock Knock,thunder_button,천둥 버튼,리액션만 2,1,1,녹화 청취 기반 추정,Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중
+noknok-knock-knock,Knock Knock,thunder_button,천둥 버튼,응답자 3,1,1,녹화 청취 기반 추정,Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중

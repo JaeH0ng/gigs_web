@@ -161,6 +161,17 @@ const reactionTypeLabels = {
   wave: '파도',
 }
 
+const estimatedSpecialActions = [
+  {
+    song_id: 'noknok-knock-knock',
+    action_type: 'thunder_button',
+    label: '천둥 버튼',
+    estimated_total: 10,
+    source: '녹화 청취 기반 추정',
+    allocation_basis: 'Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중',
+  },
+]
+
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'))
 }
@@ -700,10 +711,47 @@ const matchedClientIds = [...surveyClients].filter((clientId) => reactionClients
 const reactionOnlyClientIds = [...reactionClients].filter((clientId) => !surveyClients.has(clientId))
 const surveyOnlyClientIds = [...surveyClients].filter((clientId) => !reactionClients.has(clientId))
 const clientAlias = new Map(parsedSurveys.map((row, index) => [row.client_id, `응답자 ${index + 1}`]))
+const reactionOnlyAlias = new Map(reactionOnlyClientIds.map((clientId, index) => [clientId, `리액션만 ${index + 1}`]))
+
+function displayClient(clientId) {
+  return clientAlias.get(clientId) ?? reactionOnlyAlias.get(clientId) ?? '미분류'
+}
 
 function topEntry(entries) {
   if (!entries.length) return ['', 0]
   return entries.sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])))[0]
+}
+
+function allocateEstimateByObservedShare(rows, total) {
+  if (!rows.length || total <= 0) return []
+
+  const counts = new Map()
+  for (const row of rows) {
+    counts.set(row.client_id, (counts.get(row.client_id) ?? 0) + 1)
+  }
+
+  const observedTotal = rows.length
+  const allocations = [...counts.entries()].map(([clientId, count]) => {
+    const exact = (count / observedTotal) * total
+    return {
+      client_id: clientId,
+      observed_reaction_count: count,
+      exact,
+      estimated_count: Math.floor(exact),
+      remainder: exact - Math.floor(exact),
+    }
+  })
+
+  let remaining = total - allocations.reduce((sum, row) => sum + row.estimated_count, 0)
+  for (const row of allocations.sort((a, b) => b.remainder - a.remainder || b.observed_reaction_count - a.observed_reaction_count)) {
+    if (remaining <= 0) break
+    row.estimated_count += 1
+    remaining -= 1
+  }
+
+  return allocations
+    .sort((a, b) => b.estimated_count - a.estimated_count || b.observed_reaction_count - a.observed_reaction_count)
+    .map(({ exact, remainder, ...row }) => row)
 }
 
 function averageRatings(row) {
@@ -722,6 +770,34 @@ function averageInteractionRatings(row) {
   return round(mean(values))
 }
 
+const estimatedSpecialActionSummary = estimatedSpecialActions.map((action) => {
+  const observedRows = reactionRows.filter((row) => row.song_id === action.song_id)
+  return {
+    ...action,
+    song_title: songMeta.get(action.song_id)?.title ?? action.song_id,
+    observed_emoji_reactions: observedRows.length,
+    estimated_total_with_emoji: observedRows.length + action.estimated_total,
+  }
+})
+const estimatedSpecialActionAllocations = estimatedSpecialActions.flatMap((action) => {
+  const observedRows = reactionRows.filter((row) => row.song_id === action.song_id)
+  return allocateEstimateByObservedShare(observedRows, action.estimated_total).map((allocation) => ({
+    song_id: action.song_id,
+    song_title: songMeta.get(action.song_id)?.title ?? action.song_id,
+    action_type: action.action_type,
+    label: action.label,
+    participant: displayClient(allocation.client_id),
+    observed_song_reactions: allocation.observed_reaction_count,
+    estimated_count: allocation.estimated_count,
+    source: action.source,
+    allocation_basis: action.allocation_basis,
+  }))
+})
+const estimatedSpecialByParticipant = new Map()
+for (const row of estimatedSpecialActionAllocations) {
+  estimatedSpecialByParticipant.set(row.participant, (estimatedSpecialByParticipant.get(row.participant) ?? 0) + row.estimated_count)
+}
+
 const joinedClientSummary = parsedSurveys.map((survey, index) => {
   const rows = reactionRows.filter((row) => row.client_id === survey.client_id)
   const songCounts = new Map()
@@ -738,6 +814,8 @@ const joinedClientSummary = parsedSurveys.map((survey, index) => {
     participant: clientAlias.get(survey.client_id) ?? `응답자 ${index + 1}`,
     has_reaction_log: rows.length > 0 ? 'yes' : 'no',
     reaction_total: rows.length,
+    estimated_special_interactions: estimatedSpecialByParticipant.get(clientAlias.get(survey.client_id)) ?? 0,
+    total_with_estimated_special: rows.length + (estimatedSpecialByParticipant.get(clientAlias.get(survey.client_id)) ?? 0),
     active_song_count: songCounts.size,
     reactions_per_active_song: songCounts.size ? round(rows.length / songCounts.size) : 0,
     top_song: songMeta.get(topSongId)?.title ?? topSongId,
@@ -765,9 +843,12 @@ const reactionOnlySummary = reactionOnlyClientIds.map((clientId, index) => {
   }
   const [topSongId, topSongCount] = topEntry([...songCounts.entries()])
   const [topReactionType, topReactionCount] = topEntry([...typeCounts.entries()])
+  const participant = `리액션만 ${index + 1}`
   return {
-    participant: `리액션만 ${index + 1}`,
+    participant,
     reaction_total: rows.length,
+    estimated_special_interactions: estimatedSpecialByParticipant.get(participant) ?? 0,
+    total_with_estimated_special: rows.length + (estimatedSpecialByParticipant.get(participant) ?? 0),
     active_song_count: songCounts.size,
     top_song: songMeta.get(topSongId)?.title ?? topSongId,
     top_song_reactions: topSongCount,
@@ -857,14 +938,24 @@ writeCsv('open_text_summary.csv', openTextSummary, ['question', 'label', 'n_resp
 writeCsv('song_reactions_by_song.csv', reactionsBySong, ['song_id', 'order', 'title', 'total', 'unique_clients', 'reactions_per_client', ...reactionTypes])
 writeCsv('song_reactions_by_type.csv', reactionsByType, ['reaction_type', 'label', 'total', 'unique_clients', 'pct_of_reactions'])
 writeCsv('song_reactions_by_song_type.csv', reactionsBySongType, ['song_id', 'title', 'reaction_type', 'reaction_label', 'count', 'pct_in_song'])
+writeCsv('estimated_special_interactions_summary.csv', estimatedSpecialActionSummary, [
+  'song_id', 'song_title', 'action_type', 'label', 'estimated_total', 'observed_emoji_reactions',
+  'estimated_total_with_emoji', 'source', 'allocation_basis',
+])
+writeCsv('estimated_special_interactions_by_participant.csv', estimatedSpecialActionAllocations, [
+  'song_id', 'song_title', 'action_type', 'label', 'participant', 'observed_song_reactions',
+  'estimated_count', 'source', 'allocation_basis',
+])
 writeCsv('joined_client_summary.csv', joinedClientSummary, [
-  'participant', 'has_reaction_log', 'reaction_total', 'active_song_count', 'reactions_per_active_song',
+  'participant', 'has_reaction_log', 'reaction_total', 'estimated_special_interactions', 'total_with_estimated_special',
+  'active_song_count', 'reactions_per_active_song',
   'top_song', 'top_song_reactions', 'dominant_reaction', 'dominant_reaction_count',
   'avg_rating', 'overall_satisfaction', 'flow_immersion', 'active_participation', 'revisit_intent',
   'avg_interaction_rating', 'selected_impressive_count', 'selected_impressive',
 ])
 writeCsv('reaction_only_clients_summary.csv', reactionOnlySummary, [
-  'participant', 'reaction_total', 'active_song_count', 'top_song', 'top_song_reactions',
+  'participant', 'reaction_total', 'estimated_special_interactions', 'total_with_estimated_special',
+  'active_song_count', 'top_song', 'top_song_reactions',
   'dominant_reaction', 'dominant_reaction_count',
 ])
 writeCsv('engagement_rating_correlations.csv', engagementCorrelations, [
@@ -939,6 +1030,19 @@ svgScatterChart({
 
 const topSurvey = [...surveyRatingSummary].sort((a, b) => b.mean - a.mean)
 const topSongs = [...reactionsBySong].sort((a, b) => b.total - a.total).slice(0, 5)
+const reactionsBySongWithEstimatedSpecial = reactionsBySong.map((song) => {
+  const estimatedSpecialCount = estimatedSpecialActionSummary
+    .filter((action) => action.song_id === song.song_id)
+    .reduce((sum, action) => sum + action.estimated_total, 0)
+  return {
+    ...song,
+    estimated_special_interactions: estimatedSpecialCount,
+    total_with_estimated_special: song.total + estimatedSpecialCount,
+  }
+})
+const topSongsWithEstimatedSpecial = [...reactionsBySongWithEstimatedSpecial]
+  .sort((a, b) => b.total_with_estimated_special - a.total_with_estimated_special)
+  .slice(0, 5)
 const notableCorrelationRows = [...engagementCorrelations]
   .filter((row) => row.pearson_r !== '')
   .sort((a, b) => Math.abs(b.pearson_r) - Math.abs(a.pearson_r))
@@ -952,9 +1056,11 @@ const mostEngagedClient = [...joinedClientSummary].sort((a, b) => b.reaction_tot
 const broadestEngagementClient = [...joinedClientSummary].sort((a, b) => b.active_song_count - a.active_song_count)[0]
 const noReactionSurveyClients = joinedClientSummary.filter((row) => row.has_reaction_log === 'no')
 const strongestCorrelation = notableCorrelationRows[0]
+const reportDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date())
 const dataOverviewRows = [
   { item: '설문 응답', value: `${parsedSurveys.length}명`, note: '공연 후 만족도/상호작용 평가' },
   { item: '리액션 이벤트', value: `${reactionRows.length}건`, note: '공연 중 웹 아이콘 인터랙션 로그' },
+  { item: '추정 특수 인터랙션', value: `${estimatedSpecialActionSummary.reduce((sum, row) => sum + row.estimated_total, 0)}건`, note: '원자료 로그가 아니라 녹화 기반으로 보정한 천둥 버튼 추정치' },
   { item: '리액션 참여 클라이언트', value: `${new Set(reactionRows.map((row) => row.client_id)).size}명`, note: '리액션을 1회 이상 남긴 익명 클라이언트' },
   { item: '리액션 발생 곡', value: `${new Set(reactionRows.map((row) => row.song_id)).size}곡`, note: 'Psyche 제외 11곡에서 리액션 기록' },
   { item: '설문-리액션 매칭', value: `${matchedClientIds.length}/${parsedSurveys.length}명`, note: `설문 응답자의 ${pct(matchedClientIds.length, parsedSurveys.length)}%가 리액션 로그와 연결` },
@@ -988,6 +1094,11 @@ const coreFindingRows = [
     interpretation: '상위 곡은 곡의 장면 전환이나 인터랙션 구조가 관객 행동을 더 잘 유도했을 가능성이 있습니다.',
   },
   {
+    finding: 'Knock Knock의 천둥 버튼은 별도 추정치로 반영됨',
+    evidence: `이모지 리액션 15건 + 천둥 버튼 추정 10건 = 보정 총 ${estimatedSpecialActionSummary[0].estimated_total_with_emoji}건`,
+    interpretation: '천둥 버튼은 Supabase 리액션 로그에 저장되지 않아 녹화 청취 기반 추정치로 분리 표기했습니다.',
+  },
+  {
     finding: '참여 폭과 만족도 사이에 탐색적 관계가 보임',
     evidence: `${strongestCorrelation.metric_label} ↔ ${strongestCorrelation.survey_metric_label}, Pearson r=${strongestCorrelation.pearson_r}, N=${strongestCorrelation.n}`,
     interpretation: '여러 곡에 걸쳐 리액션을 남긴 관객일수록 전반 만족도도 높게 나타났습니다. 단, 표본이 작아 인과관계가 아니라 경향으로 해석해야 합니다.',
@@ -995,7 +1106,7 @@ const coreFindingRows = [
 ]
 const report = `# 공연 이후 관객 리액션 및 설문 결과 분석
 
-생성일: ${new Date().toISOString().slice(0, 10)}
+생성일: ${reportDate}
 
 ## 데이터 개요
 
@@ -1037,6 +1148,8 @@ ${markdownTable(joinedClientSummary, [
   ['응답자', 'participant'],
   ['리액션 로그', 'has_reaction_log'],
   ['총 리액션', 'reaction_total'],
+  ['추정 천둥', 'estimated_special_interactions'],
+  ['보정 총합', 'total_with_estimated_special'],
   ['리액션한 곡 수', 'active_song_count'],
   ['1곡당 리액션', 'reactions_per_active_song'],
   ['최다 리액션 곡', 'top_song'],
@@ -1053,7 +1166,7 @@ ${markdownTable(joinedClientSummary, [
 
 ![리액션한 곡 수와 전반적 만족도](charts/joined_active_songs_vs_satisfaction.svg)
 
-해석: ${mostEngagedClient.participant}는 총 리액션 ${mostEngagedClient.reaction_total}건, 리액션한 곡 수 ${mostEngagedClient.active_song_count}곡으로 가장 적극적인 참여자입니다. 이 응답자의 전체 설문 평균은 ${mostEngagedClient.avg_rating}점, 전반 만족도는 ${mostEngagedClient.overall_satisfaction}점입니다. 반대로 리액션 로그가 없는 설문 응답자는 ${noReactionSurveyClients.length}명이며, ${noReactionSurveyClients.length ? `${noReactionSurveyClients[0].participant}의 전체 설문 평균은 ${noReactionSurveyClients[0].avg_rating}점입니다.` : '해당 응답자는 없습니다.'} 이 비교는 "참여 행동이 많은 관객이 더 긍정적으로 평가했는가"를 볼 수 있게 해줍니다.
+해석: ${mostEngagedClient.participant}는 원자료 기준 총 리액션 ${mostEngagedClient.reaction_total}건, 리액션한 곡 수 ${mostEngagedClient.active_song_count}곡으로 가장 적극적인 참여자입니다. 추정 천둥 버튼까지 포함하면 보정 총합은 ${mostEngagedClient.total_with_estimated_special}건입니다. 이 응답자의 전체 설문 평균은 ${mostEngagedClient.avg_rating}점, 전반 만족도는 ${mostEngagedClient.overall_satisfaction}점입니다. 반대로 리액션 로그가 없는 설문 응답자는 ${noReactionSurveyClients.length}명이며, ${noReactionSurveyClients.length ? `${noReactionSurveyClients[0].participant}의 전체 설문 평균은 ${noReactionSurveyClients[0].avg_rating}점입니다.` : '해당 응답자는 없습니다.'} 이 비교는 "참여 행동이 많은 관객이 더 긍정적으로 평가했는가"를 볼 수 있게 해줍니다.
 
 ### 탐색적 상관
 
@@ -1170,6 +1283,30 @@ ${markdownTable(reactionsBySong, [
 
 ![곡별 리액션 수](charts/song_reactions_stacked.svg)
 
+### 추정 특수 인터랙션: Knock Knock 천둥 버튼
+
+Knock Knock에는 일반 이모지 리액션과 별도로 천둥 버튼이 있었지만, 이 버튼 클릭은 song_reactions 원자료에 저장되어 있지 않습니다. 녹화 확인 기준으로 약 10회 사용된 것으로 보고, 아래 표에는 원자료와 구분되는 추정치로 반영했습니다.
+
+${markdownTable(estimatedSpecialActionSummary, [
+  ['곡', 'song_title'],
+  ['인터랙션', 'label'],
+  ['원자료 이모지 리액션', 'observed_emoji_reactions'],
+  ['천둥 버튼 추정', 'estimated_total'],
+  ['보정 총합', 'estimated_total_with_emoji'],
+  ['근거', 'source'],
+])}
+
+천둥 버튼 10회는 기존 Knock Knock 이모지 리액션을 남긴 클라이언트 비중에 따라 아래처럼 분배했습니다. 이 분배는 실제 로그가 아니라 분석용 추정치입니다.
+
+${markdownTable(estimatedSpecialActionAllocations, [
+  ['참여자', 'participant'],
+  ['Knock Knock 기존 리액션', 'observed_song_reactions'],
+  ['추정 천둥 버튼', 'estimated_count'],
+  ['분배 기준', 'allocation_basis'],
+])}
+
+추정 천둥 버튼까지 포함하면 곡별 보정 총량 상위 곡은 ${topSongsWithEstimatedSpecial.map((row) => `${row.title}(${row.total_with_estimated_special})`).join(', ')}입니다. 따라서 원자료 기준으로는 부둣가가 16건으로 가장 높지만, Knock Knock의 천둥 버튼을 포함해 보면 Knock Knock이 25건으로 가장 높은 참여 곡으로 해석될 수 있습니다.
+
 ## 리액션 타입별 집계
 
 ${markdownTable(reactionsByType, [
@@ -1241,6 +1378,8 @@ ${markdownTable(interactionSummary, [
 - song_reactions_by_song.csv
 - song_reactions_by_type.csv
 - song_reactions_by_song_type.csv
+- estimated_special_interactions_summary.csv
+- estimated_special_interactions_by_participant.csv
 - joined_client_summary.csv
 - reaction_only_clients_summary.csv
 - engagement_rating_correlations.csv

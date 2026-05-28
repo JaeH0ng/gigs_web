@@ -1,0 +1,2 @@
+song_id,song_title,action_type,label,estimated_total,observed_emoji_reactions,estimated_total_with_emoji,source,allocation_basis
+noknok-knock-knock,Knock Knock,thunder_button,천둥 버튼,10,15,25,녹화 청취 기반 추정,Knock Knock에서 기록된 기존 이모지 리액션의 클라이언트별 비중
