@@ -8,7 +8,7 @@
   </style>
   <rect class="bg" width="100%" height="100%" />
   
-    <text x="24" y="34" class="title">참여 몰입 - 웹페이지</text>
+    <text x="24" y="34" class="title">참여 몰입 - 웹 페이지</text>
     <text x="24" y="60" class="value">응답 5명, 평균 3.8, 중앙값 4, 4-5점 60%</text>
     <path d="M 190 190 L 302.22466892282813 153.5359946637562 A 118 118 0 0 0 190 72 Z" fill="#2f6f73" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 259.35865977051185 285.4640053362438 A 118 118 0 0 0 302.22466892282813 153.5359946637562 Z" fill="#d99058" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 120.64134022948818 285.4640053362438 A 118 118 0 0 0 259.35865977051185 285.4640053362438 Z" fill="#6b7fb8" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 189.99999999999997 72 A 118 118 0 0 0 120.64134022948818 285.4640053362438 Z" fill="#b65f6b" stroke="#fbfaf7" stroke-width="2" />
     <circle cx="190" cy="190" r="55" fill="#fbfaf7" />

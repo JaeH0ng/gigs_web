@@ -22,10 +22,10 @@
       <text x="208" y="177" text-anchor="end" class="label">관객 공동 참여</text>
       <rect x="220" y="162" width="252" height="18" rx="3" fill="#b65f6b" />
       <text x="480" y="177" class="value">2</text>
-      <text x="208" y="211" text-anchor="end" class="label">공간</text>
+      <text x="208" y="211" text-anchor="end" class="label">공간 연출</text>
       <rect x="220" y="196" width="126" height="18" rx="3" fill="#6d8f45" />
       <text x="354" y="211" class="value">1</text>
-      <text x="208" y="245" text-anchor="end" class="label">손 마네킹</text>
+      <text x="208" y="245" text-anchor="end" class="label">손 모양 마네킹 인터렉션</text>
       <rect x="220" y="230" width="126" height="18" rx="3" fill="#8f6bb8" />
       <text x="354" y="245" class="value">1</text>
   

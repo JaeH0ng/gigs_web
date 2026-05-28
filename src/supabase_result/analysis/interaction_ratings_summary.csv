@@ -1,10 +1,10 @@
 dimension,dimension_label,channel,channel_label,n,mean,median,min,max,stddev,top2_count,top2_pct,score_1,score_2,score_3,score_4,score_5
-mood_understanding,분위기 이해,web_page,웹페이지,5,4.8,5,4,5,0.45,5,100,0,0,0,1,4
-mood_understanding,분위기 이해,projection,프로젝션,5,4.6,5,4,5,0.55,5,100,0,0,0,2,3
-mood_understanding,분위기 이해,physical_touch,물리적 터치,5,4,4,2,5,1.22,4,80,0,1,0,2,2
-interaction_comfort,상호작용 편안함,web_page,웹페이지,5,4.6,5,4,5,0.55,5,100,0,0,0,2,3
-interaction_comfort,상호작용 편안함,projection,프로젝션,5,4,5,2,5,1.41,3,60,0,1,1,0,3
-interaction_comfort,상호작용 편안함,physical_touch,물리적 터치,5,4.8,5,4,5,0.45,5,100,0,0,0,1,4
-participation_immersion,참여 몰입,web_page,웹페이지,5,3.8,4,2,5,1.3,3,60,0,1,1,1,2
-participation_immersion,참여 몰입,projection,프로젝션,5,4,4,3,5,1,3,60,0,0,2,1,2
-participation_immersion,참여 몰입,physical_touch,물리적 터치,5,4.4,5,3,5,0.89,4,80,0,0,1,1,3
+mood_understanding,분위기 이해,projection,빔프로젝터,5,4.6,5,4,5,0.55,5,100,0,0,0,2,3
+mood_understanding,분위기 이해,web_page,웹 페이지,5,4.8,5,4,5,0.45,5,100,0,0,0,1,4
+mood_understanding,분위기 이해,physical_touch,실물 터치,5,4,4,2,5,1.22,4,80,0,1,0,2,2
+participation_immersion,참여 몰입,projection,빔프로젝터,5,4,4,3,5,1,3,60,0,0,2,1,2
+participation_immersion,참여 몰입,web_page,웹 페이지,5,3.8,4,2,5,1.3,3,60,0,1,1,1,2
+participation_immersion,참여 몰입,physical_touch,실물 터치,5,4.4,5,3,5,0.89,4,80,0,0,1,1,3
+interaction_comfort,상호작용 편안함,projection,빔프로젝터,5,4,5,2,5,1.41,3,60,0,1,1,0,3
+interaction_comfort,상호작용 편안함,web_page,웹 페이지,5,4.6,5,4,5,0.55,5,100,0,0,0,2,3
+interaction_comfort,상호작용 편안함,physical_touch,실물 터치,5,4.8,5,4,5,0.45,5,100,0,0,0,1,4

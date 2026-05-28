@@ -8,34 +8,150 @@ const outputDir = path.join(sourceDir, 'analysis')
 const chartsDir = path.join(outputDir, 'charts')
 
 const ratingLabels = {
-  space_fit: '공간 적합도',
-  artistic_fit: '예술적 적합도',
-  flow_immersion: '흐름/몰입도',
-  revisit_intent: '재관람 의향',
-  active_participation: '능동적 참여도',
   overall_satisfaction: '전반적 만족도',
+  flow_immersion: '흐름/몰입도',
+  space_fit: '공간 적합도',
   floor_seating_comfort: '바닥 착석 편안함',
+  active_participation: '능동적 참여도',
+  artistic_fit: '예술적 적합도',
+  revisit_intent: '재관람 의향',
+}
+
+const ratingQuestionTexts = {
+  overall_satisfaction: {
+    ko: '오늘 공연에 전반적으로 만족했다.',
+    en: 'Overall, I was satisfied with today’s performance.',
+  },
+  flow_immersion: {
+    ko: '공연의 흐름이 자연스럽고 몰입하기 좋았다.',
+    en: 'The flow of the performance felt natural and immersive.',
+  },
+  space_fit: {
+    ko: '공연 공간의 분위기가 곡과 잘 어울렸다.',
+    en: 'The atmosphere of the venue matched the songs well.',
+  },
+  floor_seating_comfort: {
+    ko: '돗자리에 앉아 인터렉션에 참여하는 공연장의 공간 구도가 편안했다.',
+    en: 'The floor-seating layout for participating in the interactions felt comfortable.',
+  },
+  active_participation: {
+    ko: '기존의 일반적인 공연보다 더 능동적으로 참여한다고 느꼈다.',
+    en: 'Compared with a typical concert, I felt more actively involved.',
+  },
+  artistic_fit: {
+    ko: '인터렉션 요소가 공연의 예술적 완성도를 해치지 않고 자연스럽게 어울렸다.',
+    en: 'The interactive elements felt natural and did not weaken the artistic quality.',
+  },
+  revisit_intent: {
+    ko: '다시 비슷한 형식의 공연을 관람하고 싶다.',
+    en: 'I would like to attend a similar performance again.',
+  },
+}
+
+const likertOptions = [
+  { value: 1, ko: '전혀 그렇지 않다', en: 'Strongly disagree' },
+  { value: 2, ko: '그렇지 않다', en: 'Disagree' },
+  { value: 3, ko: '보통이다', en: 'Neutral' },
+  { value: 4, ko: '그렇다', en: 'Agree' },
+  { value: 5, ko: '매우 그렇다', en: 'Strongly agree' },
+]
+
+const likertOptionText = likertOptions
+  .map((option) => `${option.value}=${option.ko}(${option.en})`)
+  .join(', ')
+
+const interactionQuestionTexts = {
+  mood_understanding: {
+    ko: '곡의 감정이나 분위기를 이해하는 데 도움이 되었다.',
+    en: 'It helped me understand the emotion or mood of the songs.',
+  },
+  participation_immersion: {
+    ko: '공연에 참여하고 몰입하고 있다는 느낌을 주었다.',
+    en: 'It made me feel involved and immersed in the performance.',
+  },
+  interaction_comfort: {
+    ko: '참여 방식이 직관적이고 부담스럽지 않았다.',
+    en: 'The way of participating felt intuitive and comfortable.',
+  },
 }
 
 const interactionDimensionLabels = {
   mood_understanding: '분위기 이해',
-  interaction_comfort: '상호작용 편안함',
   participation_immersion: '참여 몰입',
+  interaction_comfort: '상호작용 편안함',
 }
 
 const interactionChannelLabels = {
-  web_page: '웹페이지',
-  projection: '프로젝션',
-  physical_touch: '물리적 터치',
+  projection: '빔프로젝터',
+  web_page: '웹 페이지',
+  physical_touch: '실물 터치',
+}
+
+const interactionChannelTexts = {
+  projection: {
+    ko: '빔프로젝터',
+    en: 'Projection',
+  },
+  web_page: {
+    ko: '웹 페이지',
+    en: 'Web page',
+  },
+  physical_touch: {
+    ko: '실물 터치',
+    en: 'Physical touch',
+  },
 }
 
 const featureLabels = {
   music: '음악',
+  space: '공간 연출',
   ceiling_projection: '천장 프로젝션',
-  hand_mannequin: '손 마네킹',
+  emoji_reactions: '웹 이모지 반응',
   thunder_button: '천둥 버튼',
+  hand_mannequin: '손 모양 마네킹 인터렉션',
   shared_audience: '관객 공동 참여',
-  space: '공간',
+}
+
+const featureOptionTexts = {
+  music: {
+    ko: '음악',
+    en: 'Music',
+  },
+  space: {
+    ko: '공간 연출',
+    en: 'Spatial direction',
+  },
+  ceiling_projection: {
+    ko: '천장 프로젝션',
+    en: 'Ceiling projection',
+  },
+  emoji_reactions: {
+    ko: '웹 이모지 반응',
+    en: 'Web emoji reactions',
+  },
+  thunder_button: {
+    ko: '천둥 버튼',
+    en: 'Thunder button',
+  },
+  hand_mannequin: {
+    ko: '손 모양 마네킹 인터렉션',
+    en: 'Hand mannequin interaction',
+  },
+  shared_audience: {
+    ko: '관객들과 함께 참여하는 분위기',
+    en: 'The shared audience atmosphere',
+  },
+}
+
+const textQuestionTexts = {
+  memorable_moment: {
+    ko: '가장 기억에 남은 순간이나 인터렉션을 적어주세요.',
+    en: 'Please write the moment or interaction you remember most.',
+  },
+  improvement: {
+    ko: '개선되었으면 하는 점이 있다면 적어주세요.',
+    en: 'Please share anything you think could be improved.',
+  },
 }
 
 const reactionTypeLabels = {
@@ -352,14 +468,27 @@ function scalePieRows(summary) {
   }))
 }
 
+function scaleAnswerDistribution(summary) {
+  return likertOptions
+    .map((option) => `${option.value}점 ${summary[`score_${option.value}`]}명`)
+    .join(', ')
+}
+
 function questionSummaryLine(summary) {
   return `응답 ${summary.n}명, 평균 ${summary.mean}, 중앙값 ${summary.median}, 4-5점 ${summary.top2_pct}%`
 }
 
-function scaleQuestionBlocks(summaries, prefix) {
+function scaleQuestionBlocks(summaries, prefix, getQuestionInfo) {
   return summaries.map((summary) => {
     const fileName = `${prefix}_${slugify(summary.question)}.svg`
+    const questionInfo = getQuestionInfo(summary)
     return `### ${summary.label}
+
+질문: ${questionInfo.questionKo}  
+Question: ${questionInfo.questionEn}  
+답변 방식: ${questionInfo.answerType}  
+답변 선택지: ${likertOptionText}  
+응답 분포: ${scaleAnswerDistribution(summary)}
 
 ${questionSummaryLine(summary)}
 
@@ -377,11 +506,19 @@ function textResponsesBlock(rows, key, label) {
   if (!responses.length) {
     return `### ${label}
 
+질문: ${textQuestionTexts[key].ko}  
+Question: ${textQuestionTexts[key].en}  
+답변 방식: 자유 서술형
+
 응답 없음
 `
   }
 
   return `### ${label}
+
+질문: ${textQuestionTexts[key].ko}  
+Question: ${textQuestionTexts[key].en}  
+답변 방식: 자유 서술형
 
 ${responses.map((response, index) => `${index + 1}. ${response.replaceAll('\n', '<br>')}`).join('\n\n')}
 `
@@ -435,6 +572,16 @@ const featureSummary = [...featureCounts.entries()]
     pct_of_respondents: pct(count, parsedSurveys.length),
   }))
   .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+const featureOptionSummary = Object.keys(featureOptionTexts).map((feature) => {
+  const count = featureCounts.get(feature) ?? 0
+  return {
+    feature,
+    label: featureOptionTexts[feature].ko,
+    answer_en: featureOptionTexts[feature].en,
+    count,
+    pct_of_respondents: pct(count, parsedSurveys.length),
+  }
+})
 
 const openTextSummary = [
   ['memorable_moment', '기억에 남는 순간'],
@@ -498,6 +645,42 @@ for (const song of reactionsBySong) {
   }
 }
 
+const questionOverview = [
+  ...surveyRatingSummary.map((summary) => ({
+    question_id: summary.question,
+    label: summary.label,
+    question_ko: ratingQuestionTexts[summary.question].ko,
+    question_en: ratingQuestionTexts[summary.question].en,
+    answer_type: '5점 리커트 척도 단일 선택',
+    answer_options: likertOptionText,
+  })),
+  ...interactionSummary.map((summary) => ({
+    question_id: summary.question,
+    label: summary.label,
+    question_ko: `${interactionQuestionTexts[summary.dimension].ko} - ${interactionChannelTexts[summary.channel].ko}`,
+    question_en: `${interactionQuestionTexts[summary.dimension].en} - ${interactionChannelTexts[summary.channel].en}`,
+    answer_type: '영역별 5점 리커트 척도 단일 선택',
+    answer_options: likertOptionText,
+  })),
+  {
+    question_id: 'most_impressive',
+    label: '인상 깊었던 요소',
+    question_ko: '이번 공연에서 가장 인상 깊었던 요소는 무엇인가요? 복수 선택이 가능합니다.',
+    question_en: 'What were the most memorable elements of this performance? You may select multiple options.',
+    answer_type: '복수 선택형 체크박스',
+    answer_options: Object.values(featureOptionTexts).map((option) => `${option.ko}(${option.en})`).join(', '),
+  },
+  ...Object.entries(textQuestionTexts).map(([questionId, text]) => ({
+    question_id: questionId,
+    label: questionId === 'memorable_moment' ? '기억에 남는 순간' : '개선점',
+    question_ko: text.ko,
+    question_en: text.en,
+    answer_type: '자유 서술형',
+    answer_options: '응답자가 직접 작성',
+  })),
+]
+
+writeCsv('question_overview.csv', questionOverview, ['question_id', 'label', 'question_ko', 'question_en', 'answer_type', 'answer_options'])
 writeCsv('survey_ratings_summary.csv', surveyRatingSummary, [
   'question', 'label', 'n', 'mean', 'median', 'min', 'max', 'stddev', 'top2_count', 'top2_pct',
   'score_1', 'score_2', 'score_3', 'score_4', 'score_5',
@@ -507,6 +690,7 @@ writeCsv('interaction_ratings_summary.csv', interactionSummary, [
   'score_1', 'score_2', 'score_3', 'score_4', 'score_5',
 ])
 writeCsv('most_impressive_counts.csv', featureSummary, ['feature', 'label', 'count', 'pct_of_respondents'])
+writeCsv('most_impressive_options_summary.csv', featureOptionSummary, ['feature', 'label', 'answer_en', 'count', 'pct_of_respondents'])
 writeCsv('open_text_summary.csv', openTextSummary, ['question', 'label', 'n_responses', 'response_rate_pct', 'avg_chars', 'min_chars', 'max_chars'])
 writeCsv('song_reactions_by_song.csv', reactionsBySong, ['song_id', 'order', 'title', 'total', 'unique_clients', 'reactions_per_client', ...reactionTypes])
 writeCsv('song_reactions_by_type.csv', reactionsByType, ['reaction_type', 'label', 'total', 'unique_clients', 'pct_of_reactions'])
@@ -549,8 +733,8 @@ for (const summary of interactionSummary) {
 }
 svgPieChart({
   title: '인상 깊었던 요소',
-  subtitle: `복수 선택 응답 ${parsedSurveys.length}명, 총 선택 ${featureSummary.reduce((sum, row) => sum + row.count, 0)}건`,
-  rows: featureSummary.map((row) => ({ label: row.label, count: row.count })),
+  subtitle: `복수 선택 응답 ${parsedSurveys.length}명, 총 선택 ${featureOptionSummary.reduce((sum, row) => sum + row.count, 0)}건`,
+  rows: featureOptionSummary.map((row) => ({ label: row.label, count: row.count })),
   fileName: 'most_impressive_pie.svg',
 })
 svgPieChart({
@@ -573,28 +757,54 @@ const report = `# 공연 이후 관객 리액션 및 설문 결과 분석
 - 리액션 참여 클라이언트: ${new Set(reactionRows.map((row) => row.client_id)).size}명
 - 리액션 곡 수: ${new Set(reactionRows.map((row) => row.song_id)).size}곡
 
+## 질문 및 답변 형식
+
+${markdownTable(questionOverview, [
+  ['문항', 'label'],
+  ['질문', 'question_ko'],
+  ['Question', 'question_en'],
+  ['답변 방식', 'answer_type'],
+  ['답변 선택지', 'answer_options'],
+])}
+
 ## 설문 응답 요약
 
 각 척도형 문항은 점수 분포를 파이차트로 표시했습니다. 서술형 문항은 수치화 요약 뒤에 원문 응답을 그대로 표시했습니다.
 
 가장 높은 평균은 ${topSurvey[0].label}(${topSurvey[0].mean})이고, 가장 낮은 평균은 ${topSurvey.at(-1).label}(${topSurvey.at(-1).mean})입니다.
 
-${scaleQuestionBlocks(surveyRatingSummary, 'survey')}
+${scaleQuestionBlocks(surveyRatingSummary, 'survey', (summary) => ({
+  questionKo: ratingQuestionTexts[summary.question].ko,
+  questionEn: ratingQuestionTexts[summary.question].en,
+  answerType: '5점 리커트 척도 단일 선택',
+}))}
 
 ![설문 척도 문항 평균](charts/survey_ratings_average.svg)
 
 ## 상호작용 평가
 
-${scaleQuestionBlocks(interactionSummary, 'interaction')}
+상위 질문: 인터렉션 경험을 영역별로 평가해 주세요.  
+Parent question: Please rate each type of interaction separately.
+
+${scaleQuestionBlocks(interactionSummary, 'interaction', (summary) => ({
+  questionKo: `${interactionQuestionTexts[summary.dimension].ko} - ${interactionChannelTexts[summary.channel].ko}`,
+  questionEn: `${interactionQuestionTexts[summary.dimension].en} - ${interactionChannelTexts[summary.channel].en}`,
+  answerType: '영역별 5점 리커트 척도 단일 선택',
+}))}
 
 ![상호작용 평가 평균](charts/interaction_ratings_heatmap.svg)
 
 ## 인상 깊었던 요소
 
+질문: 이번 공연에서 가장 인상 깊었던 요소는 무엇인가요? 복수 선택이 가능합니다.  
+Question: What were the most memorable elements of this performance? You may select multiple options.  
+답변 방식: 복수 선택형 체크박스
+
 복수 선택 문항이라 각 선택지 비율의 합이 100%가 아닐 수 있습니다.
 
-${markdownTable(featureSummary, [
+${markdownTable(featureOptionSummary, [
   ['요소', 'label'],
+  ['Answer', 'answer_en'],
   ['선택 수', 'count'],
   ['응답자 대비 %', 'pct_of_respondents'],
 ])}
@@ -686,7 +896,9 @@ ${markdownTable(interactionSummary, [
 
 - survey_ratings_summary.csv
 - interaction_ratings_summary.csv
+- question_overview.csv
 - most_impressive_counts.csv
+- most_impressive_options_summary.csv
 - open_text_summary.csv
 - song_reactions_by_song.csv
 - song_reactions_by_type.csv

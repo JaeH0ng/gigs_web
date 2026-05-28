@@ -8,7 +8,7 @@
   </style>
   <rect class="bg" width="100%" height="100%" />
   
-    <text x="24" y="34" class="title">분위기 이해 - 웹페이지</text>
+    <text x="24" y="34" class="title">분위기 이해 - 웹 페이지</text>
     <text x="24" y="60" class="value">응답 5명, 평균 4.8, 중앙값 5, 4-5점 100%</text>
     <path d="M 190 190 L 302.22466892282813 153.5359946637562 A 118 118 0 0 0 190 72 Z" fill="#2f6f73" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 189.99999999999997 72 A 118 118 0 1 0 302.22466892282813 153.5359946637562 Z" fill="#d99058" stroke="#fbfaf7" stroke-width="2" />
     <circle cx="190" cy="190" r="55" fill="#fbfaf7" />

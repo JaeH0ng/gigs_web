@@ -10,28 +10,28 @@
   
     <text x="24" y="34" class="title">인상 깊었던 요소</text>
     <text x="24" y="60" class="value">복수 선택 응답 5명, 총 선택 14건</text>
-    <path d="M 190 190 L 305.0414936374552 216.25747020684508 A 118 118 0 0 0 190 72 Z" fill="#2f6f73" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 190 308 A 118 118 0 0 0 305.0414936374552 216.25747020684508 Z" fill="#d99058" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 74.95850636254482 216.25747020684517 A 118 118 0 0 0 190 308 Z" fill="#6b7fb8" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 97.74388506877247 116.42820338066946 A 118 118 0 0 0 74.95850636254482 216.25747020684517 Z" fill="#b65f6b" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 138.80171878412813 83.68567358751456 A 118 118 0 0 0 97.74388506877247 116.42820338066946 Z" fill="#6d8f45" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 189.99999999999997 72 A 118 118 0 0 0 138.80171878412813 83.68567358751456 Z" fill="#8f6bb8" stroke="#fbfaf7" stroke-width="2" />
+    <path d="M 190 190 L 305.0414936374552 163.7425297931549 A 118 118 0 0 0 190 72 Z" fill="#2f6f73" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 305.0414936374552 216.25747020684508 A 118 118 0 0 0 305.0414936374552 163.7425297931549 Z" fill="#d99058" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 138.80171878412818 296.31432641248546 A 118 118 0 0 0 305.0414936374552 216.25747020684508 Z" fill="#6b7fb8" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 74.9585063625448 163.74252979315497 A 118 118 0 0 0 138.80171878412818 296.31432641248546 Z" fill="#b65f6b" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 97.74388506877247 116.42820338066946 A 118 118 0 0 0 74.9585063625448 163.74252979315497 Z" fill="#6d8f45" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 189.99999999999997 72 A 118 118 0 0 0 97.74388506877247 116.42820338066946 Z" fill="#8f6bb8" stroke="#fbfaf7" stroke-width="2" />
     <circle cx="190" cy="190" r="55" fill="#fbfaf7" />
     <text x="190" y="186" text-anchor="middle" class="title">14</text>
     <text x="190" y="211" text-anchor="middle" class="value">응답</text>
     
       <rect x="380" y="113" width="14" height="14" rx="2" fill="#2f6f73" />
-      <text x="404" y="126" class="label">천장 프로젝션</text>
-      <text x="732" y="126" text-anchor="end" class="value">4명 (28.6%)</text>
+      <text x="404" y="126" class="label">음악</text>
+      <text x="732" y="126" text-anchor="end" class="value">3명 (21.4%)</text>
       <rect x="380" y="143" width="14" height="14" rx="2" fill="#d99058" />
-      <text x="404" y="156" class="label">음악</text>
-      <text x="732" y="156" text-anchor="end" class="value">3명 (21.4%)</text>
+      <text x="404" y="156" class="label">공간 연출</text>
+      <text x="732" y="156" text-anchor="end" class="value">1명 (7.1%)</text>
       <rect x="380" y="173" width="14" height="14" rx="2" fill="#6b7fb8" />
-      <text x="404" y="186" class="label">천둥 버튼</text>
-      <text x="732" y="186" text-anchor="end" class="value">3명 (21.4%)</text>
+      <text x="404" y="186" class="label">천장 프로젝션</text>
+      <text x="732" y="186" text-anchor="end" class="value">4명 (28.6%)</text>
       <rect x="380" y="203" width="14" height="14" rx="2" fill="#b65f6b" />
-      <text x="404" y="216" class="label">관객 공동 참여</text>
-      <text x="732" y="216" text-anchor="end" class="value">2명 (14.3%)</text>
+      <text x="404" y="216" class="label">천둥 버튼</text>
+      <text x="732" y="216" text-anchor="end" class="value">3명 (21.4%)</text>
       <rect x="380" y="233" width="14" height="14" rx="2" fill="#6d8f45" />
-      <text x="404" y="246" class="label">공간</text>
+      <text x="404" y="246" class="label">손 모양 마네킹 인터렉션</text>
       <text x="732" y="246" text-anchor="end" class="value">1명 (7.1%)</text>
       <rect x="380" y="263" width="14" height="14" rx="2" fill="#8f6bb8" />
-      <text x="404" y="276" class="label">손 마네킹</text>
-      <text x="732" y="276" text-anchor="end" class="value">1명 (7.1%)</text>
+      <text x="404" y="276" class="label">관객들과 함께 참여하는 분위기</text>
+      <text x="732" y="276" text-anchor="end" class="value">2명 (14.3%)</text>
   
 </svg>
