@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360">
+  <style>
+    .bg { fill: #fbfaf7; }
+    .title { font: 700 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1f2528; }
+    .label { font: 500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #293236; }
+    .value, .legend { font: 500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #293236; }
+    .heat-value { font: 700 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #fffdf8; }
+  </style>
+  <rect class="bg" width="100%" height="100%" />
+  
+    <text x="24" y="34" class="title">참여 몰입 - 프로젝션</text>
+    <text x="24" y="60" class="value">응답 5명, 평균 4, 중앙값 4, 4-5점 60%</text>
+    <path d="M 190 190 L 259.35865977051185 285.4640053362438 A 118 118 0 0 0 190 72 Z" fill="#2f6f73" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 120.64134022948818 285.4640053362438 A 118 118 0 0 0 259.35865977051185 285.4640053362438 Z" fill="#d99058" stroke="#fbfaf7" stroke-width="2" /><path d="M 190 190 L 189.99999999999997 72 A 118 118 0 0 0 120.64134022948818 285.4640053362438 Z" fill="#6b7fb8" stroke="#fbfaf7" stroke-width="2" />
+    <circle cx="190" cy="190" r="55" fill="#fbfaf7" />
+    <text x="190" y="186" text-anchor="middle" class="title">5</text>
+    <text x="190" y="211" text-anchor="middle" class="value">응답</text>
+    
+      <rect x="380" y="113" width="14" height="14" rx="2" fill="#2f6f73" />
+      <text x="404" y="126" class="label">3점</text>
+      <text x="732" y="126" text-anchor="end" class="value">2명 (40%)</text>
+      <rect x="380" y="143" width="14" height="14" rx="2" fill="#d99058" />
+      <text x="404" y="156" class="label">4점</text>
+      <text x="732" y="156" text-anchor="end" class="value">1명 (20%)</text>
+      <rect x="380" y="173" width="14" height="14" rx="2" fill="#6b7fb8" />
+      <text x="404" y="186" class="label">5점</text>
+      <text x="732" y="186" text-anchor="end" class="value">2명 (40%)</text>
+  
+</svg>

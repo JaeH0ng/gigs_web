@@ -141,6 +141,10 @@ function pct(count, total) {
   return total ? round((count / total) * 100, 1) : 0
 }
 
+function slugify(value) {
+  return String(value).replaceAll(/[^a-zA-Z0-9_-]/g, '-').replaceAll(/-+/g, '-').replaceAll(/^-|-$/g, '')
+}
+
 function svgBarChart({ title, rows, valueKey = 'value', labelKey = 'label', fileName, width = 960 }) {
   const rowHeight = 34
   const margin = { top: 54, right: 96, bottom: 34, left: 220 }
@@ -162,6 +166,66 @@ function svgBarChart({ title, rows, valueKey = 'value', labelKey = 'label', file
   writeSvg(fileName, width, height, `
     <text x="24" y="34" class="title">${escapeXml(title)}</text>
     ${body}
+  `)
+}
+
+function polarPoint(cx, cy, radius, angle) {
+  const radians = (angle - 90) * Math.PI / 180
+  return {
+    x: cx + radius * Math.cos(radians),
+    y: cy + radius * Math.sin(radians),
+  }
+}
+
+function piePath(cx, cy, radius, startAngle, endAngle) {
+  const start = polarPoint(cx, cy, radius, endAngle)
+  const end = polarPoint(cx, cy, radius, startAngle)
+  const largeArc = endAngle - startAngle <= 180 ? 0 : 1
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y} Z`
+}
+
+function svgPieChart({ title, subtitle, rows, fileName, width = 760 }) {
+  const filteredRows = rows.filter((row) => row.count > 0)
+  const total = filteredRows.reduce((sum, row) => sum + row.count, 0)
+  const legendRowHeight = 30
+  const height = Math.max(360, 160 + filteredRows.length * legendRowHeight)
+  const cx = 190
+  const cy = 190
+  const radius = 118
+  const colors = ['#2f6f73', '#d99058', '#6b7fb8', '#b65f6b', '#6d8f45', '#8f6bb8', '#4c8fa8']
+  let currentAngle = 0
+
+  const slices = total === 0
+    ? '<circle cx="190" cy="190" r="118" fill="#d9d6cf" />'
+    : filteredRows.map((row, index) => {
+      const angle = (row.count / total) * 360
+      const fill = colors[index % colors.length]
+      if (angle >= 359.999) {
+        currentAngle += angle
+        return `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${fill}" />`
+      }
+      const d = piePath(cx, cy, radius, currentAngle, currentAngle + angle)
+      currentAngle += angle
+      return `<path d="${d}" fill="${fill}" stroke="#fbfaf7" stroke-width="2" />`
+    }).join('')
+
+  const legend = filteredRows.map((row, index) => {
+    const y = 126 + index * legendRowHeight
+    const percent = pct(row.count, total)
+    return `
+      <rect x="380" y="${y - 13}" width="14" height="14" rx="2" fill="${colors[index % colors.length]}" />
+      <text x="404" y="${y}" class="label">${escapeXml(row.label)}</text>
+      <text x="${width - 28}" y="${y}" text-anchor="end" class="value">${row.count}명 (${percent}%)</text>`
+  }).join('')
+
+  writeSvg(fileName, width, height, `
+    <text x="24" y="34" class="title">${escapeXml(title)}</text>
+    <text x="24" y="60" class="value">${escapeXml(subtitle)}</text>
+    ${slices}
+    <circle cx="${cx}" cy="${cy}" r="55" fill="#fbfaf7" />
+    <text x="${cx}" y="${cy - 4}" text-anchor="middle" class="title">${total}</text>
+    <text x="${cx}" y="${cy + 21}" text-anchor="middle" class="value">응답</text>
+    ${legend}
   `)
 }
 
@@ -279,6 +343,48 @@ function markdownTable(rows, columns) {
   const divider = `| ${columns.map(() => '---').join(' | ')} |`
   const body = rows.map((row) => `| ${columns.map(([, key]) => row[key]).join(' | ')} |`)
   return [header, divider, ...body].join('\n')
+}
+
+function scalePieRows(summary) {
+  return [1, 2, 3, 4, 5].map((score) => ({
+    label: `${score}점`,
+    count: summary[`score_${score}`],
+  }))
+}
+
+function questionSummaryLine(summary) {
+  return `응답 ${summary.n}명, 평균 ${summary.mean}, 중앙값 ${summary.median}, 4-5점 ${summary.top2_pct}%`
+}
+
+function scaleQuestionBlocks(summaries, prefix) {
+  return summaries.map((summary) => {
+    const fileName = `${prefix}_${slugify(summary.question)}.svg`
+    return `### ${summary.label}
+
+${questionSummaryLine(summary)}
+
+![${summary.label} 점수분포](charts/${fileName})
+`
+  }).join('\n')
+}
+
+function textResponsesBlock(rows, key, label) {
+  const responses = rows
+    .map((row) => row[key])
+    .filter((value) => typeof value === 'string' && value.trim())
+    .map((value) => value.trim())
+
+  if (!responses.length) {
+    return `### ${label}
+
+응답 없음
+`
+  }
+
+  return `### ${label}
+
+${responses.map((response, index) => `${index + 1}. ${response.replaceAll('\n', '<br>')}`).join('\n\n')}
+`
 }
 
 ensureDir(outputDir)
@@ -425,6 +531,34 @@ svgBarChart({
   fileName: 'reaction_type_counts.svg',
   width: 720,
 })
+for (const summary of surveyRatingSummary) {
+  svgPieChart({
+    title: summary.label,
+    subtitle: questionSummaryLine(summary),
+    rows: scalePieRows(summary),
+    fileName: `survey_${slugify(summary.question)}.svg`,
+  })
+}
+for (const summary of interactionSummary) {
+  svgPieChart({
+    title: summary.label,
+    subtitle: questionSummaryLine(summary),
+    rows: scalePieRows(summary),
+    fileName: `interaction_${slugify(summary.question)}.svg`,
+  })
+}
+svgPieChart({
+  title: '인상 깊었던 요소',
+  subtitle: `복수 선택 응답 ${parsedSurveys.length}명, 총 선택 ${featureSummary.reduce((sum, row) => sum + row.count, 0)}건`,
+  rows: featureSummary.map((row) => ({ label: row.label, count: row.count })),
+  fileName: 'most_impressive_pie.svg',
+})
+svgPieChart({
+  title: '리액션 타입',
+  subtitle: `전체 리액션 ${reactionRows.length}건`,
+  rows: reactionsByType.map((row) => ({ label: row.label, count: row.total })),
+  fileName: 'reaction_type_pie.svg',
+})
 
 const topSurvey = [...surveyRatingSummary].sort((a, b) => b.mean - a.mean)
 const topSongs = [...reactionsBySong].sort((a, b) => b.total - a.total).slice(0, 5)
@@ -439,44 +573,25 @@ const report = `# 공연 이후 관객 리액션 및 설문 결과 분석
 - 리액션 참여 클라이언트: ${new Set(reactionRows.map((row) => row.client_id)).size}명
 - 리액션 곡 수: ${new Set(reactionRows.map((row) => row.song_id)).size}곡
 
-## 설문 척도 문항
+## 설문 응답 요약
 
-${markdownTable(surveyRatingSummary, [
-  ['문항', 'label'],
-  ['N', 'n'],
-  ['평균', 'mean'],
-  ['중앙값', 'median'],
-  ['Top2(4-5)', 'top2_pct'],
-  ['1점', 'score_1'],
-  ['2점', 'score_2'],
-  ['3점', 'score_3'],
-  ['4점', 'score_4'],
-  ['5점', 'score_5'],
-])}
+각 척도형 문항은 점수 분포를 파이차트로 표시했습니다. 서술형 문항은 수치화 요약 뒤에 원문 응답을 그대로 표시했습니다.
 
 가장 높은 평균은 ${topSurvey[0].label}(${topSurvey[0].mean})이고, 가장 낮은 평균은 ${topSurvey.at(-1).label}(${topSurvey.at(-1).mean})입니다.
+
+${scaleQuestionBlocks(surveyRatingSummary, 'survey')}
 
 ![설문 척도 문항 평균](charts/survey_ratings_average.svg)
 
 ## 상호작용 평가
 
-${markdownTable(interactionSummary, [
-  ['차원', 'dimension_label'],
-  ['채널', 'channel_label'],
-  ['N', 'n'],
-  ['평균', 'mean'],
-  ['중앙값', 'median'],
-  ['Top2(4-5)', 'top2_pct'],
-  ['1점', 'score_1'],
-  ['2점', 'score_2'],
-  ['3점', 'score_3'],
-  ['4점', 'score_4'],
-  ['5점', 'score_5'],
-])}
+${scaleQuestionBlocks(interactionSummary, 'interaction')}
 
 ![상호작용 평가 평균](charts/interaction_ratings_heatmap.svg)
 
 ## 인상 깊었던 요소
+
+복수 선택 문항이라 각 선택지 비율의 합이 100%가 아닐 수 있습니다.
 
 ${markdownTable(featureSummary, [
   ['요소', 'label'],
@@ -484,9 +599,11 @@ ${markdownTable(featureSummary, [
   ['응답자 대비 %', 'pct_of_respondents'],
 ])}
 
+![인상 깊었던 요소 선택 비중](charts/most_impressive_pie.svg)
+
 ![인상 깊었던 요소 선택 수](charts/most_impressive_counts.svg)
 
-## 서술형 응답 수치 요약
+## 서술형 응답
 
 ${markdownTable(openTextSummary, [
   ['문항', 'label'],
@@ -496,6 +613,10 @@ ${markdownTable(openTextSummary, [
   ['최소', 'min_chars'],
   ['최대', 'max_chars'],
 ])}
+
+${textResponsesBlock(parsedSurveys, 'memorable_moment', '기억에 남는 순간')}
+
+${textResponsesBlock(parsedSurveys, 'improvement', '개선점')}
 
 ## 곡별 리액션
 
@@ -524,7 +645,42 @@ ${markdownTable(reactionsByType, [
   ['전체 대비 %', 'pct_of_reactions'],
 ])}
 
+![리액션 타입별 비중](charts/reaction_type_pie.svg)
+
 ![리액션 타입별 총량](charts/reaction_type_counts.svg)
+
+## 원자료 수치표
+
+### 설문 척도 문항
+
+${markdownTable(surveyRatingSummary, [
+  ['문항', 'label'],
+  ['N', 'n'],
+  ['평균', 'mean'],
+  ['중앙값', 'median'],
+  ['Top2(4-5)', 'top2_pct'],
+  ['1점', 'score_1'],
+  ['2점', 'score_2'],
+  ['3점', 'score_3'],
+  ['4점', 'score_4'],
+  ['5점', 'score_5'],
+])}
+
+### 상호작용 평가
+
+${markdownTable(interactionSummary, [
+  ['차원', 'dimension_label'],
+  ['채널', 'channel_label'],
+  ['N', 'n'],
+  ['평균', 'mean'],
+  ['중앙값', 'median'],
+  ['Top2(4-5)', 'top2_pct'],
+  ['1점', 'score_1'],
+  ['2점', 'score_2'],
+  ['3점', 'score_3'],
+  ['4점', 'score_4'],
+  ['5점', 'score_5'],
+])}
 
 ## 산출 파일
 
